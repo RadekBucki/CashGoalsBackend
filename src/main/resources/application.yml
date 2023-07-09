@@ -1,0 +1,32 @@
+spring:
+  graphql:
+    graphiql:
+      enabled: true
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: cashgoals
+  datasource:
+    username: ${POSTGRES_USER:#{user}}
+    password: ${POSTGRES_PASSWORD:#{password}}
+    url: ${POSTGRES_URL}
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    jwt:
+      secret: ${JTW_SECRET
+      expiration: ${JTW_EXPIRATION}
+      refresh-expiration: ${JTW_REFRESH_EXPIRATION}
+      header-name: ${JTW_HEADER}
+      prefix: ${JTW_PREFIX}
+  data:
+    redis:
+      database: ${REDIS_DATABASE}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      timeout: ${REDIS_TIMEOUT}
+      url: redis://${REDIS_HOST}:${REDIS_PORT}
