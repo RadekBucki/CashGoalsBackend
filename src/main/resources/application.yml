@@ -17,7 +17,7 @@ spring:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
   security:
     jwt:
-      secret: ${JTW_SECRET
+      secret: ${JTW_SECRET}
       expiration: ${JTW_EXPIRATION}
       refresh-expiration: ${JTW_REFRESH_EXPIRATION}
       header-name: ${JTW_HEADER}
