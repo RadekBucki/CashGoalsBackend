@@ -5,10 +5,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import pl.cashgoals.user.business.exception.AuthenticationException;
 import pl.cashgoals.user.business.model.LoginOutput;
-import pl.cashgoals.user.business.model.TokenType;
 import pl.cashgoals.user.business.model.UserInput;
 import pl.cashgoals.user.persistence.model.AppUser;
 import pl.cashgoals.user.persistence.repository.AppUserRepository;
@@ -53,9 +53,11 @@ public class UserService implements UserDetailsService {
             throw new AuthenticationException();
         }
 
+        String accessToken = tokenService.generateAccessToken(appUser);
+
         return new LoginOutput(
-                tokenService.generateToken(appUser, TokenType.ACCESS_TOKEN),
-                tokenService.generateToken(appUser, TokenType.REFRESH_TOKEN),
+                accessToken,
+                tokenService.generateRefreshToken(appUser, accessToken),
                 appUser
         );
     }
@@ -71,5 +73,21 @@ public class UserService implements UserDetailsService {
         appUser.setPassword(passwordEncoder.encode(input.password()));
 
         return appUserRepository.saveAndFlush(appUser);
+    }
+
+    public LoginOutput refreshToken(String token, Principal principal) {
+        if (!tokenService.verifyRefreshToken(token, ((JwtAuthenticationToken) principal).getToken().getTokenValue())) {
+            throw new AuthenticationException();
+        }
+        AppUser appUser = appUserRepository.getUserByUsername(principal.getName())
+                .orElseThrow(AuthenticationException::new);
+
+        String accessToken = tokenService.generateAccessToken(appUser);
+
+        return new LoginOutput(
+                accessToken,
+                tokenService.generateRefreshToken(appUser, accessToken),
+                appUser
+        );
     }
 }

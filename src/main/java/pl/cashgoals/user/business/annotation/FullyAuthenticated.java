@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-@PreAuthorize("isFullyAuthenticated()")
+@PreAuthorize("isFullyAuthenticated() && hasAuthority('SCOPE_USER')")
 public @interface FullyAuthenticated {
 }

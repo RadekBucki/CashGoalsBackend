@@ -19,8 +19,8 @@ spring:
     jwt:
       public-key: classpath:jwt/app.pub
       private-key: classpath:jwt/app.key
-      access-expiration: ${JTW_EXPIRATION}
-      refresh-expiration: ${JTW_REFRESH_EXPIRATION}
+      access-expiration-in-hours: ${JTW_EXPIRATION_IN_HOURS}
+      refresh-expiration-in-days: ${JTW_REFRESH_EXPIRATION_IN_DAYS}
   data:
     redis:
       database: ${REDIS_DATABASE}

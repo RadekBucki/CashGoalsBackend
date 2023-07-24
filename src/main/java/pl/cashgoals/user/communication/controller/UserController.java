@@ -15,21 +15,27 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-    private final UserFacade userService;
+    private final UserFacade userFacade;
 
     @MutationMapping
     public LoginOutput login(@Argument String username, @Argument String password) {
-        return userService.login(username, password);
+        return userFacade.login(username, password);
     }
 
     @MutationMapping
     public AppUser createUser(@Argument UserInput input) {
-        return userService.createUser(input);
+        return userFacade.createUser(input);
     }
 
     @MutationMapping
     @FullyAuthenticated
     public AppUser updateUser(@Argument UserInput input, Principal principal) {
-        return userService.updateUser(input, principal);
+        return userFacade.updateUser(input, principal);
+    }
+
+    @MutationMapping
+    @FullyAuthenticated
+    public LoginOutput refreshToken(@Argument String token, Principal principal) {
+        return userFacade.refreshToken(token, principal);
     }
 }

@@ -25,4 +25,8 @@ public class UserFacade {
     public AppUser updateUser(UserInput input, Principal principal) {
         return userService.updateUser(input, principal);
     }
+
+    public LoginOutput refreshToken(String token, Principal principal) {
+        return userService.refreshToken(token, principal);
+    }
 }
