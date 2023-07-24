@@ -17,11 +17,10 @@ spring:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
   security:
     jwt:
-      secret: ${JTW_SECRET}
-      expiration: ${JTW_EXPIRATION}
+      public-key: classpath:jwt/app.pub
+      private-key: classpath:jwt/app.key
+      access-expiration: ${JTW_EXPIRATION}
       refresh-expiration: ${JTW_REFRESH_EXPIRATION}
-      header-name: ${JTW_HEADER}
-      prefix: ${JTW_PREFIX}
   data:
     redis:
       database: ${REDIS_DATABASE}

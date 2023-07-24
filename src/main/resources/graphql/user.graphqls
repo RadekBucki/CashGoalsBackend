@@ -1,0 +1,31 @@
+extend type Query {
+    user: User!
+}
+
+extend type Mutation {
+    login(username: String!, password: String!): LoginOutput!
+    refreshToken(token: String!): LoginOutput!
+    createUser(input: UserInput!): User!
+    updateUser(input: UserInput!): User!
+}
+
+type User {
+    username: String!
+    email: String!
+    firstname: String!
+    lastname: String!
+}
+
+type LoginOutput {
+    accessToken: String!
+    refreshToken: String!
+    user: User!
+}
+
+input UserInput {
+    username: String!
+    email: String!
+    firstname: String!
+    lastname: String!
+    password: String!
+}

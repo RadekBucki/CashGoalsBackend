@@ -1,6 +1,2 @@
-type Query {
-    example: String
-}
-type Mutation {
-    example: String
-}
+type Query
+type Mutation
