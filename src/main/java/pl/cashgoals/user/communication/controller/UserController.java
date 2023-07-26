@@ -1,5 +1,6 @@
 package pl.cashgoals.user.communication.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -23,19 +24,19 @@ public class UserController {
     }
 
     @MutationMapping
-    public AppUser createUser(@Argument UserInput input) {
+    public AppUser createUser(@Valid @Argument UserInput input) {
         return userFacade.createUser(input);
     }
 
     @MutationMapping
     @FullyAuthenticated
-    public AppUser updateUser(@Argument UserInput input, Principal principal) {
+    public AppUser updateUser(@Valid @Argument UserInput input, Principal principal) {
         return userFacade.updateUser(input, principal);
     }
 
     @MutationMapping
     @FullyAuthenticated
-    public LoginOutput refreshToken(@Argument String token, Principal principal) {
+    public LoginOutput refreshToken(@Valid @Argument String token, Principal principal) {
         return userFacade.refreshToken(token, principal);
     }
 }

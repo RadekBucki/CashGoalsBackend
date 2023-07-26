@@ -1,2 +1,7 @@
 type Query
 type Mutation
+
+# Scalars from graphql-java-extended-scalars
+scalar Date
+scalar Time
+scalar DateTime

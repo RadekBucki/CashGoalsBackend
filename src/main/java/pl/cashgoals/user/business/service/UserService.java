@@ -3,7 +3,6 @@ package pl.cashgoals.user.business.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,12 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
+        return appUserRepository.getUserByUsername(username)
+                .orElseThrow(AuthenticationException::new);
+    }
+
+    public AppUser getUserByUsername(String username) {
         return appUserRepository.getUserByUsername(username)
                 .orElseThrow(AuthenticationException::new);
     }
@@ -43,8 +47,7 @@ public class UserService implements UserDetailsService {
     }
 
     public LoginOutput login(String username, String password) {
-        AppUser appUser = appUserRepository.getUserByUsername(username)
-                .orElseThrow(AuthenticationException::new);
+        AppUser appUser = getUserByUsername(username);
 
         if (
                 !passwordEncoder.matches(password, appUser.getPassword())
@@ -63,8 +66,7 @@ public class UserService implements UserDetailsService {
     }
 
     public AppUser updateUser(UserInput input, Principal principal) {
-        AppUser appUser = appUserRepository.getUserByUsername(principal.getName())
-                .orElseThrow(AuthenticationException::new);
+        AppUser appUser = getUserByUsername(principal.getName());
 
         appUser.setUsername(input.username());
         appUser.setEmail(input.email());
@@ -79,8 +81,7 @@ public class UserService implements UserDetailsService {
         if (!tokenService.verifyRefreshToken(token, ((JwtAuthenticationToken) principal).getToken().getTokenValue())) {
             throw new AuthenticationException();
         }
-        AppUser appUser = appUserRepository.getUserByUsername(principal.getName())
-                .orElseThrow(AuthenticationException::new);
+        AppUser appUser = getUserByUsername(principal.getName());
 
         String accessToken = tokenService.generateAccessToken(appUser);
 
