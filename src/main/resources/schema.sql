@@ -1,4 +1,4 @@
-CREATE TABLE app_user
+CREATE TABLE user_entity
 (
     id        SERIAL       NOT NULL,
     enabled   BOOLEAN      NOT NULL,

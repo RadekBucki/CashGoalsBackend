@@ -11,14 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-@Entity
+@Entity(name = "user_entity")
 @Getter
 @Setter
 @Builder
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUser implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

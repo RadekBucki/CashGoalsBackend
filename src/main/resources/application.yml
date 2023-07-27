@@ -19,6 +19,7 @@ spring:
     properties:
       hibernate:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
   security:
     jwt:
       public-key: classpath:jwt/app.pub

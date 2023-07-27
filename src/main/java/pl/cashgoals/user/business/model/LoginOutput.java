@@ -1,6 +1,6 @@
 package pl.cashgoals.user.business.model;
 
-import pl.cashgoals.user.persistence.model.AppUser;
+import pl.cashgoals.user.persistence.model.User;
 
-public record LoginOutput(String accessToken, String refreshToken, AppUser user) {
+public record LoginOutput(String accessToken, String refreshToken, User user) {
 }

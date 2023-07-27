@@ -6,11 +6,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-import pl.cashgoals.user.business.exception.AuthenticationException;
+import pl.cashgoals.user.business.exception.UserNotFound;
 import pl.cashgoals.user.business.model.LoginOutput;
 import pl.cashgoals.user.business.model.UserInput;
-import pl.cashgoals.user.persistence.model.AppUser;
-import pl.cashgoals.user.persistence.repository.AppUserRepository;
+import pl.cashgoals.user.persistence.model.User;
+import pl.cashgoals.user.persistence.repository.UserRepository;
 
 import java.security.Principal;
 
@@ -18,24 +18,24 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private final AppUserRepository appUserRepository;
+    private final UserRepository userRepository;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return appUserRepository.getUserByUsername(username)
-                .orElseThrow(AuthenticationException::new);
+        return userRepository.getUserByUsername(username)
+                .orElseThrow(UserNotFound::new);
     }
 
-    public AppUser getUserByUsername(String username) {
-        return appUserRepository.getUserByUsername(username)
-                .orElseThrow(AuthenticationException::new);
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username)
+                .orElseThrow(UserNotFound::new);
     }
 
-    public AppUser createUser(UserInput input) {
-        return appUserRepository.saveAndFlush(
-                AppUser.builder()
+    public User createUser(UserInput input) {
+        return userRepository.saveAndFlush(
+                User.builder()
                         .username(input.username())
                         .email(input.email())
                         .firstname(input.firstname())
@@ -47,48 +47,48 @@ public class UserService implements UserDetailsService {
     }
 
     public LoginOutput login(String username, String password) {
-        AppUser appUser = getUserByUsername(username);
+        User user = getUserByUsername(username);
 
         if (
-                !passwordEncoder.matches(password, appUser.getPassword())
-                        || Boolean.TRUE.equals(!appUser.getEnabled())
+                !passwordEncoder.matches(password, user.getPassword())
+                        || Boolean.TRUE.equals(!user.getEnabled())
         ) {
-            throw new AuthenticationException();
+            throw new UserNotFound();
         }
 
-        String accessToken = tokenService.generateAccessToken(appUser);
+        String accessToken = tokenService.generateAccessToken(user);
 
         return new LoginOutput(
                 accessToken,
-                tokenService.generateRefreshToken(appUser, accessToken),
-                appUser
+                tokenService.generateRefreshToken(user, accessToken),
+                user
         );
     }
 
-    public AppUser updateUser(UserInput input, Principal principal) {
-        AppUser appUser = getUserByUsername(principal.getName());
+    public User updateUser(UserInput input, Principal principal) {
+        User user = getUserByUsername(principal.getName());
 
-        appUser.setUsername(input.username());
-        appUser.setEmail(input.email());
-        appUser.setFirstname(input.firstname());
-        appUser.setLastname(input.lastname());
-        appUser.setPassword(passwordEncoder.encode(input.password()));
+        user.setUsername(input.username());
+        user.setEmail(input.email());
+        user.setFirstname(input.firstname());
+        user.setLastname(input.lastname());
+        user.setPassword(passwordEncoder.encode(input.password()));
 
-        return appUserRepository.saveAndFlush(appUser);
+        return userRepository.saveAndFlush(user);
     }
 
     public LoginOutput refreshToken(String token, Principal principal) {
         if (!tokenService.verifyRefreshToken(token, ((JwtAuthenticationToken) principal).getToken().getTokenValue())) {
-            throw new AuthenticationException();
+            throw new UserNotFound();
         }
-        AppUser appUser = getUserByUsername(principal.getName());
+        User user = getUserByUsername(principal.getName());
 
-        String accessToken = tokenService.generateAccessToken(appUser);
+        String accessToken = tokenService.generateAccessToken(user);
 
         return new LoginOutput(
                 accessToken,
-                tokenService.generateRefreshToken(appUser, accessToken),
-                appUser
+                tokenService.generateRefreshToken(user, accessToken),
+                user
         );
     }
 }

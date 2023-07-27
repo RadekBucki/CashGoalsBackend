@@ -4,11 +4,11 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import pl.cashgoals.user.business.annotation.UniqueUsername;
-import pl.cashgoals.user.persistence.repository.AppUserRepository;
+import pl.cashgoals.user.persistence.repository.UserRepository;
 
 @RequiredArgsConstructor
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
-    private final AppUserRepository appUserRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void initialize(UniqueUsername constraintAnnotation) {
@@ -17,6 +17,6 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return appUserRepository.getUserByUsername(value).isEmpty();
+        return userRepository.getUserByUsername(value).isEmpty();
     }
 }
