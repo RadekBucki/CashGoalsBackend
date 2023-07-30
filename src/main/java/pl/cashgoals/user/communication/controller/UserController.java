@@ -37,7 +37,7 @@ public class UserController {
 
     @MutationMapping
     @FullyAuthenticated
-    public LoginOutput refreshToken(@Valid @Argument String token, Principal principal) {
+    public LoginOutput refreshToken(@Argument String token, Principal principal) {
         return userFacade.refreshToken(token, principal);
     }
 
