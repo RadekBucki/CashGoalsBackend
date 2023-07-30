@@ -29,3 +29,9 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  sonarqube:
+    image: sonarqube:latest
+    ports:
+      - 9000:9000
+    environment:
+      - SONAR_AUTHENTICATOR_ENABLED=false

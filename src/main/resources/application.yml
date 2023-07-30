@@ -21,6 +21,7 @@ spring:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   security:
+    password-strength: 10
     jwt:
       public-key: classpath:jwt/app.pub
       private-key: classpath:jwt/app.key

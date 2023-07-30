@@ -5,6 +5,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.2'
     id 'org.hibernate.orm' version '6.2.6.Final'
     id 'org.graalvm.buildtools.native' version '0.9.23'
+    id 'jacoco'
+    id 'org.sonarqube' version '4.2.1.3168'
 }
 
 group = 'pl'
@@ -52,8 +54,34 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.testcontainers:rabbitmq'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
 }
+
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+sonarqube {
+    properties {
+        property 'sonar.host.url', 'http://localhost:9000'
+        property 'sonar.projectName', 'CashGoalsBackend'
+        property 'sonar.projectKey', 'CashGoalsBackend'
+        property 'sonar.token', 'sqp_7086049f28741143cfa47d6afe9b9a13adee6808'
+        property 'sonar.login', 'admin'
+        property 'sonar.password', 'admin'
+        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+    }
+}
+test.finalizedBy jacocoTestReport
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}
+
+tasks.named('sonarqube').configure {
+    dependsOn test
 }

@@ -29,6 +29,8 @@ public class BusinessSecurityConfig {
     private RSAPrivateKey privateKey;
     @Value("${spring.security.jwt.public-key}")
     private RSAPublicKey publicKey;
+    @Value("${spring.security.password-strength}")
+    private int passwordStrength;
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
@@ -39,7 +41,7 @@ public class BusinessSecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder(passwordStrength);
     }
 
     @Bean

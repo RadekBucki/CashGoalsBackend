@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-import pl.cashgoals.user.business.exception.UserNotFound;
+import pl.cashgoals.user.business.exception.UserNotFoundException;
 import pl.cashgoals.user.business.model.LoginOutput;
 import pl.cashgoals.user.business.model.UserInput;
 import pl.cashgoals.user.persistence.model.User;
@@ -25,12 +25,12 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         return userRepository.getUserByUsername(username)
-                .orElseThrow(UserNotFound::new);
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public User getUserByUsername(String username) {
         return userRepository.getUserByUsername(username)
-                .orElseThrow(UserNotFound::new);
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public User createUser(UserInput input) {
@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
                 !passwordEncoder.matches(password, user.getPassword())
                         || Boolean.TRUE.equals(!user.getEnabled())
         ) {
-            throw new UserNotFound();
+            throw new UserNotFoundException();
         }
 
         String accessToken = tokenService.generateAccessToken(user);
@@ -79,7 +79,7 @@ public class UserService implements UserDetailsService {
 
     public LoginOutput refreshToken(String token, Principal principal) {
         if (!tokenService.verifyRefreshToken(token, ((JwtAuthenticationToken) principal).getToken().getTokenValue())) {
-            throw new UserNotFound();
+            throw new UserNotFoundException();
         }
         User user = getUserByUsername(principal.getName());
 
