@@ -23,7 +23,7 @@ public class RedisContainer extends GenericContainer<RedisContainer> {
     @Override
     public void start() {
         super.start();
-        System.setProperty("REDIS_PORT", container.getMappedPort(6379).toString());
+        System.setProperty("spring.data.redis.port", container.getMappedPort(6379).toString());
     }
 
     @Override

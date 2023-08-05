@@ -67,6 +67,7 @@ public abstract class AbstractIntegrationTest {
     static void beforeAll() {
         Locale.setDefault(Locale.ROOT);
         Locale.setDefault(Locale.Category.DISPLAY, Locale.ROOT);
+        System.setProperty("spring.profiles.active", "test");
     }
 
     @BeforeEach

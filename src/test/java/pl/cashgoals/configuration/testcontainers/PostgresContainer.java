@@ -17,12 +17,9 @@ public class PostgresContainer extends org.testcontainers.containers.PostgreSQLC
     @Override
     public void start() {
         super.start();
-        System.setProperty("POSTGRES_HOST", container.getHost());
-        System.setProperty("POSTGRES_LOCAL_PORT", container.getMappedPort(5432).toString());
-        System.setProperty("POSTGRES_DOCKER_PORT", "5432");
-        System.setProperty("POSTGRES_USER", container.getUsername());
-        System.setProperty("POSTGRES_PASSWORD", container.getPassword());
-        System.setProperty("POSTGRES_DB", container.getDatabaseName());
+        System.setProperty("spring.datasource.username", container.getUsername());
+        System.setProperty("spring.datasource.password", container.getPassword());
+        System.setProperty("spring.datasource.url", container.getJdbcUrl());
     }
 
     @Override

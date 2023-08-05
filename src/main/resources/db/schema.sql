@@ -1,4 +1,4 @@
-CREATE TABLE user_entity
+CREATE TABLE IF NOT EXISTS user_entity
 (
     id        SERIAL       NOT NULL,
     enabled   BOOLEAN      NOT NULL,
