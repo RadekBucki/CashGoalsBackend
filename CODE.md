@@ -21,6 +21,12 @@ Used rules are defined in `sonar/java.xml` file.
 6. Run `./gradlew sonar` or gradle task `verification/sonar` from IDE
 7. Go to Project Settings -> Quality Profiles and set profile you imported in step 4 as default
 
+### SonarQube usage
+
+```bash
+./gradlew test jacocoTestReport sonar
+```
+
 ## Setup SonarLint
 
 1. Install SonarLint plugin in your IDE

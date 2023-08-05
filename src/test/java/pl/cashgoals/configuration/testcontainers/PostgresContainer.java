@@ -1,4 +1,4 @@
-package pl.cashgoals.integration.testcontainers;
+package pl.cashgoals.configuration.testcontainers;
 
 public class PostgresContainer extends org.testcontainers.containers.PostgreSQLContainer<PostgresContainer> {
     private static final String IMAGE_VERSION = "postgres:latest";
@@ -23,5 +23,10 @@ public class PostgresContainer extends org.testcontainers.containers.PostgreSQLC
         System.setProperty("POSTGRES_USER", container.getUsername());
         System.setProperty("POSTGRES_PASSWORD", container.getPassword());
         System.setProperty("POSTGRES_DB", container.getDatabaseName());
+    }
+
+    @Override
+    public void stop() {
+        //do nothing, JVM handles shut down
     }
 }

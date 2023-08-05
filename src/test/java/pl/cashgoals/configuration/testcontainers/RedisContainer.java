@@ -1,4 +1,4 @@
-package pl.cashgoals.integration.testcontainers;
+package pl.cashgoals.configuration.testcontainers;
 
 import org.testcontainers.containers.GenericContainer;
 

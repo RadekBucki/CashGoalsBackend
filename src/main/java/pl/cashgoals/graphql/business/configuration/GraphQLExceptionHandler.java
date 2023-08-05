@@ -5,18 +5,23 @@ import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 import pl.cashgoals.graphql.business.exception.AbstractGraphQLException;
+import pl.cashgoals.graphql.business.message.MessageResolver;
 
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class GraphQLExceptionHandler extends DataFetcherExceptionResolverAdapter {
     @Value("${spring.profiles.active}")
@@ -52,15 +57,23 @@ public class GraphQLExceptionHandler extends DataFetcherExceptionResolverAdapter
             @NotNull DataFetchingEnvironment environment
     ) {
         ErrorClassification errorType = ErrorType.INTERNAL_ERROR;
+        String message = throwable.getLocalizedMessage();
         if (throwable instanceof AccessDeniedException) {
             errorType = ErrorType.FORBIDDEN;
+            message = MessageResolver.getGraphQlMessage("cashgoals.user.forbidden");
+        } else if (throwable instanceof AuthenticationCredentialsNotFoundException) {
+            errorType = ErrorType.UNAUTHORIZED;
+            message = MessageResolver.getGraphQlMessage("cashgoals.user.unauthorized");
+        } else if (throwable instanceof JwtException) {
+            errorType = ErrorType.BAD_REQUEST;
+            message = MessageResolver.getGraphQlMessage("cashgoals.user.bad-refresh-token");
         } else if (throwable instanceof AbstractGraphQLException abstractGraphQLException) {
             errorType = abstractGraphQLException.getErrorType();
         }
 
         GraphqlErrorBuilder<?> graphqlErrorBuilder = GraphqlErrorBuilder.newError()
                 .errorType(errorType)
-                .message(throwable.getMessage())
+                .message(message)
                 .path(environment.getExecutionStepInfo().getPath())
                 .location(environment.getField().getSourceLocation());
         if (errorType == ErrorType.INTERNAL_ERROR) {

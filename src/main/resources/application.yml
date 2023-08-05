@@ -8,6 +8,9 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: cashgoals
+  web:
+    locale-resolver: accept_header
+    locale: en
   datasource:
     username: ${POSTGRES_USER:#{user}}
     password: ${POSTGRES_PASSWORD:#{password}}
@@ -15,7 +18,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
         database-platform: org.hibernate.dialect.PostgreSQLDialect

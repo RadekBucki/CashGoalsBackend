@@ -60,11 +60,8 @@ public class TokenService {
 
     public boolean verifyRefreshToken(String refreshToken, String accessToken) {
         Jwt refreshTokenJwt = jwtDecoder.decode(refreshToken);
-        if (Objects.requireNonNull(refreshTokenJwt.getExpiresAt()).isBefore(Instant.now())) {
-            return false;
-        }
         Jwt accessTokenJwt = jwtDecoder.decode(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN));
-        return refreshTokenJwt.getClaimAsString(USERNAME).equals(accessTokenJwt.getSubject())
-                && refreshTokenJwt.getClaimAsString(ACCESS_TOKEN).equals(accessToken);
+        return Objects.equals(refreshTokenJwt.getClaimAsString(USERNAME),accessTokenJwt.getSubject())
+                && Objects.equals(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN), accessToken);
     }
 }
