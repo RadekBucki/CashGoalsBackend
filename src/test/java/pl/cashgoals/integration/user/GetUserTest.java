@@ -20,8 +20,6 @@ class GetUserTest extends AbstractIntegrationTest {
                 .errors().verify()
                 .path("user").entity(User.class).satisfies(user -> {
                     assertEquals("test", user.getUsername());
-                    assertEquals("test", user.getFirstname());
-                    assertEquals("test", user.getLastname());
                     assertEquals("test@example.com", user.getEmail());
                 });
     }

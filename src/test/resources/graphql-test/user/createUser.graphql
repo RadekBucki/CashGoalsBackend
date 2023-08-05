@@ -2,7 +2,5 @@ mutation createUser($userInput: UserInput!) {
     createUser(input: $userInput) {
         username
         email
-        firstname
-        lastname
     }
 }

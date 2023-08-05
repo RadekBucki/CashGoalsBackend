@@ -40,8 +40,6 @@ class LoginTest extends AbstractIntegrationTest {
                 .errors().verify()
                 .path("login").entity(LoginOutput.class).satisfies(loginOutput -> {
                     assertEquals("test", loginOutput.user().getUsername());
-                    assertEquals("test", loginOutput.user().getFirstname());
-                    assertEquals("test", loginOutput.user().getLastname());
                     assertEquals("test@example.com", loginOutput.user().getEmail());
 
                     Jwt accessToken = jwtDecoder.decode(loginOutput.accessToken());

@@ -21,17 +21,13 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
-                "test1@example.com",
-                "Test",
-                "Test"
+                "test1@example.com"
         );
 
         response
                 .errors().verify()
                 .path("updateUser").entity(User.class).satisfies(user -> {
                     assertEquals("test1", user.getUsername());
-                    assertEquals("Test", user.getFirstname());
-                    assertEquals("Test", user.getLastname());
                     assertEquals("test1@example.com", user.getEmail());
                 });
     }
@@ -43,9 +39,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "t",
                 "test",
-                "bad email",
-                "T",
-                "T"
+                "bad email"
         );
 
         response.errors()
@@ -53,16 +47,6 @@ class UpdateUserTest extends AbstractIntegrationTest {
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
                                 Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Size.message") &&
                                 responseError.getPath().equals("updateUser.input.username")
-                )
-                .expect(responseError ->
-                        responseError.getErrorType().equals(ErrorType.ValidationError) &&
-                                Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Size.message") &&
-                                responseError.getPath().equals("updateUser.input.firstname")
-                )
-                .expect(responseError ->
-                        responseError.getErrorType().equals(ErrorType.ValidationError) &&
-                                Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Size.message") &&
-                                responseError.getPath().equals("updateUser.input.lastname")
                 )
                 .expect(responseError ->
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
@@ -83,9 +67,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "inactive",
                 "Test123!",
-                "test1@example.com",
-                "Test",
-                "Test"
+                "test1@example.com"
         );
 
         response.errors().expect(responseError ->
@@ -102,9 +84,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
-                "inactive@example.com",
-                "Test",
-                "Test"
+                "inactive@example.com"
         );
 
         response.errors().expect(responseError ->
@@ -120,9 +100,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
-                "test1@example.com",
-                "Test",
-                "Test"
+                "test1@example.com"
         );
 
         response.errors().expect(responseError ->

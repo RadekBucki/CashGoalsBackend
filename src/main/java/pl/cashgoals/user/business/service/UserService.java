@@ -39,8 +39,6 @@ public class UserService implements UserDetailsService {
                 User.builder()
                         .username(input.username())
                         .email(input.email())
-                        .firstname(input.firstname())
-                        .lastname(input.lastname())
                         .password(passwordEncoder.encode(input.password()))
                         .enabled(false)
                         .build()
@@ -71,8 +69,6 @@ public class UserService implements UserDetailsService {
 
         user.setUsername(input.username());
         user.setEmail(input.email());
-        user.setFirstname(input.firstname());
-        user.setLastname(input.lastname());
         user.setPassword(passwordEncoder.encode(input.password()));
 
         return userRepository.saveAndFlush(user);

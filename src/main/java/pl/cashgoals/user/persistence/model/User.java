@@ -28,8 +28,6 @@ public class User implements UserDetails {
     private Boolean enabled;
     private String username;
     private String email;
-    private String firstname;
-    private String lastname;
     private String password;
 
     @Override

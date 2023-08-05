@@ -5,8 +5,6 @@ mutation refreshToken($token: String!) {
         user {
             username
             email
-            firstname
-            lastname
         }
     }
 }

@@ -2,7 +2,5 @@ query {
     user {
         username
         email
-        firstname
-        lastname
     }
 }

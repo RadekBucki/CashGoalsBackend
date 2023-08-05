@@ -18,13 +18,7 @@ public record UserInput(
         @NotNull
         @Email
         @UniqueEmail
-        String email,
-        @NotNull
-        @Size(min = 2, max = 100)
-        String firstname,
-        @NotNull
-        @Size(min = 2, max = 100)
-        String lastname
+        String email
 ) {
 
 }

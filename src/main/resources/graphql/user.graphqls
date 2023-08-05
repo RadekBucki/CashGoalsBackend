@@ -12,8 +12,6 @@ extend type Mutation {
 type User {
     username: String!
     email: String!
-    firstname: String!
-    lastname: String!
 }
 
 type LoginOutput {
@@ -25,7 +23,5 @@ type LoginOutput {
 input UserInput {
     username: String!
     email: String!
-    firstname: String!
-    lastname: String!
     password: String!
 }

@@ -14,16 +14,12 @@ public class UserRequests {
     public GraphQlTester.Response createUser(
             String username,
             String password,
-            String email,
-            String firstname,
-            String lastname
+            String email
     ) {
         Map<String, String> userInput = Map.of(
                 "username", username,
                 "password", password,
-                "email", email,
-                "firstname", firstname,
-                "lastname", lastname
+                "email", email
         );
         return graphQlTester.documentName("user/createUser")
                 .variable("userInput", userInput)
@@ -47,16 +43,12 @@ public class UserRequests {
     public GraphQlTester.Response updateUser(
             String username,
             String password,
-            String email,
-            String firstname,
-            String lastname
+            String email
     ) {
         Map<String, String> userInput = Map.of(
                 "username", username,
                 "password", password,
-                "email", email,
-                "firstname", firstname,
-                "lastname", lastname
+                "email", email
         );
         return graphQlTester.documentName("user/updateUser")
                 .variable("userInput", userInput)

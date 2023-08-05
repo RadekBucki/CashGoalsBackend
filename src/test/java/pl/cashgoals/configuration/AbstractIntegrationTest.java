@@ -83,16 +83,12 @@ public abstract class AbstractIntegrationTest {
                 .username("test")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("test@example.com")
-                .firstname("test")
-                .lastname("test")
                 .build();
         User inactiveUser = User.builder()
                 .enabled(false)
                 .username("inactive")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("inactive@example.com")
-                .firstname("inactive")
-                .lastname("inactive")
                 .build();
         userRepository.saveAllAndFlush(List.of(user, inactiveUser));
     }
