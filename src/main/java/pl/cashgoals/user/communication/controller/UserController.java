@@ -6,10 +6,10 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import pl.cashgoals.user.business.UserFacade;
 import pl.cashgoals.user.business.annotation.FullyAuthenticated;
 import pl.cashgoals.user.business.model.LoginOutput;
 import pl.cashgoals.user.business.model.UserInput;
+import pl.cashgoals.user.business.service.UserService;
 import pl.cashgoals.user.persistence.model.User;
 
 import java.security.Principal;
@@ -17,33 +17,33 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-    private final UserFacade userFacade;
+    private final UserService userService;
 
     @MutationMapping
     public LoginOutput login(@Argument String username, @Argument String password) {
-        return userFacade.login(username, password);
+        return userService.login(username, password);
     }
 
     @MutationMapping
     public User createUser(@Valid @Argument UserInput input) {
-        return userFacade.createUser(input);
+        return userService.createUser(input);
     }
 
     @MutationMapping
     @FullyAuthenticated
     public User updateUser(@Valid @Argument UserInput input, Principal principal) {
-        return userFacade.updateUser(input, principal);
+        return userService.updateUser(input, principal);
     }
 
     @MutationMapping
     @FullyAuthenticated
     public LoginOutput refreshToken(@Argument String token, Principal principal) {
-        return userFacade.refreshToken(token, principal);
+        return userService.refreshToken(token, principal);
     }
 
     @QueryMapping
     @FullyAuthenticated
     public User user(Principal principal) {
-        return userFacade.getUserByUsername(principal.getName());
+        return userService.getUserByUsername(principal.getName());
     }
 }
