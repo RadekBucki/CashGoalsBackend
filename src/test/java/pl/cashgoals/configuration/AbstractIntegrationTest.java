@@ -1,7 +1,9 @@
 package pl.cashgoals.configuration;
 
+import com.icegreen.greenmail.junit5.GreenMailExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,11 +13,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.cashgoals.configuration.requests.UserRequests;
-import pl.cashgoals.configuration.testcontainers.GreenMailContainer;
+import pl.cashgoals.configuration.testcontainers.GreenMail;
 import pl.cashgoals.configuration.testcontainers.PostgresContainer;
 import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
+import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
+import pl.cashgoals.user.persistence.model.UserToken;
 import pl.cashgoals.user.persistence.repository.UserRepository;
 
 import java.util.List;
@@ -38,8 +42,8 @@ public abstract class AbstractIntegrationTest {
     @Container
     private static final RabbitMQContainer rabbitMQContainer = RabbitMQContainer.getInstance();
 
-    @Container
-    private static final GreenMailContainer greenMailContainer = GreenMailContainer.getInstance();
+    @RegisterExtension
+    protected static final GreenMailExtension greenMail = GreenMail.getInstance();
 
     /**
      * Dependencies
@@ -85,12 +89,21 @@ public abstract class AbstractIntegrationTest {
                 .password(passwordEncoder.encode("Test123!"))
                 .email("test@example.com")
                 .build();
+
         User inactiveUser = User.builder()
                 .enabled(false)
                 .username("inactive")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("inactive@example.com")
                 .build();
+        inactiveUser.getTokens().add(
+                UserToken.builder()
+                        .token("token")
+                        .type(TokenType.ACTIVATION)
+                        .user(inactiveUser)
+                        .build()
+        );
+
         userRepository.saveAllAndFlush(List.of(user, inactiveUser));
     }
 }

@@ -59,4 +59,25 @@ public class UserRequests {
         return graphQlTester.documentName("user/user")
                 .execute();
     }
+
+    public GraphQlTester.Response activateUser(String email, String token) {
+        return graphQlTester.documentName("user/activateUser")
+                .variable("email", email)
+                .variable("token", token)
+                .execute();
+    }
+
+    public GraphQlTester.Response requestPasswordReset(String email) {
+        return graphQlTester.documentName("user/requestPasswordReset")
+                .variable("email", email)
+                .execute();
+    }
+
+    public GraphQlTester.Response resetPassword(String email, String token, String password) {
+        return graphQlTester.documentName("user/resetPassword")
+                .variable("email", email)
+                .variable("token", token)
+                .variable("password", password)
+                .execute();
+    }
 }

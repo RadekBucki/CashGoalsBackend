@@ -1,0 +1,3 @@
+mutation activateUser($email: String!, $token: String!) {
+    activateUser(email: $email, token: $token)
+}

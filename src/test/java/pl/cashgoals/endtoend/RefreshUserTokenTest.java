@@ -1,4 +1,4 @@
-package pl.cashgoals.integration.user;
+package pl.cashgoals.endtoend;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mockStatic;
 
-class RefreshTokenTest extends AbstractIntegrationTest {
+class RefreshUserTokenTest extends AbstractIntegrationTest {
 
     @Autowired
     private JwtEncoder jwtEncoder;

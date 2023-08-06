@@ -1,9 +1,6 @@
 package pl.cashgoals.user.persistence.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity(name = "user_entity")
 @Getter
@@ -29,6 +27,9 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private transient List<UserToken> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
