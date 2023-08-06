@@ -1,4 +1,4 @@
-package pl.cashgoals.graphql.business.message;
+package pl.cashgoals.utils.business.message;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 

@@ -1,4 +1,4 @@
-package pl.cashgoals.graphql.business.exception;
+package pl.cashgoals.utils.business.exception;
 
 public class GraphQLValidationException extends AbstractGraphQLException {
 

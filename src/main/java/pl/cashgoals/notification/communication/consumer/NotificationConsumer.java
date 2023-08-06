@@ -1,0 +1,19 @@
+package pl.cashgoals.notification.communication.consumer;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+import pl.cashgoals.notification.business.service.NotificationService;
+import pl.cashgoals.notification.business.model.Notification;
+import pl.cashgoals.notification.communication.configuration.NotificationQueueConfiguration;
+
+@Component
+@RequiredArgsConstructor
+public class NotificationConsumer {
+    private final NotificationService notificationService;
+
+    @RabbitListener(queues = {NotificationQueueConfiguration.QUEUE_NAME, NotificationQueueConfiguration.QUEUE_DLQ_NAME})
+    public void consume(Notification notification) {
+        notificationService.consume(notification);
+    }
+}

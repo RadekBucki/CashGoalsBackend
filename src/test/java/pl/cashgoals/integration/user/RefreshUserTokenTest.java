@@ -1,4 +1,4 @@
-package pl.cashgoals.endtoend;
+package pl.cashgoals.integration.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
