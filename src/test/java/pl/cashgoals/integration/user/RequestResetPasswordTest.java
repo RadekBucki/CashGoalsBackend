@@ -1,5 +1,6 @@
 package pl.cashgoals.integration.user;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
@@ -15,8 +16,8 @@ class RequestResetPasswordTest extends AbstractIntegrationTest {
         userRequests.requestPasswordReset("test@example.com")
                 .errors().verify()
                 .path("requestPasswordReset")
-                .entity(String.class)
-                .satisfies(response -> assertEquals("cashgoals.user.password-reset-requested", response));
+                .entity(Boolean.class)
+                .satisfies(Assertions::assertTrue);
 
         greenMail.waitForIncomingEmail(1);
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();

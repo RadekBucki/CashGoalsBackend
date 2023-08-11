@@ -1,5 +1,6 @@
 package pl.cashgoals.integration.user;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.graphql.execution.ErrorType;
@@ -29,8 +30,8 @@ class ActivateUserTest extends AbstractIntegrationTest {
         userRequests.activateUser(user.getEmail(), token)
                 .errors().verify()
                 .path("activateUser")
-                .entity(String.class)
-                .satisfies(response -> assertEquals("cashgoals.user.activated", response));
+                .entity(Boolean.class)
+                .satisfies(Assertions::assertTrue);
 
         user = userRepository.getUserByEmail("inactive@example.com").orElseThrow();
 

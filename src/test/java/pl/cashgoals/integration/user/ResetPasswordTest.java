@@ -1,6 +1,7 @@
 package pl.cashgoals.integration.user;
 
 import graphql.ErrorType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
@@ -31,8 +32,8 @@ class ResetPasswordTest extends AbstractIntegrationTest {
         userRequests.resetPassword("test@example.com", "token", "Test123@")
                 .errors().verify()
                 .path("resetPassword")
-                .entity(String.class)
-                .satisfies(response -> assertEquals("cashgoals.user.password-reset", response));
+                .entity(Boolean.class)
+                .satisfies(Assertions::assertTrue);
 
         user = userRepository.getUserByEmail("test@example.com")
                 .orElseThrow();

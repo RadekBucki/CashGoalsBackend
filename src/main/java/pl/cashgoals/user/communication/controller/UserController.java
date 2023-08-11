@@ -46,4 +46,9 @@ public class UserController {
     public User user(Principal principal) {
         return userService.getUserByUsername(principal.getName());
     }
+
+    @MutationMapping
+    public Boolean activateUser(@Argument String token, @Argument String email) {
+        return userService.activateUser(token, email);
+    }
 }

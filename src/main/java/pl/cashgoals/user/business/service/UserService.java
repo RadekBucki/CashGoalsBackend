@@ -18,6 +18,7 @@ import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.user.persistence.model.UserToken;
 import pl.cashgoals.user.persistence.repository.UserRepository;
+import pl.cashgoals.utils.business.exception.GraphQLBadRequestException;
 
 import java.security.Principal;
 import java.util.List;
@@ -117,5 +118,26 @@ public class UserService implements UserDetailsService {
                 tokenService.generateRefreshToken(user, accessToken),
                 user
         );
+    }
+
+    public Boolean activateUser(String token, String email) {
+        User user = userRepository.getUserByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (user.isEnabled()) {
+            throw new GraphQLBadRequestException("cashgoals.user.already-activated");
+        }
+
+        UserToken userToken = user.getTokens().stream()
+                .filter(userToken1 -> userToken1.getType() == TokenType.ACTIVATION)
+                .filter(userToken1 -> userToken1.getToken().equals(token))
+                .findFirst()
+                .orElseThrow(() -> new GraphQLBadRequestException("cashgoals.user.bad-activation-token"));
+
+        user.setEnabled(true);
+        user.getTokens().remove(userToken);
+        userRepository.saveAndFlush(user);
+
+        return true;
     }
 }
