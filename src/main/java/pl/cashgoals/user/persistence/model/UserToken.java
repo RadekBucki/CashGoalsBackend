@@ -22,6 +22,7 @@ public class UserToken implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String token;
+    @Enumerated(EnumType.STRING)
     private TokenType type;
 
     @ManyToOne(fetch = FetchType.LAZY)

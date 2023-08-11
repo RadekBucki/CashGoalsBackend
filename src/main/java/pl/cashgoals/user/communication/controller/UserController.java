@@ -51,4 +51,14 @@ public class UserController {
     public Boolean activateUser(@Argument String token, @Argument String email) {
         return userService.activateUser(token, email);
     }
+
+    @MutationMapping
+    public Boolean requestPasswordReset(@Argument String email, @Argument String resetUrl) {
+        return userService.requestPasswordReset(email, resetUrl);
+    }
+
+    @MutationMapping
+    public Boolean resetPassword(@Argument String email, @Argument String token, @Argument String password) {
+        return userService.resetPassword(email, token, password);
+    }
 }

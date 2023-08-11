@@ -8,7 +8,7 @@ extend type Mutation {
     createUser(input: CreateUserInput!): User!
     updateUser(input: UserInput!): User!
     activateUser(email: String!, token: String!): Boolean!
-    requestPasswordReset(email: String!): Boolean!
+    requestPasswordReset(email: String!, resetUrl: String!): Boolean!
     resetPassword(email: String!, token: String!, password: String!): Boolean!
 }
 

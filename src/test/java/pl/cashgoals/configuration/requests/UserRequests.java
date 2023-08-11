@@ -48,7 +48,8 @@ public class UserRequests {
         Map<String, String> userInput = Map.of(
                 "username", username,
                 "password", password,
-                "email", email
+                "email", email,
+                "activationUrl", "http://some-web.com/activate"
         );
         return graphQlTester.documentName("user/updateUser")
                 .variable("userInput", userInput)
@@ -70,6 +71,7 @@ public class UserRequests {
     public GraphQlTester.Response requestPasswordReset(String email) {
         return graphQlTester.documentName("user/requestPasswordReset")
                 .variable("email", email)
+                .variable("resetUrl", "http://some-web.com/reset")
                 .execute();
     }
 

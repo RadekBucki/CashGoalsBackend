@@ -121,21 +121,72 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean activateUser(String token, String email) {
+        User user = userRepository.getActiveUserByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (
+                user.getTokens()
+                        .stream()
+                        .filter(userToken -> userToken.getType() == TokenType.ACTIVATION)
+                        .filter(userToken -> userToken.getToken().equals(token))
+                        .findFirst()
+                        .isEmpty()
+        ) {
+            throw new GraphQLBadRequestException("cashgoals.user.bad-activation-token");
+        }
+
+        user.setEnabled(true);
+        user.getTokens().removeIf(userToken -> userToken.getType() == TokenType.ACTIVATION);
+        userRepository.saveAndFlush(user);
+
+        return true;
+    }
+
+    public Boolean requestPasswordReset(String email, String resetUrl) {
         User user = userRepository.getUserByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.isEnabled()) {
-            throw new GraphQLBadRequestException("cashgoals.user.already-activated");
+        String code = tokenService.generateRandomCode();
+
+        UserToken userToken = UserToken.builder()
+                .user(user)
+                .token(code)
+                .type(TokenType.RESET_PASSWORD)
+                .build();
+
+        user.getTokens().add(userToken);
+        userRepository.saveAndFlush(user);
+
+        notificationFacade.sendNotification(
+                Template.RESET_PASSWORD,
+                user,
+                Map.of(
+                        "url", resetUrl + "?user=" + user.getEmail() + "&code=" + code,
+                        "code", code
+                ),
+                List.of(Source.EMAIL)
+        );
+
+        return true;
+    }
+
+    public Boolean resetPassword(String email, String token, String newPassword) {
+        User user = userRepository.getUserByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (
+                user.getTokens()
+                        .stream()
+                        .filter(userToken -> userToken.getType() == TokenType.RESET_PASSWORD)
+                        .filter(userToken -> userToken.getToken().equals(token))
+                        .findFirst()
+                        .isEmpty()
+        ) {
+            throw new GraphQLBadRequestException("cashgoals.user.bad-reset-password-token");
         }
 
-        UserToken userToken = user.getTokens().stream()
-                .filter(userToken1 -> userToken1.getType() == TokenType.ACTIVATION)
-                .filter(userToken1 -> userToken1.getToken().equals(token))
-                .findFirst()
-                .orElseThrow(() -> new GraphQLBadRequestException("cashgoals.user.bad-activation-token"));
-
-        user.setEnabled(true);
-        user.getTokens().remove(userToken);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.getTokens().removeIf(userToken -> userToken.getType() == TokenType.RESET_PASSWORD);
         userRepository.saveAndFlush(user);
 
         return true;

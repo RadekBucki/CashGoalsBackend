@@ -64,7 +64,7 @@ class ActivateUserTest extends AbstractIntegrationTest {
         userRequests.activateUser(user.getEmail(), "token")
                 .errors()
                 .expect(responseError ->
-                        Objects.equals(responseError.getMessage(), "cashgoals.user.already-activated")
+                        Objects.equals(responseError.getMessage(), "cashgoals.user.not-found")
                                 && Objects.equals(responseError.getErrorType(), ErrorType.BAD_REQUEST)
                 )
                 .verify();

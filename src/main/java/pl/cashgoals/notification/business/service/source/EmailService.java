@@ -36,8 +36,8 @@ public class EmailService implements SendMessageService {
         variables.put("user", notification.getUser());
         context.setVariables(Collections.unmodifiableMap(variables));
 
-        String body = templateEngine.process(notification.getTemplate().getName(), context);
         try {
+            String body = templateEngine.process(notification.getTemplate().getName(), context);
             MimeMessage message = javaMailSender.createMimeMessage();
             message.setSubject(getSubject(notification));
             MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());

@@ -31,8 +31,8 @@ class RequestResetPasswordTest extends AbstractIntegrationTest {
         userRequests.requestPasswordReset("notexistingemail@example.com")
                 .errors().verify()
                 .path("requestPasswordReset")
-                .entity(String.class).
-                satisfies(response -> assertEquals("cashgoals.user.password-reset-requested", response));
+                .entity(String.class)
+                .satisfies(response -> assertEquals("cashgoals.user.password-reset-requested", response));
 
         greenMail.waitForIncomingEmail(0);
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
