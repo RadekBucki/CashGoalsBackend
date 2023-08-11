@@ -7,13 +7,16 @@ import org.springframework.stereotype.Service;
 import pl.cashgoals.user.persistence.model.User;
 
 import java.time.Instant;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class TokenService {
     private static final int HOURS_TO_SECONDS_MULTIPLIER = 60 * 60;
     private static final int DAYS_TO_SECONDS_MULTIPLIER = 60 * 60 * 24;
+    private static final int RANDOM_CODE_LENGTH = 10;
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String USERNAME = "username";
 
@@ -63,5 +66,13 @@ public class TokenService {
         Jwt accessTokenJwt = jwtDecoder.decode(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN));
         return Objects.equals(refreshTokenJwt.getClaimAsString(USERNAME),accessTokenJwt.getSubject())
                 && Objects.equals(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN), accessToken);
+    }
+
+    public String generateRandomCode() {
+        return UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .substring(0, RANDOM_CODE_LENGTH)
+                .toUpperCase(Locale.ENGLISH);
     }
 }

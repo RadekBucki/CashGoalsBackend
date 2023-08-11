@@ -2,7 +2,10 @@ package pl.cashgoals.user.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
@@ -12,7 +15,9 @@ import java.sql.Timestamp;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserToken {
+public class UserToken implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,5 +28,7 @@ public class UserToken {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(updatable = false)
+    @CreationTimestamp
     private Timestamp createdAt;
 }

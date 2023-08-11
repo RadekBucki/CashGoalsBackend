@@ -8,7 +8,5 @@ spring:
       mode: always
   mail:
     host: 127.0.0.1
-    username: admin
-    password: admin
     port: 3025
     protocol: smtp

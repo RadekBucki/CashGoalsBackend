@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS user_entity
 CREATE TABLE IF NOT EXISTS user_token
 (
     id         SERIAL       NOT NULL,
-    token      VARCHAR(100) NOT NULL,
-    type       VARCHAR(100) NOT NULL,
+    token      VARCHAR(10) NOT NULL,
+    type       VARCHAR(20) NOT NULL,
     user_id    INTEGER      NOT NULL,
     created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES user_entity (id)
+    FOREIGN KEY (user_id) REFERENCES user_entity (id) ON DELETE CASCADE
 );

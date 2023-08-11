@@ -5,7 +5,7 @@ extend type Query {
 extend type Mutation {
     login(username: String!, password: String!): LoginOutput!
     refreshToken(token: String!): LoginOutput!
-    createUser(input: UserInput!): User!
+    createUser(input: CreateUserInput!): User!
     updateUser(input: UserInput!): User!
     activateUser(email: String!, token: String!): String!
     requestPasswordReset(email: String!): String!
@@ -21,6 +21,13 @@ type LoginOutput {
     accessToken: String!
     refreshToken: String!
     user: User!
+}
+
+input CreateUserInput {
+    username: String!
+    email: String!
+    password: String!
+    activationUrl: String!
 }
 
 input UserInput {

@@ -1,19 +1,27 @@
 package pl.cashgoals.user.business.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import pl.cashgoals.notification.business.NotificationFacade;
+import pl.cashgoals.notification.business.model.Template;
+import pl.cashgoals.notification.business.service.source.Source;
 import pl.cashgoals.user.business.exception.BadRefreshTokenException;
 import pl.cashgoals.user.business.exception.UserNotFoundException;
 import pl.cashgoals.user.business.model.LoginOutput;
 import pl.cashgoals.user.business.model.UserInput;
+import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
+import pl.cashgoals.user.persistence.model.UserToken;
 import pl.cashgoals.user.persistence.repository.UserRepository;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +30,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationFacade notificationFacade;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -34,15 +43,36 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(UserNotFoundException::new);
     }
 
+    @Transactional
     public User createUser(UserInput input) {
-        return userRepository.saveAndFlush(
-                User.builder()
-                        .username(input.username())
-                        .email(input.email())
-                        .password(passwordEncoder.encode(input.password()))
-                        .enabled(false)
-                        .build()
+        User user = User.builder()
+                .username(input.username())
+                .email(input.email())
+                .password(passwordEncoder.encode(input.password()))
+                .enabled(false)
+                .build();
+
+        String code = tokenService.generateRandomCode();
+
+        UserToken token = UserToken.builder()
+                .user(user)
+                .token(code)
+                .type(TokenType.ACTIVATION)
+                .build();
+
+        user.getTokens().add(token);
+        userRepository.saveAndFlush(user);
+
+        notificationFacade.sendNotification(
+                Template.ACTIVATION,
+                user,
+                Map.of(
+                        "url", input.activationUrl() + "?user=" + user.getEmail() + "&code=" + code,
+                        "code", code
+                ),
+                List.of(Source.EMAIL)
         );
+        return user;
     }
 
     public LoginOutput login(String username, String password) {

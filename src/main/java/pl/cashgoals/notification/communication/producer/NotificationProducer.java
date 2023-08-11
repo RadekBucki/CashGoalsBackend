@@ -1,7 +1,7 @@
 package pl.cashgoals.notification.communication.producer;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.stereotype.Component;
 import pl.cashgoals.notification.business.model.Notification;
 import pl.cashgoals.notification.communication.configuration.NotificationQueueConfiguration;
@@ -10,8 +10,13 @@ import pl.cashgoals.notification.communication.configuration.NotificationQueueCo
 @RequiredArgsConstructor
 public class NotificationProducer {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final AmqpTemplate amqpTemplate;
+
     public void publish(Notification notification) {
-        rabbitTemplate.convertAndSend(NotificationQueueConfiguration.QUEUE_NAME, notification);
+        amqpTemplate.convertAndSend(
+                NotificationQueueConfiguration.QUEUE_EXCHANGE_NAME,
+                NotificationQueueConfiguration.QUEUE_NAME,
+                notification
+        );
     }
 }
