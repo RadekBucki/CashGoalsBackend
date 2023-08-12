@@ -68,10 +68,10 @@ public class UserRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response requestPasswordReset(String email) {
+    public GraphQlTester.Response requestPasswordReset(String email, String resetUrl) {
         return graphQlTester.documentName("user/requestPasswordReset")
                 .variable("email", email)
-                .variable("resetUrl", "http://some-web.com/reset")
+                .variable("resetUrl", resetUrl)
                 .execute();
     }
 

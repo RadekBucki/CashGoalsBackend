@@ -147,7 +147,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean requestPasswordReset(String email, String resetUrl) {
-        User user = userRepository.getUserWithTokensByEmail(email)
+        User user = userRepository.getActiveUserByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         String code = tokenService.generateRandomCode();
@@ -175,7 +175,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean resetPassword(String email, String token, String newPassword) {
-        User user = userRepository.getUserWithTokensByEmail(email)
+        User user = userRepository.getActiveUserByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (

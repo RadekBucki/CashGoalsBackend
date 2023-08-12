@@ -13,12 +13,12 @@ import pl.cashgoals.user.business.model.LoginOutput;
 import pl.cashgoals.user.business.model.UserInput;
 import pl.cashgoals.user.business.service.UserService;
 import pl.cashgoals.user.persistence.model.User;
+import pl.cashgoals.validation.business.annotation.URL;
 
 import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-@Validated
 public class UserController {
     private final UserService userService;
 
@@ -56,11 +56,13 @@ public class UserController {
     }
 
     @MutationMapping
-    public Boolean requestPasswordReset(@Argument String email, @Argument String resetUrl) {
+    @Validated
+    public Boolean requestPasswordReset(@Argument String email, @Argument @URL String resetUrl) {
         return userService.requestPasswordReset(email, resetUrl);
     }
 
     @MutationMapping
+    @Validated
     public Boolean resetPassword(
             @Argument String email,
             @Argument String token,
