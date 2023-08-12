@@ -19,7 +19,8 @@ public class UserRequests {
         Map<String, String> userInput = Map.of(
                 "username", username,
                 "password", password,
-                "email", email
+                "email", email,
+                "activationUrl", "http://some-web.com/activate"
         );
         return graphQlTester.documentName("user/createUser")
                 .variable("userInput", userInput)
@@ -48,8 +49,7 @@ public class UserRequests {
         Map<String, String> userInput = Map.of(
                 "username", username,
                 "password", password,
-                "email", email,
-                "activationUrl", "http://some-web.com/activate"
+                "email", email
         );
         return graphQlTester.documentName("user/updateUser")
                 .variable("userInput", userInput)

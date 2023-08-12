@@ -18,7 +18,7 @@ class ActivateUserTest extends AbstractIntegrationTest {
     @DisplayName("Should activate user")
     @Test
     void shouldActivateUser() {
-        User user = userRepository.getUserByEmail("inactive@example.com").orElseThrow();
+        User user = userRepository.getUserWithTokensByEmail("inactive@example.com").orElseThrow();
         assertFalse(user.isEnabled());
 
         String token = user.getTokens().stream()
@@ -33,7 +33,7 @@ class ActivateUserTest extends AbstractIntegrationTest {
                 .entity(Boolean.class)
                 .satisfies(Assertions::assertTrue);
 
-        user = userRepository.getUserByEmail("inactive@example.com").orElseThrow();
+        user = userRepository.getUserWithTokensByEmail("inactive@example.com").orElseThrow();
 
         assertTrue(user.isEnabled());
 
@@ -64,7 +64,7 @@ class ActivateUserTest extends AbstractIntegrationTest {
         userRequests.activateUser(user.getEmail(), "token")
                 .errors()
                 .expect(responseError ->
-                        Objects.equals(responseError.getMessage(), "cashgoals.user.not-found")
+                        Objects.equals(responseError.getMessage(), "cashgoals.user.already-activated")
                                 && Objects.equals(responseError.getErrorType(), ErrorType.BAD_REQUEST)
                 )
                 .verify();

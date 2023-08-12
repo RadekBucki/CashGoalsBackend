@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> getUserByUsername(String username);
     Optional<User> getUserByEmail(String email);
 
-    @Query("SELECT u FROM user_entity u LEFT JOIN FETCH u.tokens WHERE u.email = :email AND u.enabled = true")
-    Optional<User> getActiveUserByEmail(String email);
+    @Query("SELECT u FROM user_entity u LEFT JOIN FETCH u.tokens WHERE u.email = :email")
+    Optional<User> getUserWithTokensByEmail(String email);
 }

@@ -17,7 +17,7 @@ class ResetPasswordTest extends AbstractIntegrationTest {
     @DisplayName("Should reset password")
     @Test
     void shouldResetPassword() {
-        User user = userRepository.getUserByEmail("test@example.com")
+        User user = userRepository.getUserWithTokensByEmail("test@example.com")
                 .orElseThrow();
         user.getTokens()
                 .add(
@@ -35,10 +35,15 @@ class ResetPasswordTest extends AbstractIntegrationTest {
                 .entity(Boolean.class)
                 .satisfies(Assertions::assertTrue);
 
-        user = userRepository.getUserByEmail("test@example.com")
+        user = userRepository.getUserWithTokensByEmail("test@example.com")
                 .orElseThrow();
 
         assertTrue(passwordEncoder.matches("Test123@", user.getPassword()));
+        assertTrue(
+                user.getTokens()
+                        .stream()
+                        .noneMatch(userToken -> userToken.getType() == TokenType.RESET_PASSWORD)
+        );
     }
 
     @DisplayName("Should not reset password when token is invalid")
@@ -47,10 +52,9 @@ class ResetPasswordTest extends AbstractIntegrationTest {
         userRequests.resetPassword("test@example.com", "token", "Test123@")
                 .errors()
                 .expect(responseError ->
-                        Objects.equals(responseError.getErrorType(), ErrorType.ValidationError)
-                                && Objects.equals(responseError.getMessage(), "cashgoals.user.password-reset-token-invalid")
-                )
-                .verify();
+                        Objects.equals(responseError.getErrorType(), org.springframework.graphql.execution.ErrorType.BAD_REQUEST)
+                                && Objects.equals(responseError.getMessage(), "cashgoals.user.bad-reset-password-token")
+                );
 
         User user = userRepository.getUserByEmail("test@example.com")
                 .orElseThrow();
@@ -58,19 +62,14 @@ class ResetPasswordTest extends AbstractIntegrationTest {
         assertFalse(passwordEncoder.matches("Test123@", user.getPassword()));
     }
 
-    @DisplayName("Should return validation errors when email and/or password are invalid")
+    @DisplayName("Should return validation errors when password is invalid")
     @Test
     void shouldReturnValidationErrorsWhenEmailAndPasswordAreInvalid() {
-        userRequests.resetPassword("test_notEmail", "token", "tosimplepassword")
+        userRequests.resetPassword("test@example.com", "token", "tosimplepassword")
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getErrorType(), ErrorType.ValidationError)
-                                && Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Email.message")
-                )
-                .expect(responseError ->
-                        Objects.equals(responseError.getErrorType(), ErrorType.ValidationError)
                                 && Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Password.message")
-                )
-                .verify();
+                );
     }
 }

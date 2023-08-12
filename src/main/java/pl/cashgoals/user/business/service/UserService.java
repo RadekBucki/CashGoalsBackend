@@ -121,8 +121,12 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean activateUser(String token, String email) {
-        User user = userRepository.getActiveUserByEmail(email)
+        User user = userRepository.getUserWithTokensByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
+
+        if (user.isEnabled()) {
+            throw new GraphQLBadRequestException("cashgoals.user.already-activated");
+        }
 
         if (
                 user.getTokens()
@@ -143,7 +147,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean requestPasswordReset(String email, String resetUrl) {
-        User user = userRepository.getUserByEmail(email)
+        User user = userRepository.getUserWithTokensByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         String code = tokenService.generateRandomCode();
@@ -171,7 +175,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean resetPassword(String email, String token, String newPassword) {
-        User user = userRepository.getUserByEmail(email)
+        User user = userRepository.getUserWithTokensByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (

@@ -23,7 +23,7 @@ public class SendMessageServicesResolver {
                 .toList();
     }
 
-    private List<Source> resolveSources(Notification notification) {
+    private static List<Source> resolveSources(Notification notification) {
         if (notification.getSource().isEmpty()) {
             return List.of(Source.EMAIL);
         } else {

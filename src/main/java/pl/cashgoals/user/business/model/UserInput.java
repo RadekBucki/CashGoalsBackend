@@ -1,7 +1,6 @@
 package pl.cashgoals.user.business.model;
 
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.URL;
 import pl.cashgoals.user.business.annotation.Email;
 import pl.cashgoals.user.business.annotation.Password;
 import pl.cashgoals.user.business.annotation.UniqueEmail;
@@ -20,7 +19,6 @@ public record UserInput(
         @Email
         @UniqueEmail
         String email,
-        @URL
         String activationUrl
 ) {
 

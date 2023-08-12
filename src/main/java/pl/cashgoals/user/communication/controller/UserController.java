@@ -6,7 +6,9 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import pl.cashgoals.user.business.annotation.FullyAuthenticated;
+import pl.cashgoals.user.business.annotation.Password;
 import pl.cashgoals.user.business.model.LoginOutput;
 import pl.cashgoals.user.business.model.UserInput;
 import pl.cashgoals.user.business.service.UserService;
@@ -16,6 +18,7 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
+@Validated
 public class UserController {
     private final UserService userService;
 
@@ -58,7 +61,11 @@ public class UserController {
     }
 
     @MutationMapping
-    public Boolean resetPassword(@Argument String email, @Argument String token, @Argument String password) {
+    public Boolean resetPassword(
+            @Argument String email,
+            @Argument String token,
+            @Argument @Password String password
+    ) {
         return userService.resetPassword(email, token, password);
     }
 }
