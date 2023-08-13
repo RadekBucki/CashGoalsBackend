@@ -29,6 +29,15 @@ spring:
       password: ${REDIS_PASSWORD}
       timeout: ${REDIS_TIMEOUT}
       url: redis://${REDIS_HOST}:${REDIS_PORT}
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 1s # 1m
+          multiplier: 2
+          max-interval: 10m
   mail:
     host: 127.0.0.1
     port: 1025

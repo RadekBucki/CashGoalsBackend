@@ -45,7 +45,7 @@ public class EmailService implements SendMessageService {
             helper.setTo(notification.getUser().getEmail());
             helper.setText(body, true);
             javaMailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (RuntimeException | MessagingException e) {
             log.error("Error while sending email" + e.getMessage(), notification);
             throw new AmqpException(e);
         }

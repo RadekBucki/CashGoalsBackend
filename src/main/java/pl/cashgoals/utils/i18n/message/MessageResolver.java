@@ -1,4 +1,4 @@
-package pl.cashgoals.utils.business.message;
+package pl.cashgoals.utils.i18n.message;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 

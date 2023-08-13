@@ -1,9 +1,9 @@
-package pl.cashgoals.utils.business.exception;
+package pl.cashgoals.utils.graphql.exception;
 
 import graphql.ErrorClassification;
 import lombok.Getter;
 import org.springframework.context.i18n.LocaleContextHolder;
-import pl.cashgoals.utils.business.message.MessageResolver;
+import pl.cashgoals.utils.i18n.message.MessageResolver;
 
 import java.util.Map;
 import java.util.ResourceBundle;

@@ -1,6 +1,6 @@
 package pl.cashgoals.user.business.exception;
 
-import pl.cashgoals.utils.business.exception.GraphQLBadRequestException;
+import pl.cashgoals.utils.graphql.exception.GraphQLBadRequestException;
 
 public class BadRefreshTokenException extends GraphQLBadRequestException {
     private static final String MESSAGE = "cashgoals.user.bad-refresh-token";

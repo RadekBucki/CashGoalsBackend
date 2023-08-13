@@ -1,4 +1,4 @@
-package pl.cashgoals.utils.business.configuration;
+package pl.cashgoals.utils.graphql.configuration;
 
 import graphql.ErrorClassification;
 import graphql.GraphQLError;
@@ -15,8 +15,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
-import pl.cashgoals.utils.business.exception.AbstractGraphQLException;
-import pl.cashgoals.utils.business.message.MessageResolver;
+import pl.cashgoals.utils.graphql.exception.AbstractGraphQLException;
+import pl.cashgoals.utils.i18n.message.MessageResolver;
 
 import java.util.*;
 
