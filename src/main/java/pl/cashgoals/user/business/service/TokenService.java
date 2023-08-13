@@ -1,6 +1,7 @@
 package pl.cashgoals.user.business.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TokenService {
     private static final int HOURS_TO_SECONDS_MULTIPLIER = 60 * 60;
     private static final int DAYS_TO_SECONDS_MULTIPLIER = 60 * 60 * 24;
@@ -62,10 +64,16 @@ public class TokenService {
     }
 
     public boolean verifyRefreshToken(String refreshToken, String accessToken) {
-        Jwt refreshTokenJwt = jwtDecoder.decode(refreshToken);
-        Jwt accessTokenJwt = jwtDecoder.decode(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN));
-        return Objects.equals(refreshTokenJwt.getClaimAsString(USERNAME),accessTokenJwt.getSubject())
-                && Objects.equals(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN), accessToken);
+        try {
+            Jwt refreshTokenJwt = jwtDecoder.decode(refreshToken);
+            Jwt accessTokenJwt = jwtDecoder.decode(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN));
+            return Objects.equals(refreshTokenJwt.getClaimAsString(USERNAME),accessTokenJwt.getSubject())
+                    && Objects.equals(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN), accessToken)
+                    && Objects.requireNonNull(refreshTokenJwt.getExpiresAt()).isAfter(Instant.now());
+        } catch (JwtException e) {
+            log.debug("Invalid refresh token: {0}", e);
+            return false;
+        }
     }
 
     public String generateRandomCode() {
