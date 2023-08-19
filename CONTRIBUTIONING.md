@@ -42,8 +42,8 @@ Issue name should contain issue number from tracker and should be in kebab-case.
 - Commit messages should be in English
 - Commit messages should be short and descriptive
 - **If some changes are weird or hard to describe short extended commit message (after 2 enters) should be added**
-- **If we don't finish issue by the end of the day, we should commit our changes and add `WIP` (work in progress) 
-  to commit message and necessary push it to remote repository**
+- **If we don't finish issue by the end of the day, we should commit our changes and necessary push it to remote 
+  repository**
 - Linguistic rules:
   - Commit messages should be in imperative mood
   - Commit messages should be in present tense
