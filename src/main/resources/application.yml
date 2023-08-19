@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: cashgoals
+  config:
+    import: optional:file:.env[.properties]
+  web:
+    locale-resolver: accept_header
+    locale: en
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      platform: postgresql
+      schema-locations: classpath:db/schema.sql
+  datasource:
+    username: ${POSTGRES_USER:#{user}}
+    password: ${POSTGRES_PASSWORD:#{password}}
+    url: ${POSTGRES_URL}
+  data:
+    redis:
+      database: ${REDIS_DATABASE}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      timeout: ${REDIS_TIMEOUT}
+      url: redis://${REDIS_HOST}:${REDIS_PORT}
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 1s # 1m
+          multiplier: 2
+          max-interval: 10m
+  mail:
+    host: 127.0.0.1
+    port: 1025
+    sender: notification@cashgoals.pl
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  security:
+    password-strength: 10
+    jwt:
+      public-key: classpath:jwt/app.pub
+      private-key: classpath:jwt/app.key
+      access-expiration-in-hours: ${JTW_EXPIRATION_IN_HOURS}
+      refresh-expiration-in-days: ${JTW_REFRESH_EXPIRATION_IN_DAYS}

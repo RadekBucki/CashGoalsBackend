@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+  mail:
+    host: 127.0.0.1
+    port: 3025
+    protocol: smtp
