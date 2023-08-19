@@ -118,7 +118,12 @@ class GraphQLExceptionHandlerTest {
             when(dataFetchingEnvironment.getField()).thenReturn(field);
 
             ReflectionTestUtils.setField(graphQLExceptionHandler, "activeProfile", "prod");
-            Locale.setDefault(Locale.of("test"));
+
+            Locale.setDefault(
+                    new Locale.Builder()
+                            .setLanguage("test")
+                            .build()
+            );
         }
 
         @DisplayName("should return forbidden error when AccessDeniedException is thrown")
