@@ -9,21 +9,6 @@ body:
         Thanks for taking the time to fill out this bug report 🤗
         Make sure there aren't any open/closed issues for this topic 😃
 
-  - type: dropdown
-    id: bug-browser
-    attributes:
-      label: Browser
-      description: Select the browser you are using
-      options:
-        - Chrome
-        - Firefox
-        - Edge
-        - Safari
-        - Opera
-        - Other (Please specify in the description
-    validations:
-      required: true
-
   - type: textarea
     id: bug-description
     attributes:
