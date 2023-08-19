@@ -6,13 +6,12 @@ We use GitLab Flow branching model. That means that we have branches for each en
 
 ```
 master
-  |
-  |--- develop
-  |       |
-  |       |--- feature
-  |       |--- hotfix
-  |       |--- bugfix
-
+  |------------------- hotfix
+  |--- develop            |
+  |       |               |
+  |       |--- feature    |
+  |       |               |
+  |       |--- bugfix     |
 ```
 
 

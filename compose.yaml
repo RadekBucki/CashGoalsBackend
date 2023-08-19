@@ -28,6 +28,14 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+  app:
+    build: .
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
+    volumes:
+      - .m2:/root/.m2
   sonarqube:
     image: sonarqube:latest
     ports:

@@ -7,7 +7,7 @@
 | Frontend                            | https://github.com/RadekBucki/CashGoalsFrontend          |
 | Backend                             | https://github.com/RadekBucki/CashGoalsBackend           |
 
-# Read before start
- - [Contribution guidelines](CONTRIBUTIONING.md)
+## Read before start
+ - [Contribution guidelines](CONTRIBUTING.md)
  - [Code style and quality](CODE.md)
  - [Application setup](SETUP.md)
