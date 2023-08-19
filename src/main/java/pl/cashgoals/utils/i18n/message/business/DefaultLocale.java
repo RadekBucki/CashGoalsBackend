@@ -1,4 +1,4 @@
-package pl.cashgoals.utils.i18n.message;
+package pl.cashgoals.utils.i18n.message.business;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

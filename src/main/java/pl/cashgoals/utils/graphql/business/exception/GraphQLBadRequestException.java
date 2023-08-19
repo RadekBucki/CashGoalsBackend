@@ -1,4 +1,4 @@
-package pl.cashgoals.utils.graphql.exception;
+package pl.cashgoals.utils.graphql.business.exception;
 
 import org.springframework.graphql.execution.ErrorType;
 

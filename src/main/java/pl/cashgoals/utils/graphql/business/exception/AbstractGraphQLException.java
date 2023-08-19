@@ -1,12 +1,10 @@
-package pl.cashgoals.utils.graphql.exception;
+package pl.cashgoals.utils.graphql.business.exception;
 
 import graphql.ErrorClassification;
 import lombok.Getter;
-import org.springframework.context.i18n.LocaleContextHolder;
-import pl.cashgoals.utils.i18n.message.MessageResolver;
+import pl.cashgoals.utils.i18n.message.business.MessageResolver;
 
 import java.util.Map;
-import java.util.ResourceBundle;
 
 @Getter
 public abstract class AbstractGraphQLException extends RuntimeException {
@@ -31,11 +29,6 @@ public abstract class AbstractGraphQLException extends RuntimeException {
 
     @Override
     public String getLocalizedMessage() {
-        String message = ResourceBundle.getBundle("GraphQlExceptionMessages", LocaleContextHolder.getLocale())
-                .getString(super.getLocalizedMessage());
-        for (Map.Entry<String, String> entry : messageArguments.entrySet()) {
-            message = message.replace("{" + entry.getKey() + "}", entry.getValue());
-        }
         return MessageResolver.getGraphQlMessage(super.getLocalizedMessage(), messageArguments);
     }
 }

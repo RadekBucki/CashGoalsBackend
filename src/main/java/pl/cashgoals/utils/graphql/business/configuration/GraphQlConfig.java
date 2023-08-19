@@ -1,4 +1,4 @@
-package pl.cashgoals.utils.graphql.configuration;
+package pl.cashgoals.utils.graphql.business.configuration;
 
 import graphql.scalars.ExtendedScalars;
 import lombok.extern.slf4j.Slf4j;

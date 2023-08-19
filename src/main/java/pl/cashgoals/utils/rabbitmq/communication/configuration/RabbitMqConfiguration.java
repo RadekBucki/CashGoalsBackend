@@ -1,4 +1,4 @@
-package pl.cashgoals.utils.rabbitmq.configuration;
+package pl.cashgoals.utils.rabbitmq.communication.configuration;
 
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;

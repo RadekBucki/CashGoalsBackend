@@ -22,7 +22,7 @@ import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.user.persistence.model.UserToken;
 import pl.cashgoals.user.persistence.repository.UserRepository;
-import pl.cashgoals.utils.graphql.exception.GraphQLBadRequestException;
+import pl.cashgoals.utils.graphql.business.exception.GraphQLBadRequestException;
 
 import java.security.Principal;
 import java.util.ArrayList;
