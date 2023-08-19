@@ -31,6 +31,8 @@ public class BusinessSecurityConfig {
     private RSAPublicKey publicKey;
     @Value("${spring.security.password-strength}")
     private int passwordStrength;
+    @Value("${spring.application.name}")
+    private String applicationName;
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
@@ -53,7 +55,7 @@ public class BusinessSecurityConfig {
     public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
-                .keyID("cashgoals")
+                .keyID(applicationName)
                 .build();
         JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwkSource);
