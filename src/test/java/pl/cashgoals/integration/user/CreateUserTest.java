@@ -25,7 +25,7 @@ class CreateUserTest extends AbstractIntegrationTest {
         response
                 .errors().verify()
                 .path("createUser").entity(User.class).satisfies(user -> {
-                    assertEquals("test1", user.getUsername());
+                    assertEquals("test1", user.getName());
                     assertEquals("test1@example.com", user.getEmail());
                 });
     }
@@ -43,7 +43,7 @@ class CreateUserTest extends AbstractIntegrationTest {
                 .expect(responseError ->
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
                                 Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Size.message") &&
-                                responseError.getPath().equals("createUser.input.username")
+                                responseError.getPath().equals("createUser.input.name")
                 )
                 .expect(responseError ->
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
@@ -55,22 +55,6 @@ class CreateUserTest extends AbstractIntegrationTest {
                                 Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Password.message") &&
                                 responseError.getPath().equals("createUser.input.password")
                 );
-    }
-
-    @DisplayName("Should return error when user with given username already exists")
-    @Test
-    void shouldReturnErrorWhenUserWithGivenUsernameAlreadyExists() {
-        GraphQlTester.Response response = userRequests.createUser(
-                "test",
-                "Test123!",
-                "test1@example.com"
-        );
-
-        response.errors().expect(responseError ->
-                responseError.getErrorType().equals(ErrorType.ValidationError) &&
-                        Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.UsernameExist.message") &&
-                        responseError.getPath().equals("createUser.input.username")
-        );
     }
 
     @DisplayName("Should return error when user with given email already exists")

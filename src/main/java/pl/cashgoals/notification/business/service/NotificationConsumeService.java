@@ -13,7 +13,7 @@ public class NotificationConsumeService {
     private final UserFacade userFacade;
 
     public void consume(Notification notification) {
-        notification.setUser(userFacade.getUserByUsername(notification.getUsername()));
+        notification.setUser(userFacade.getUserByEmail(notification.getEmail()));
         sendMessageServicesResolver.resolve(notification)
                 .forEach(sendMessageService -> sendMessageService.send(notification));
     }

@@ -1,20 +1,20 @@
 CREATE TABLE IF NOT EXISTS user_entity
 (
-    id        SERIAL       NOT NULL,
-    enabled   BOOLEAN      NOT NULL,
-    username  VARCHAR(100) NOT NULL UNIQUE,
-    email     VARCHAR(100) NOT NULL UNIQUE,
-    password  VARCHAR(100) NOT NULL,
+    id       SERIAL       NOT NULL,
+    enabled  BOOLEAN      NOT NULL,
+    name     VARCHAR(100) NOT NULL,
+    email    VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS user_token
 (
-    id         SERIAL       NOT NULL,
+    id         SERIAL      NOT NULL,
     token      VARCHAR(10) NOT NULL,
     type       VARCHAR(20) NOT NULL,
-    user_id    INTEGER      NOT NULL,
-    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id    INTEGER     NOT NULL,
+    created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES user_entity (id) ON DELETE CASCADE
 );

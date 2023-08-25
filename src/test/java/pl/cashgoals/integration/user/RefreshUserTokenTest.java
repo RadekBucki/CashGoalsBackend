@@ -43,7 +43,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
     @BeforeEach
     void setUp() {
         super.setup();
-        loginOutput = userRequests.login("test", "Test123!")
+        loginOutput = userRequests.login("test@example.com", "Test123!")
                 .path("login").entity(LoginOutput.class)
                 .get();
 
@@ -51,7 +51,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
         context.setAuthentication(
                 new JwtAuthenticationToken(
                         Jwt.withTokenValue(loginOutput.accessToken())
-                                .subject(loginOutput.user().getUsername())
+                                .subject(loginOutput.user().getEmail())
                                 .header("Authorization", "Bearer " + loginOutput.accessToken())
                                 .claim("scope", "USER")
                                 .build(),
@@ -67,7 +67,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
         userRequests.refreshToken(loginOutput.refreshToken())
                 .errors().verify()
                 .path("refreshToken").entity(LoginOutput.class).satisfies(loginOutput -> {
-                    assertEquals("test", loginOutput.user().getUsername());
+                    assertEquals("test", loginOutput.user().getName());
                     assertNotNull(loginOutput.accessToken());
                     assertNotNull(loginOutput.refreshToken());
                 });
@@ -107,7 +107,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
         }
     }
 
-    @DisplayName("Should not refresh token when username claim is missing in refresh token")
+    @DisplayName("Should not refresh token when name claim is missing in refresh token")
     @Test
     void shouldNotRefreshTokenWhenUsernameClaimIsMissingInRefreshToken() {
         String refreshToken = jwtEncoder.encode(JwtEncoderParameters.from(
@@ -135,7 +135,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
                         .issuer(issuer)
                         .issuedAt(Instant.now())
                         .expiresAt(Instant.now().plusSeconds(refreshExpirationTime * 24 * 60 * 60))
-                        .claim("username", loginOutput.user().getUsername())
+                        .claim("name", loginOutput.user().getName())
                         .build()
         )).getTokenValue();
         userRequests.refreshToken(refreshToken)

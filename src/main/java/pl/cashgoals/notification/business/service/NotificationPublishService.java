@@ -21,7 +21,7 @@ public class NotificationPublishService {
         Notification notification = Notification.builder()
                 .template(template)
                 .locale(LocaleContextHolder.getLocale())
-                .username(user.getUsername())
+                .email(user.getEmail())
                 .variables(variables)
                 .source(sources)
                 .build();

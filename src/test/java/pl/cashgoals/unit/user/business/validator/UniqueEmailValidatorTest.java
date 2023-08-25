@@ -27,7 +27,7 @@ class UniqueEmailValidatorTest {
     @BeforeEach
     void setUp() {
         SecurityContextHolder.clearContext();
-        user.setUsername("example");
+        user.setName("example");
         uniqueEmailValidator.initialize(uniqueEmail);
     }
 

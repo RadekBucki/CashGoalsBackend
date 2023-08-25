@@ -21,7 +21,7 @@ public class Notification implements Serializable {
     private Template template;
     private Locale locale;
     private User user;
-    private String username;
+    private String email;
     private Map<String, String> variables;
     private List<Source> source;
 }

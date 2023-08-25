@@ -65,13 +65,13 @@ class TokenServiceTest {
     void shouldGenerateAccessToken() {
         String token = tokenService.generateAccessToken(
                 User.builder()
-                        .username("username")
+                        .email("test@example.com")
                         .build()
         );
 
         Jwt decodedToken = jwtDecoder.decode(token);
 
-        assertEquals("username", decodedToken.getSubject());
+        assertEquals("test@example.com", decodedToken.getSubject());
         assertEquals("issuer", decodedToken.getClaim(JwtClaimNames.ISS));
         assertEquals(
                 Instant.now().plusSeconds(3600).toEpochMilli(),
@@ -85,14 +85,14 @@ class TokenServiceTest {
     void shouldGenerateRefreshToken() {
         String token = tokenService.generateRefreshToken(
                 User.builder()
-                        .username("username")
+                        .email("test@example.com")
                         .build(),
                 "accessToken"
         );
 
         Jwt decodedToken = jwtDecoder.decode(token);
 
-        assertEquals("username", decodedToken.getClaimAsString("username"));
+        assertEquals("test@example.com", decodedToken.getClaimAsString("email"));
         assertEquals("accessToken", decodedToken.getClaimAsString("accessToken"));
         assertEquals("issuer", decodedToken.getClaim(JwtClaimNames.ISS));
         assertEquals(
@@ -110,12 +110,12 @@ class TokenServiceTest {
         void shouldReturnTrueWhenTokenIsValid() {
             String accessToken = tokenService.generateAccessToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build()
             );
             String refreshToken = tokenService.generateRefreshToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build(),
                     accessToken
             );
@@ -128,12 +128,12 @@ class TokenServiceTest {
         void shouldReturnFalseWhenTokenIsInvalid() {
             String accessToken = tokenService.generateAccessToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build()
             );
             String refreshToken = tokenService.generateRefreshToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build(),
                     accessToken
             );
@@ -152,12 +152,12 @@ class TokenServiceTest {
         void shouldReturnFalseWhenRefreshTokenIsExpired() {
             String accessToken = tokenService.generateAccessToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build()
             );
             String refreshToken = tokenService.generateRefreshToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build(),
                     accessToken
             );
@@ -174,17 +174,17 @@ class TokenServiceTest {
             }
         }
 
-        @DisplayName("Should return false when username in refresh token is different than access token subject")
+        @DisplayName("Should return false when name in refresh token is different than access token subject")
         @Test
         void shouldReturnFalseWhenUsernameInRefreshTokenIsDifferentThanAccessTokenSubject() {
             String accessToken = tokenService.generateAccessToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build()
             );
             String refreshToken = tokenService.generateRefreshToken(
                     User.builder()
-                            .username("username2")
+                            .email("email2")
                             .build(),
                     accessToken
             );
@@ -197,12 +197,12 @@ class TokenServiceTest {
         void shouldReturnFalseWhenRefreshTokenHasDifferentAccessToken() {
             String accessToken = tokenService.generateAccessToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build()
             );
             String refreshToken = tokenService.generateRefreshToken(
                     User.builder()
-                            .username("username")
+                            .email("test@example.com")
                             .build(),
                     accessToken + "invalid"
             );

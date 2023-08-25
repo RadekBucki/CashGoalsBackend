@@ -34,17 +34,17 @@ class LoginTest extends AbstractIntegrationTest {
     @DisplayName("Should login")
     @Test
     void shouldLogin() {
-        GraphQlTester.Response response = userRequests.login("test", "Test123!");
+        GraphQlTester.Response response = userRequests.login("test@example.com", "Test123!");
 
         response
                 .errors().verify()
                 .path("login").entity(LoginOutput.class).satisfies(loginOutput -> {
-                    assertEquals("test", loginOutput.user().getUsername());
+                    assertEquals("test", loginOutput.user().getName());
                     assertEquals("test@example.com", loginOutput.user().getEmail());
 
                     Jwt accessToken = jwtDecoder.decode(loginOutput.accessToken());
                     assertEquals(issuer, accessToken.getClaim(JwtClaimNames.ISS));
-                    assertEquals("test", accessToken.getSubject());
+                    assertEquals("test@example.com", accessToken.getSubject());
                     assertNotNull(accessToken.getIssuedAt());
                     assertEquals(accessToken.getIssuedAt().toEpochMilli(), Instant.now().toEpochMilli(), 3000);
                     assertNotNull(accessToken.getExpiresAt());
@@ -56,7 +56,7 @@ class LoginTest extends AbstractIntegrationTest {
 
                     Jwt refreshToken = jwtDecoder.decode(loginOutput.refreshToken());
                     assertEquals(issuer, refreshToken.getClaim(JwtClaimNames.ISS));
-                    assertEquals("test", refreshToken.getClaimAsString("username"));
+                    assertEquals("test@example.com", refreshToken.getClaimAsString("email"));
                     assertEquals(loginOutput.accessToken(), refreshToken.getClaimAsString("accessToken"));
                     assertNotNull(refreshToken.getIssuedAt());
                     assertEquals(refreshToken.getIssuedAt().toEpochMilli(), Instant.now().toEpochMilli(), 3000);
@@ -72,7 +72,7 @@ class LoginTest extends AbstractIntegrationTest {
     @DisplayName("Should return error when password is incorrect")
     @Test
     void shouldReturnErrorWhenPasswordIsIncorrect() {
-        GraphQlTester.Response response = userRequests.login("test", "incorrect");
+        GraphQlTester.Response response = userRequests.login("test@example.com", "incorrect");
 
         response.errors()
                 .expect(responseError -> responseError.getErrorType().equals(ErrorType.NOT_FOUND) &&
@@ -84,7 +84,7 @@ class LoginTest extends AbstractIntegrationTest {
     @DisplayName("Should return error when user does not exist")
     @Test
     void shouldReturnErrorWhenUserDoesNotExist() {
-        GraphQlTester.Response response = userRequests.login("not-exist", "incorrect");
+        GraphQlTester.Response response = userRequests.login("not-exist@example.com", "incorrect");
 
         response.errors()
                 .expect(responseError -> responseError.getErrorType().equals(ErrorType.NOT_FOUND) &&
@@ -96,7 +96,7 @@ class LoginTest extends AbstractIntegrationTest {
     @DisplayName("Should return error when user is not active")
     @Test
     void shouldReturnErrorWhenUserIsNotActive() {
-        GraphQlTester.Response response = userRequests.login("inactive", "Test123!");
+        GraphQlTester.Response response = userRequests.login("inactive@example.com", "Test123!");
 
         response.errors()
                 .expect(responseError -> responseError.getErrorType().equals(ErrorType.NOT_FOUND) &&

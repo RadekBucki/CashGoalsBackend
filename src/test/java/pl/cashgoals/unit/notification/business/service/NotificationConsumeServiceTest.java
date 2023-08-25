@@ -37,12 +37,12 @@ class NotificationConsumeServiceTest {
     @DisplayName("Should consume notification")
     @Test
     void shouldConsumeNotification() {
-        when(userFacade.getUserByUsername("username"))
+        when(userFacade.getUserByEmail("name"))
                 .thenReturn(new User());
         when(sendMessageServicesResolver.resolve(any()))
                 .thenReturn(List.of(sendMessageService));
         Notification notification = Notification.builder()
-                .username("username")
+                .email("name")
                 .build();
 
         notificationConsumeService.consume(notification);
@@ -59,12 +59,12 @@ class NotificationConsumeServiceTest {
     @DisplayName("Should call message service 2 times")
     @Test
     void shouldCallMessageService2Times() {
-        when(userFacade.getUserByUsername("username"))
+        when(userFacade.getUserByEmail("name"))
                 .thenReturn(new User());
         when(sendMessageServicesResolver.resolve(any()))
                 .thenReturn(List.of(sendMessageService, sendMessageService));
         Notification notification = Notification.builder()
-                .username("username")
+                .email("name")
                 .build();
 
         notificationConsumeService.consume(notification);

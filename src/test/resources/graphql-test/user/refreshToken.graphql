@@ -3,7 +3,7 @@ mutation refreshToken($token: String!) {
         refreshToken
         accessToken
         user {
-            username
+            name
             email
         }
     }
