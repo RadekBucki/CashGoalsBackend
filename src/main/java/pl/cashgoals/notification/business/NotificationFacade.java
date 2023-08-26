@@ -17,6 +17,5 @@ public class NotificationFacade {
 
     public void sendNotification(Template template, User user, Map<String, String> variables, List<Source> sources) {
         notificationPublishService.publish(template, user, variables, sources);
-
     }
 }
