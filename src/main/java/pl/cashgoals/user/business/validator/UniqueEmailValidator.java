@@ -23,10 +23,10 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         Optional<User> user = userRepository.getUserByEmail(value);
-        return user.isEmpty() || user.get().getName().equals(getUserName());
+        return user.isEmpty() || user.get().getEmail().equals(getLoggedUserEmail());
     }
 
-    public String getUserName() {
+    public String getLoggedUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return null;
