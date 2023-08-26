@@ -34,20 +34,19 @@ public class UserService implements UserDetailsService {
     private final NotificationFacade notificationFacade;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        return userRepository.getUserByUsername(username)
-                .orElseThrow(UserNotFoundException::new);
+    public UserDetails loadUserByUsername(String email) {
+        return getUserByEmail(email);
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.getUserByUsername(username)
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional
     public User createUser(UserInput input) {
         User user = User.builder()
-                .username(input.username())
+                .name(input.name())
                 .email(input.email())
                 .password(passwordEncoder.encode(input.password()))
                 .enabled(false)
@@ -76,8 +75,8 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public LoginOutput login(String username, String password) {
-        User user = getUserByUsername(username);
+    public LoginOutput login(String email, String password) {
+        User user = getUserByEmail(email);
 
         if (
                 !passwordEncoder.matches(password, user.getPassword())
@@ -96,9 +95,9 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateUser(UserInput input, Principal principal) {
-        User user = getUserByUsername(principal.getName());
+        User user = getUserByEmail(principal.getName());
 
-        user.setUsername(input.username());
+        user.setName(input.name());
         user.setEmail(input.email());
         user.setPassword(passwordEncoder.encode(input.password()));
 
@@ -109,7 +108,7 @@ public class UserService implements UserDetailsService {
         if (!tokenService.verifyRefreshToken(token, ((JwtAuthenticationToken) principal).getToken().getTokenValue())) {
             throw new BadRefreshTokenException();
         }
-        User user = getUserByUsername(principal.getName());
+        User user = getUserByEmail(principal.getName());
 
         String accessToken = tokenService.generateAccessToken(user);
 

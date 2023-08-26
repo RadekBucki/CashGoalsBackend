@@ -16,7 +16,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
 
     @DisplayName("Should update user")
     @Test
-    @WithMockUser(username = "test", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
     void shouldUpdateUser() {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
@@ -27,14 +27,14 @@ class UpdateUserTest extends AbstractIntegrationTest {
         response
                 .errors().verify()
                 .path("updateUser").entity(User.class).satisfies(user -> {
-                    assertEquals("test1", user.getUsername());
+                    assertEquals("test1", user.getName());
                     assertEquals("test1@example.com", user.getEmail());
                 });
     }
 
     @DisplayName("Should return validation errors")
     @Test
-    @WithMockUser(username = "test", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
     void shouldReturnValidationErrors() {
         GraphQlTester.Response response = userRequests.updateUser(
                 "t",
@@ -46,7 +46,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 .expect(responseError ->
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
                                 Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Size.message") &&
-                                responseError.getPath().equals("updateUser.input.username")
+                                responseError.getPath().equals("updateUser.input.name")
                 )
                 .expect(responseError ->
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
@@ -60,26 +60,9 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 );
     }
 
-    @DisplayName("Should return error when user with given username already exists")
-    @Test
-    @WithMockUser(username = "test", authorities = {"SCOPE_USER"})
-    void shouldReturnErrorWhenUserWithGivenUsernameAlreadyExists() {
-        GraphQlTester.Response response = userRequests.updateUser(
-                "inactive",
-                "Test123!",
-                "test1@example.com"
-        );
-
-        response.errors().expect(responseError ->
-                responseError.getErrorType().equals(ErrorType.ValidationError) &&
-                        Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.UsernameExist.message") &&
-                        responseError.getPath().equals("updateUser.input.username")
-        );
-    }
-
     @DisplayName("Should return error when user with given email already exists")
     @Test
-    @WithMockUser(username = "test", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
     void shouldReturnErrorWhenUserWithGivenEmailAlreadyExists() {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",

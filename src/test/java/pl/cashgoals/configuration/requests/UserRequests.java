@@ -12,12 +12,12 @@ public class UserRequests {
     }
 
     public GraphQlTester.Response createUser(
-            String username,
+            String name,
             String password,
             String email
     ) {
         Map<String, String> userInput = Map.of(
-                "username", username,
+                "name", name,
                 "password", password,
                 "email", email,
                 "activationUrl", "http://some-web.com/activate"
@@ -27,9 +27,9 @@ public class UserRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response login(String username, String password) {
+    public GraphQlTester.Response login(String email, String password) {
         return graphQlTester.documentName("user/login")
-                .variable("username", username)
+                .variable("email", email)
                 .variable("password", password)
                 .execute();
     }
@@ -42,12 +42,12 @@ public class UserRequests {
     }
 
     public GraphQlTester.Response updateUser(
-            String username,
+            String name,
             String password,
             String email
     ) {
         Map<String, String> userInput = Map.of(
-                "username", username,
+                "name", name,
                 "password", password,
                 "email", email
         );

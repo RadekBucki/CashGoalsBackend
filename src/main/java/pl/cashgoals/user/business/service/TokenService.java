@@ -20,7 +20,7 @@ public class TokenService {
     private static final int DAYS_TO_SECONDS_MULTIPLIER = 60 * 60 * 24;
     private static final int RANDOM_CODE_LENGTH = 10;
     private static final String ACCESS_TOKEN = "accessToken";
-    private static final String USERNAME = "username";
+    private static final String EMAIL = "email";
 
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
@@ -40,7 +40,7 @@ public class TokenService {
                         .issuer(issuer)
                         .issuedAt(Instant.now())
                         .expiresAt(Instant.now().plusSeconds(accessExpirationTime * HOURS_TO_SECONDS_MULTIPLIER))
-                        .subject(user.getUsername())
+                        .subject(user.getEmail())
                         .claim("scope",
                                 user.getAuthorities()
                                         .stream()
@@ -57,7 +57,7 @@ public class TokenService {
                         .issuer(issuer)
                         .issuedAt(Instant.now())
                         .expiresAt(Instant.now().plusSeconds(refreshExpirationTime * DAYS_TO_SECONDS_MULTIPLIER))
-                        .claim(USERNAME, user.getUsername())
+                        .claim(EMAIL, user.getEmail())
                         .claim(ACCESS_TOKEN, accessToken)
                         .build()
         )).getTokenValue();
@@ -67,7 +67,7 @@ public class TokenService {
         try {
             Jwt refreshTokenJwt = jwtDecoder.decode(refreshToken);
             Jwt accessTokenJwt = jwtDecoder.decode(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN));
-            return Objects.equals(refreshTokenJwt.getClaimAsString(USERNAME),accessTokenJwt.getSubject())
+            return Objects.equals(refreshTokenJwt.getClaimAsString(EMAIL),accessTokenJwt.getSubject())
                     && Objects.equals(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN), accessToken)
                     && Objects.requireNonNull(refreshTokenJwt.getExpiresAt()).isAfter(Instant.now());
         } catch (JwtException e) {

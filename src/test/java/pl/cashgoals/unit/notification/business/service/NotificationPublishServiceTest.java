@@ -38,7 +38,7 @@ class NotificationPublishServiceTest {
                 Template.ACTIVATION,
                 User.builder()
                         .enabled(true)
-                        .username("username")
+                        .email("test@example.com")
                         .build(),
                 Map.of("key", "value"),
                 List.of(Source.EMAIL)
@@ -49,7 +49,7 @@ class NotificationPublishServiceTest {
         Notification notification = notificationArgumentCaptor.getValue();
         assertNotNull(notification);
         assertEquals(Template.ACTIVATION, notification.getTemplate());
-        assertEquals("username", notification.getUsername());
+        assertEquals("test@example.com", notification.getEmail());
         assertEquals(Map.of("key", "value"), notification.getVariables());
         assertEquals(List.of(Source.EMAIL), notification.getSource());
     }

@@ -50,64 +50,64 @@ class UserServiceTest {
     @InjectMocks
     UserService userService;
 
-    @DisplayName("Load user by username")
+    @DisplayName("Load user by email")
     @Nested
-    class LoadUserByUsernameTest {
-        @DisplayName("Should load user by username")
+    class LoadUserByEmailTest {
+        @DisplayName("Should load user by email")
         @Test
-        void shouldLoadUserByUsername() {
-            when(userRepository.getUserByUsername(anyString()))
+        void shouldLoadUserByEmail() {
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.of(
                             User.builder()
-                                    .username("username")
+                                    .email("test@example.com")
                                     .build()
                     ));
 
-            UserDetails username = userService.loadUserByUsername("username");
+            UserDetails username = userService.loadUserByUsername("test@example.com");
 
-            assertEquals("username", username.getUsername());
+            assertEquals("test@example.com", username.getUsername());
         }
 
         @DisplayName("Should throw exception when user not found")
         @Test
         void shouldThrowExceptionWhenUserNotFound() {
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.empty());
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.loadUserByUsername("username")
+                    () -> userService.loadUserByUsername("test@example.com")
             );
         }
     }
 
-    @DisplayName("Get user by username")
+    @DisplayName("Get user by email")
     @Nested
-    class GetUserByUsernameTest {
-        @DisplayName("Should get user by username")
+    class GetUserByEmailTest {
+        @DisplayName("Should get user by email")
         @Test
-        void shouldGetUserByUsername() {
-            when(userRepository.getUserByUsername(anyString()))
+        void shouldGetUserByEmail() {
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.of(
                             User.builder()
-                                    .username("username")
+                                    .email("test@example.com")
                                     .build()
                     ));
 
-            User username = userService.getUserByUsername("username");
+            User username = userService.getUserByEmail("test@example.com");
 
-            assertEquals("username", username.getUsername());
+            assertEquals("test@example.com", username.getEmail());
         }
 
         @DisplayName("Should throw exception when user not found")
         @Test
         void shouldThrowExceptionWhenUserNotFound() {
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.empty());
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.getUserByUsername("username")
+                    () -> userService.getUserByEmail("test@example.com")
             );
         }
     }
@@ -121,13 +121,13 @@ class UserServiceTest {
                 .thenReturn("code");
 
         User username = userService.createUser(new UserInput(
-                "username",
+                "name",
                 "Qwerty123!",
                 "example@example.com",
                 "http://some-url.com"
         ));
 
-        assertEquals("username", username.getUsername());
+        assertEquals("name", username.getName());
     }
 
     @DisplayName("Login user")
@@ -137,11 +137,11 @@ class UserServiceTest {
         @Test
         void shouldLoginUser() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
                     .enabled(true)
                     .build();
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.of(user));
             when(passwordEncoder.matches(anyString(), anyString()))
                     .thenReturn(true);
@@ -150,9 +150,9 @@ class UserServiceTest {
             when(tokenService.generateRefreshToken(user, "access"))
                     .thenReturn("refresh");
 
-            LoginOutput loginOutput = userService.login("username", "password");
+            LoginOutput loginOutput = userService.login("name", "password");
 
-            assertEquals("username", loginOutput.user().getUsername());
+            assertEquals("name", loginOutput.user().getName());
             assertEquals("access", loginOutput.accessToken());
             assertEquals("refresh", loginOutput.refreshToken());
 
@@ -161,12 +161,12 @@ class UserServiceTest {
         @DisplayName("Should throw exception when user not found")
         @Test
         void shouldThrowExceptionWhenUserNotFound() {
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.empty());
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.login("username", "password")
+                    () -> userService.login("name", "password")
             );
         }
 
@@ -174,18 +174,18 @@ class UserServiceTest {
         @Test
         void shouldThrowExceptionWhenPasswordIsIncorrect() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
                     .enabled(true)
                     .build();
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.of(user));
             when(passwordEncoder.matches(anyString(), anyString()))
                     .thenReturn(false);
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.login("username", "password")
+                    () -> userService.login("name", "password")
             );
         }
 
@@ -193,18 +193,18 @@ class UserServiceTest {
         @Test
         void shouldThrowExceptionWhenUserIsNotEnabled() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
                     .enabled(false)
                     .build();
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.of(user));
             when(passwordEncoder.matches(anyString(), anyString()))
                     .thenReturn(true);
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.login("username", "password")
+                    () -> userService.login("name", "password")
             );
         }
     }
@@ -225,24 +225,24 @@ class UserServiceTest {
             );
 
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
-                    .email("email")
+                    .name("test@example.com")
                     .enabled(true)
                     .build();
 
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.of(user));
             when(passwordEncoder.encode(anyString()))
                     .thenReturn("encoded");
             when(principal.getName())
-                    .thenReturn("username");
+                    .thenReturn("name");
             when(userRepository.saveAndFlush(user))
                     .thenReturn(user);
 
             User updatedUser = userService.updateUser(userInput, principal);
 
-            assertEquals("username2", updatedUser.getUsername());
+            assertEquals("username2", updatedUser.getName());
             assertEquals("encoded", updatedUser.getPassword());
             assertEquals("email2", updatedUser.getEmail());
         }
@@ -256,10 +256,10 @@ class UserServiceTest {
                     "email2",
                     "activationUrl"
             );
-            when(userRepository.getUserByUsername(anyString()))
+            when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.empty());
             when(principal.getName())
-                    .thenReturn("username");
+                    .thenReturn("name");
 
             assertThrows(
                     UserNotFoundException.class,
@@ -284,10 +284,10 @@ class UserServiceTest {
             when(principal.getToken())
                     .thenReturn(jwt);
             when(principal.getName())
-                    .thenReturn("username");
+                    .thenReturn("name");
             when(tokenService.verifyRefreshToken("refreshToken", "token"))
                     .thenReturn(true);
-            when(userRepository.getUserByUsername("username"))
+            when(userRepository.getUserByEmail("name"))
                     .thenReturn(Optional.of(user));
             when(tokenService.generateAccessToken(user))
                     .thenReturn("access");
@@ -308,7 +308,7 @@ class UserServiceTest {
             when(principal.getToken())
                     .thenReturn(jwt);
             when(principal.getName())
-                    .thenReturn("username");
+                    .thenReturn("name");
             when(tokenService.verifyRefreshToken("refreshToken", "token"))
                     .thenReturn(false);
 
@@ -326,12 +326,12 @@ class UserServiceTest {
             when(principal.getToken())
                     .thenReturn(jwt);
             when(principal.getName())
-                    .thenReturn("username");
+                    .thenReturn("name");
             when(principal.getName())
-                    .thenReturn("username");
+                    .thenReturn("name");
             when(tokenService.verifyRefreshToken("refreshToken", "token"))
                     .thenReturn(true);
-            when(userRepository.getUserByUsername("username"))
+            when(userRepository.getUserByEmail("name"))
                     .thenReturn(Optional.empty());
 
             assertThrows(
@@ -348,9 +348,9 @@ class UserServiceTest {
         @Test
         void shouldActivateUser() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
-                    .email("email")
+                    .name("test@example.com")
                     .enabled(false)
                     .tokens(new ArrayList<>(List.of(
                             UserToken.builder()
@@ -363,7 +363,7 @@ class UserServiceTest {
             when(userRepository.getUserWithTokensByEmail(anyString()))
                     .thenReturn(Optional.of(user));
 
-            Boolean result = userService.activateUser("token", "email");
+            Boolean result = userService.activateUser("token", "test@example.com");
 
             assertTrue(result);
             assertTrue(user.isEnabled());
@@ -377,7 +377,7 @@ class UserServiceTest {
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.activateUser("token", "email")
+                    () -> userService.activateUser("token", "test@example.com")
             );
         }
 
@@ -385,9 +385,9 @@ class UserServiceTest {
         @Test
         void shouldThrowExceptionWhenTokenIsIncorrect() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
-                    .email("email")
+                    .name("test@example.com")
                     .enabled(false)
                     .tokens(new ArrayList<>(List.of(
                             UserToken.builder()
@@ -402,7 +402,7 @@ class UserServiceTest {
 
             assertThrows(
                     GraphQLBadRequestException.class,
-                    () -> userService.activateUser("token2", "email")
+                    () -> userService.activateUser("token2", "test@example.com")
             );
         }
 
@@ -410,9 +410,9 @@ class UserServiceTest {
         @Test
         void shouldThrowExceptionWhenUserIsAlreadyEnabled() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
-                    .email("email")
+                    .name("test@example.com")
                     .enabled(true)
                     .tokens(new ArrayList<>(List.of(
                             UserToken.builder()
@@ -427,7 +427,7 @@ class UserServiceTest {
 
             assertThrows(
                     GraphQLBadRequestException.class,
-                    () -> userService.activateUser("token", "email")
+                    () -> userService.activateUser("token", "test@example.com")
             );
         }
     }
@@ -439,9 +439,9 @@ class UserServiceTest {
         @Test
         void shouldRequestPasswordReset() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
-                    .email("email")
+                    .name("test@example.com")
                     .enabled(true)
                     .build();
 
@@ -452,7 +452,7 @@ class UserServiceTest {
             when(userRepository.saveAndFlush(user))
                     .thenReturn(user);
 
-            Boolean result = userService.requestPasswordReset("email", "resetUrl");
+            Boolean result = userService.requestPasswordReset("test@example.com", "resetUrl");
 
             assertTrue(result);
             assertEquals("code", user.getTokens().get(0).getToken());
@@ -466,7 +466,7 @@ class UserServiceTest {
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.requestPasswordReset("email", "resetUrl")
+                    () -> userService.requestPasswordReset("test@example.com", "resetUrl")
             );
         }
     }
@@ -478,9 +478,9 @@ class UserServiceTest {
         @Test
         void shouldResetPassword() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
-                    .email("email")
+                    .name("test@example.com")
                     .enabled(true)
                     .tokens(new ArrayList<>(List.of(
                             UserToken.builder()
@@ -497,7 +497,7 @@ class UserServiceTest {
             when(userRepository.saveAndFlush(user))
                     .thenReturn(user);
 
-            Boolean result = userService.resetPassword("email", "token", "password");
+            Boolean result = userService.resetPassword("test@example.com", "token", "password");
 
             assertTrue(result);
             assertEquals("encoded", user.getPassword());
@@ -511,7 +511,7 @@ class UserServiceTest {
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.resetPassword("email", "token", "password")
+                    () -> userService.resetPassword("test@example.com", "token", "password")
             );
         }
 
@@ -519,9 +519,9 @@ class UserServiceTest {
         @Test
         void shouldThrowExceptionWhenTokenIsIncorrect() {
             User user = User.builder()
-                    .username("username")
+                    .name("name")
                     .password("password")
-                    .email("email")
+                    .name("test@example.com")
                     .enabled(true)
                     .tokens(new ArrayList<>(List.of(
                             UserToken.builder()
@@ -536,7 +536,7 @@ class UserServiceTest {
 
             assertThrows(
                     GraphQLBadRequestException.class,
-                    () -> userService.resetPassword("email", "token2", "password")
+                    () -> userService.resetPassword("test@example.com", "token2", "password")
             );
         }
     }

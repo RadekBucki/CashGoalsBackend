@@ -25,7 +25,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean enabled;
-    private String username;
+    private String name;
     private String email;
     private String password;
 
@@ -37,6 +37,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(Role.USER);
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override

@@ -23,8 +23,8 @@ public class UserController {
     private final UserService userService;
 
     @MutationMapping
-    public LoginOutput login(@Argument String username, @Argument String password) {
-        return userService.login(username, password);
+    public LoginOutput login(@Argument String email, @Argument String password) {
+        return userService.login(email, password);
     }
 
     @MutationMapping
@@ -47,7 +47,7 @@ public class UserController {
     @QueryMapping
     @FullyAuthenticated
     public User user(Principal principal) {
-        return userService.getUserByUsername(principal.getName());
+        return userService.getUserByEmail(principal.getName());
     }
 
     @MutationMapping

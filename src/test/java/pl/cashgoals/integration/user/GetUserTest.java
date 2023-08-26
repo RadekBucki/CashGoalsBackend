@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GetUserTest extends AbstractIntegrationTest {
     @DisplayName("Should get user")
     @Test
-    @WithMockUser(username = "test", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
     void shouldGetUser() {
         userRequests.getUser()
                 .errors().verify()
                 .path("user").entity(User.class).satisfies(user -> {
-                    assertEquals("test", user.getUsername());
+                    assertEquals("test", user.getName());
                     assertEquals("test@example.com", user.getEmail());
                 });
     }

@@ -88,14 +88,14 @@ public abstract class AbstractIntegrationTest {
         // Initial data
         User user = User.builder()
                 .enabled(true)
-                .username("test")
+                .name("test")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("test@example.com")
                 .build();
 
         User inactiveUser = User.builder()
                 .enabled(false)
-                .username("inactive")
+                .name("inactive")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("inactive@example.com")
                 .build();

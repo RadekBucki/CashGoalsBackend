@@ -10,7 +10,7 @@ import pl.cashgoals.user.persistence.model.User;
 public class UserFacade {
     private final UserService userService;
 
-    public User getUserByUsername(String username) {
-        return userService.getUserByUsername(username);
+    public User getUserByEmail(String email) {
+        return userService.getUserByEmail(email);
     }
 }

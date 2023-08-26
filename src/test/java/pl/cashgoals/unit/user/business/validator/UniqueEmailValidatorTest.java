@@ -27,16 +27,16 @@ class UniqueEmailValidatorTest {
     @BeforeEach
     void setUp() {
         SecurityContextHolder.clearContext();
-        user.setUsername("example");
+        user.setEmail("example@example.com");
         uniqueEmailValidator.initialize(uniqueEmail);
     }
 
     @DisplayName("Should return true when email is unique")
     @Test
     void shouldEmailBeUnique() {
-        when(userRepository.getUserByEmail("example@example.com")).thenReturn(Optional.empty());
+        when(userRepository.getUserByEmail("example1@example.com")).thenReturn(Optional.empty());
 
-        boolean result = uniqueEmailValidator.isValid("example@example.com", constraintValidatorContext);
+        boolean result = uniqueEmailValidator.isValid("example1@example.com", constraintValidatorContext);
         Assertions.assertTrue(result);
     }
 
@@ -55,7 +55,7 @@ class UniqueEmailValidatorTest {
         when(userRepository.getUserByEmail("example@example.com")).thenReturn(Optional.of(user));
 
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn("example");
+        when(authentication.getName()).thenReturn("example@example.com");
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);

@@ -39,7 +39,8 @@ class EmailServiceTest {
             .template(Template.ACTIVATION)
             .user(
                     User.builder()
-                            .email("email")
+                            .name("test")
+                            .email("test@example.com")
                             .build()
             )
             .variables(Map.of())
