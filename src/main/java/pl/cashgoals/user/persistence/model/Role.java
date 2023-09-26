@@ -2,6 +2,8 @@ package pl.cashgoals.user.persistence.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Locale;
+
 public enum Role implements GrantedAuthority {
     USER,
     ADMIN;
@@ -11,7 +13,7 @@ public enum Role implements GrantedAuthority {
         return this.name();
     }
 
-    static public Role fromString(String role) {
-        return Role.valueOf(role.toUpperCase());
+    public static Role fromString(String role) {
+        return Role.valueOf(role.toUpperCase(Locale.ROOT));
     }
 }

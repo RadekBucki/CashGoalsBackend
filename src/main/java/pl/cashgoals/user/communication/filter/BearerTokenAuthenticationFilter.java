@@ -56,6 +56,7 @@ public class BearerTokenAuthenticationFilter extends BasicAuthenticationFilter {
                             .toList()
             );
         } catch (JwtException e) {
+            logger.debug("Failed to validate JWT token", e);
             try {
                 JWT jwt = JWTParser.parse(token);
                 authentication = new NotValidAuthenticationToken(

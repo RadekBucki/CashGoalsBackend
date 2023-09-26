@@ -74,10 +74,13 @@ public class TokenService {
                 return false;
             }
             JWT accessTokenJwt = JWTParser.parse(accessTokenClaim);
-            return Objects.equals(refreshTokenJwt.getClaimAsString(EMAIL), accessTokenJwt.getJWTClaimsSet().getSubject())
+            return Objects.equals(
+                    refreshTokenJwt.getClaimAsString(EMAIL),
+                    accessTokenJwt.getJWTClaimsSet().getSubject()
+            )
                     && Objects.equals(accessTokenClaim, accessToken)
                     && Objects.requireNonNull(refreshTokenJwt.getExpiresAt()).isAfter(Instant.now());
-        } catch (JwtException|ParseException e) {
+        } catch (JwtException | ParseException e) {
             log.debug("Invalid access token: {0}", e);
             return false;
         }
