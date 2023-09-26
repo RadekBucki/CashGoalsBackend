@@ -7,10 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import pl.cashgoals.notification.business.NotificationFacade;
 import pl.cashgoals.user.business.exception.BadRefreshTokenException;
 import pl.cashgoals.user.business.exception.UserNotFoundException;
@@ -272,18 +271,15 @@ class UserServiceTest {
     @DisplayName("Refresh token")
     @Nested
     class RefreshTokenTest {
-        JwtAuthenticationToken principal = mock(JwtAuthenticationToken.class);
-        Jwt jwt = mock(Jwt.class);
+        Authentication authentication = mock(Authentication.class);
 
         @DisplayName("Should refresh token")
         @Test
         void shouldRefreshToken() {
             User user = new User();
-            when(jwt.getTokenValue())
+            when(authentication.getCredentials())
                     .thenReturn("token");
-            when(principal.getToken())
-                    .thenReturn(jwt);
-            when(principal.getName())
+            when(authentication.getName())
                     .thenReturn("name");
             when(tokenService.verifyRefreshToken("refreshToken", "token"))
                     .thenReturn(true);
@@ -294,7 +290,7 @@ class UserServiceTest {
             when(tokenService.generateRefreshToken(user, "access"))
                     .thenReturn("refresh");
 
-            LoginOutput loginOutput = userService.refreshToken("refreshToken", principal);
+            LoginOutput loginOutput = userService.refreshToken("refreshToken", authentication);
 
             assertEquals("access", loginOutput.accessToken());
             assertEquals("refresh", loginOutput.refreshToken());
@@ -303,31 +299,27 @@ class UserServiceTest {
         @DisplayName("Should throw exception when refresh token is incorrect")
         @Test
         void shouldThrowExceptionWhenRefreshTokenIsIncorrect() {
-            when(jwt.getTokenValue())
+            when(authentication.getCredentials())
                     .thenReturn("token");
-            when(principal.getToken())
-                    .thenReturn(jwt);
-            when(principal.getName())
+            when(authentication.getName())
                     .thenReturn("name");
             when(tokenService.verifyRefreshToken("refreshToken", "token"))
                     .thenReturn(false);
 
             assertThrows(
                     BadRefreshTokenException.class,
-                    () -> userService.refreshToken("refreshToken", principal)
+                    () -> userService.refreshToken("refreshToken", authentication)
             );
         }
 
         @DisplayName("Should throw exception when user not found")
         @Test
         void shouldThrowExceptionWhenUserNotFound() {
-            when(jwt.getTokenValue())
+            when(authentication.getCredentials())
                     .thenReturn("token");
-            when(principal.getToken())
-                    .thenReturn(jwt);
-            when(principal.getName())
+            when(authentication.getName())
                     .thenReturn("name");
-            when(principal.getName())
+            when(authentication.getName())
                     .thenReturn("name");
             when(tokenService.verifyRefreshToken("refreshToken", "token"))
                     .thenReturn(true);
@@ -336,7 +328,7 @@ class UserServiceTest {
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.refreshToken("refreshToken", principal)
+                    () -> userService.refreshToken("refreshToken", authentication)
             );
         }
     }

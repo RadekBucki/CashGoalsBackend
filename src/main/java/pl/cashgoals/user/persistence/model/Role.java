@@ -10,4 +10,8 @@ public enum Role implements GrantedAuthority {
     public String getAuthority() {
         return this.name();
     }
+
+    static public Role fromString(String role) {
+        return Role.valueOf(role.toUpperCase());
+    }
 }
