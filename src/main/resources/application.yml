@@ -35,7 +35,7 @@ spring:
         retry:
           enabled: true
           max-attempts: 3
-          initial-interval: 1s # 1m
+          initial-interval: 1m
           multiplier: 2
           max-interval: 10m
   mail:

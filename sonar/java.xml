@@ -884,13 +884,6 @@
         </rule>
         <rule>
             <repositoryKey>java</repositoryKey>
-            <key>S1309</key>
-            <type>CODE_SMELL</type>
-            <priority>INFO</priority>
-            <parameters/>
-        </rule>
-        <rule>
-            <repositoryKey>java</repositoryKey>
             <key>S131</key>
             <type>CODE_SMELL</type>
             <priority>CRITICAL</priority>

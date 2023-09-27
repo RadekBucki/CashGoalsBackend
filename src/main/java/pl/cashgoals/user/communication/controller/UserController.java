@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import pl.cashgoals.user.business.annotation.FullyAuthenticated;
@@ -39,9 +40,8 @@ public class UserController {
     }
 
     @MutationMapping
-    @FullyAuthenticated
-    public LoginOutput refreshToken(@Argument String token, Principal principal) {
-        return userService.refreshToken(token, principal);
+    public LoginOutput refreshToken(@Argument String token, Authentication authentication) {
+        return userService.refreshToken(token, authentication);
     }
 
     @QueryMapping

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GetUserTest extends AbstractIntegrationTest {
     @DisplayName("Should get user")
     @Test
-    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"USER"})
     void shouldGetUser() {
         userRequests.getUser()
                 .errors().verify()

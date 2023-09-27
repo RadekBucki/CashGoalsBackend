@@ -2,10 +2,10 @@ package pl.cashgoals.user.business.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import pl.cashgoals.notification.business.NotificationFacade;
 import pl.cashgoals.notification.business.model.Template;
@@ -104,11 +104,11 @@ public class UserService implements UserDetailsService {
         return userRepository.saveAndFlush(user);
     }
 
-    public LoginOutput refreshToken(String token, Principal principal) {
-        if (!tokenService.verifyRefreshToken(token, ((JwtAuthenticationToken) principal).getToken().getTokenValue())) {
+    public LoginOutput refreshToken(String token, Authentication authentication) {
+        if (!tokenService.verifyRefreshToken(token, authentication.getCredentials().toString())) {
             throw new BadRefreshTokenException();
         }
-        User user = getUserByEmail(principal.getName());
+        User user = getUserByEmail(authentication.getName());
 
         String accessToken = tokenService.generateAccessToken(user);
 

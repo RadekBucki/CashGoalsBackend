@@ -7,14 +7,13 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.execution.ErrorType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
 import pl.cashgoals.user.business.model.LoginOutput;
 
@@ -49,13 +48,10 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(
-                new JwtAuthenticationToken(
-                        Jwt.withTokenValue(loginOutput.accessToken())
-                                .subject(loginOutput.user().getEmail())
-                                .header("Authorization", "Bearer " + loginOutput.accessToken())
-                                .claim("scope", "USER")
-                                .build(),
-                        List.of((GrantedAuthority) () -> "SCOPE_USER")
+                new UsernamePasswordAuthenticationToken(
+                        loginOutput.user().getEmail(),
+                        loginOutput.accessToken(),
+                        List.of((GrantedAuthority) () -> "USER")
                 )
         );
         SecurityContextHolder.setContext(context);

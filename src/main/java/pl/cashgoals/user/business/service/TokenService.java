@@ -1,5 +1,7 @@
 package pl.cashgoals.user.business.service;
 
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,6 +9,7 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import pl.cashgoals.user.persistence.model.User;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.Objects;
@@ -66,12 +69,19 @@ public class TokenService {
     public boolean verifyRefreshToken(String refreshToken, String accessToken) {
         try {
             Jwt refreshTokenJwt = jwtDecoder.decode(refreshToken);
-            Jwt accessTokenJwt = jwtDecoder.decode(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN));
-            return Objects.equals(refreshTokenJwt.getClaimAsString(EMAIL),accessTokenJwt.getSubject())
-                    && Objects.equals(refreshTokenJwt.getClaimAsString(ACCESS_TOKEN), accessToken)
+            String accessTokenClaim = refreshTokenJwt.getClaimAsString(ACCESS_TOKEN);
+            if (accessTokenClaim == null) {
+                return false;
+            }
+            JWT accessTokenJwt = JWTParser.parse(accessTokenClaim);
+            return Objects.equals(
+                    refreshTokenJwt.getClaimAsString(EMAIL),
+                    accessTokenJwt.getJWTClaimsSet().getSubject()
+            )
+                    && Objects.equals(accessTokenClaim, accessToken)
                     && Objects.requireNonNull(refreshTokenJwt.getExpiresAt()).isAfter(Instant.now());
-        } catch (JwtException e) {
-            log.debug("Invalid refresh token: {0}", e);
+        } catch (JwtException | ParseException e) {
+            log.debug("Invalid access token: {0}", e);
             return false;
         }
     }

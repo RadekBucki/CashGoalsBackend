@@ -16,7 +16,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
 
     @DisplayName("Should update user")
     @Test
-    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"USER"})
     void shouldUpdateUser() {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
@@ -34,7 +34,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
 
     @DisplayName("Should return validation errors")
     @Test
-    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"USER"})
     void shouldReturnValidationErrors() {
         GraphQlTester.Response response = userRequests.updateUser(
                 "t",
@@ -62,7 +62,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
 
     @DisplayName("Should return error when user with given email already exists")
     @Test
-    @WithMockUser(username = "test@example.com", authorities = {"SCOPE_USER"})
+    @WithMockUser(username = "test@example.com", authorities = {"USER"})
     void shouldReturnErrorWhenUserWithGivenEmailAlreadyExists() {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
