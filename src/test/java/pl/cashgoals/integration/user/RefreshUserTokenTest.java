@@ -49,7 +49,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(
                 new UsernamePasswordAuthenticationToken(
-                        "test@example.com",
+                        loginOutput.user().getEmail(),
                         loginOutput.accessToken(),
                         List.of((GrantedAuthority) () -> "USER")
                 )
