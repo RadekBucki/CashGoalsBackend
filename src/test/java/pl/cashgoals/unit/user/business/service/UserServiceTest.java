@@ -17,6 +17,7 @@ import pl.cashgoals.user.business.model.LoginOutput;
 import pl.cashgoals.user.business.model.UserInput;
 import pl.cashgoals.user.business.service.TokenService;
 import pl.cashgoals.user.business.service.UserService;
+import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.user.persistence.model.UserToken;
@@ -123,6 +124,7 @@ class UserServiceTest {
                 "name",
                 "Qwerty123!",
                 "example@example.com",
+                Theme.SYSTEM,
                 "http://some-url.com"
         ));
 
@@ -220,6 +222,7 @@ class UserServiceTest {
                     "username2",
                     "password2",
                     "email2",
+                    Theme.SYSTEM,
                     "activationUrl"
             );
 
@@ -253,6 +256,7 @@ class UserServiceTest {
                     "username2",
                     "password2",
                     "email2",
+                    Theme.SYSTEM,
                     "activationUrl"
             );
             when(userRepository.getUserByEmail(anyString()))

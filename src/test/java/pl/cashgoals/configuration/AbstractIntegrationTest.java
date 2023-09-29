@@ -17,6 +17,7 @@ import pl.cashgoals.configuration.testcontainers.GreenMail;
 import pl.cashgoals.configuration.testcontainers.PostgresContainer;
 import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
+import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.user.persistence.model.UserToken;
@@ -91,6 +92,8 @@ public abstract class AbstractIntegrationTest {
                 .name("test")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("test@example.com")
+                .theme(Theme.DARK)
+                .locale(Locale.ENGLISH)
                 .build();
 
         User inactiveUser = User.builder()
@@ -98,6 +101,8 @@ public abstract class AbstractIntegrationTest {
                 .name("inactive")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("inactive@example.com")
+                .theme(Theme.LIGHT)
+                .locale(Locale.ENGLISH)
                 .build();
         inactiveUser.getTokens().add(
                 UserToken.builder()

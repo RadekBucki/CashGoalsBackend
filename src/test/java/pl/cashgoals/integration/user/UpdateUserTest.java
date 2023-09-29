@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
+import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.User;
 
 import java.util.Objects;
@@ -21,6 +22,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
+                Theme.SYSTEM,
                 "test1@example.com"
         );
 
@@ -29,6 +31,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 .path("updateUser").entity(User.class).satisfies(user -> {
                     assertEquals("test1", user.getName());
                     assertEquals("test1@example.com", user.getEmail());
+                    assertEquals(Theme.SYSTEM, user.getTheme());
                 });
     }
 
@@ -39,6 +42,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "t",
                 "test",
+                Theme.SYSTEM,
                 "bad email"
         );
 
@@ -67,6 +71,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
+                Theme.SYSTEM,
                 "inactive@example.com"
         );
 
@@ -83,6 +88,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
+                Theme.SYSTEM,
                 "test1@example.com"
         );
 

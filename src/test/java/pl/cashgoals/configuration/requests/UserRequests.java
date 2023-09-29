@@ -1,6 +1,7 @@
 package pl.cashgoals.configuration.requests;
 
 import org.springframework.graphql.test.tester.GraphQlTester;
+import pl.cashgoals.user.persistence.model.Theme;
 
 import java.util.Map;
 
@@ -14,12 +15,14 @@ public class UserRequests {
     public GraphQlTester.Response createUser(
             String name,
             String password,
+            Theme theme,
             String email
     ) {
         Map<String, String> userInput = Map.of(
                 "name", name,
                 "password", password,
                 "email", email,
+                "theme", theme.name(),
                 "activationUrl", "http://some-web.com/activate"
         );
         return graphQlTester.documentName("user/createUser")
@@ -44,12 +47,14 @@ public class UserRequests {
     public GraphQlTester.Response updateUser(
             String name,
             String password,
+            Theme theme,
             String email
     ) {
         Map<String, String> userInput = Map.of(
                 "name", name,
                 "password", password,
-                "email", email
+                "email", email,
+                "theme", theme.name()
         );
         return graphQlTester.documentName("user/updateUser")
                 .variable("userInput", userInput)
