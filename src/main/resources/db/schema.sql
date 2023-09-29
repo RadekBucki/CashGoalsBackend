@@ -1,10 +1,14 @@
 CREATE TABLE IF NOT EXISTS user_entity
 (
-    id       SERIAL       NOT NULL,
-    enabled  BOOLEAN      NOT NULL,
-    name     VARCHAR(100) NOT NULL,
-    email    VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
+    id         SERIAL       NOT NULL,
+    enabled    BOOLEAN      NOT NULL,
+    name       VARCHAR(100) NOT NULL,
+    email      VARCHAR(100) NOT NULL UNIQUE,
+    password   VARCHAR(100) NOT NULL,
+    theme      VARCHAR(10)  NOT NULL,
+    locale     VARCHAR(10)  NOT NULL,
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );
 

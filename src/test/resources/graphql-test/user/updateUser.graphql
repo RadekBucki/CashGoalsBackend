@@ -2,5 +2,7 @@ mutation updateUser($userInput: UserInput!) {
     updateUser(input: $userInput) {
         name
         email
+        theme
+        locale
     }
 }

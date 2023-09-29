@@ -15,6 +15,8 @@ extend type Mutation {
 type User {
     name: String!
     email: String!
+    theme: Theme!
+    locale: String!
 }
 
 type LoginOutput {
@@ -27,11 +29,19 @@ input CreateUserInput {
     name: String!
     email: String!
     password: String!
+    theme: Theme!
     activationUrl: String!
 }
 
 input UserInput {
     name: String!
     email: String!
+    theme: Theme!
     password: String!
+}
+
+enum Theme {
+    LIGHT
+    DARK,
+    SYSTEM
 }

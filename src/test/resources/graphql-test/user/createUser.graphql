@@ -2,5 +2,7 @@ mutation createUser($userInput: CreateUserInput!) {
     createUser(input: $userInput) {
         name
         email
+        theme
+        locale
     }
 }

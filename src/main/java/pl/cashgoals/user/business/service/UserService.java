@@ -2,6 +2,7 @@ package pl.cashgoals.user.business.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,6 +50,8 @@ public class UserService implements UserDetailsService {
                 .name(input.name())
                 .email(input.email())
                 .password(passwordEncoder.encode(input.password()))
+                .theme(input.theme())
+                .locale(LocaleContextHolder.getLocale())
                 .enabled(false)
                 .build();
 
@@ -78,10 +81,7 @@ public class UserService implements UserDetailsService {
     public LoginOutput login(String email, String password) {
         User user = getUserByEmail(email);
 
-        if (
-                !passwordEncoder.matches(password, user.getPassword())
-                        || Boolean.TRUE.equals(!user.getEnabled())
-        ) {
+        if (!passwordEncoder.matches(password, user.getPassword()) || Boolean.TRUE.equals(!user.getEnabled())) {
             throw new UserNotFoundException();
         }
 
@@ -100,6 +100,8 @@ public class UserService implements UserDetailsService {
         user.setName(input.name());
         user.setEmail(input.email());
         user.setPassword(passwordEncoder.encode(input.password()));
+        user.setTheme(input.theme());
+        user.setLocale(LocaleContextHolder.getLocale());
 
         return userRepository.saveAndFlush(user);
     }

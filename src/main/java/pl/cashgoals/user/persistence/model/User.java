@@ -2,10 +2,13 @@ package pl.cashgoals.user.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Entity(name = "user_entity")
@@ -28,6 +31,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Theme theme;
     private Locale locale;
+    @Column(updatable = false)
+    @CreationTimestamp
+    private Timestamp createdAt;
+    @UpdateTimestamp
+    private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
