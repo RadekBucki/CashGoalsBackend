@@ -222,6 +222,61 @@ class UserServiceTest {
         void shouldUpdateUser() {
             UpdateUserInput updateUserInput = new UpdateUserInput(
                     "username2",
+                    "password",
+                    "email2",
+                    Theme.SYSTEM,
+                    Locale.ENGLISH
+            );
+
+            User user = User.builder()
+                    .name("name")
+                    .password("password")
+                    .name("test@example.com")
+                    .enabled(true)
+                    .build();
+
+            when(userRepository.getUserByEmail(anyString()))
+                    .thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(anyString(), anyString()))
+                    .thenReturn(true);
+            when(principal.getName())
+                    .thenReturn("name");
+            when(userRepository.saveAndFlush(user))
+                    .thenReturn(user);
+
+            User updatedUser = userService.updateUser(updateUserInput, principal);
+
+            assertEquals("username2", updatedUser.getName());
+            assertEquals("password", updatedUser.getPassword());
+            assertEquals("email2", updatedUser.getEmail());
+        }
+
+        @DisplayName("Should throw exception when user not found")
+        @Test
+        void shouldThrowExceptionWhenUserNotFound() {
+            UpdateUserInput updateUserInput = new UpdateUserInput(
+                    "username2",
+                    "password",
+                    "email2",
+                    Theme.SYSTEM,
+                    Locale.ENGLISH
+            );
+            when(userRepository.getUserByEmail(anyString()))
+                    .thenReturn(Optional.empty());
+            when(principal.getName())
+                    .thenReturn("name");
+
+            assertThrows(
+                    UserNotFoundException.class,
+                    () -> userService.updateUser(updateUserInput, principal)
+            );
+        }
+
+        @DisplayName("Should throw exception when password is incorrect")
+        @Test
+        void shouldThrowExceptionWhenPasswordIsIncorrect() {
+            UpdateUserInput updateUserInput = new UpdateUserInput(
+                    "username2",
                     "password2",
                     "email2",
                     Theme.SYSTEM,
@@ -237,40 +292,15 @@ class UserServiceTest {
 
             when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.of(user));
-            when(passwordEncoder.encode(anyString()))
-                    .thenReturn("encoded");
-            when(principal.getName())
-                    .thenReturn("name");
-            when(userRepository.saveAndFlush(user))
-                    .thenReturn(user);
-
-            User updatedUser = userService.updateUser(updateUserInput, principal);
-
-            assertEquals("username2", updatedUser.getName());
-            assertEquals("encoded", updatedUser.getPassword());
-            assertEquals("email2", updatedUser.getEmail());
-        }
-
-        @DisplayName("Should throw exception when user not found")
-        @Test
-        void shouldThrowExceptionWhenUserNotFound() {
-            UpdateUserInput updateUserInput = new UpdateUserInput(
-                    "username2",
-                    "password2",
-                    "email2",
-                    Theme.SYSTEM,
-                    Locale.ENGLISH
-            );
-            when(userRepository.getUserByEmail(anyString()))
-                    .thenReturn(Optional.empty());
+            when(passwordEncoder.matches(anyString(), anyString()))
+                    .thenReturn(false);
             when(principal.getName())
                     .thenReturn("name");
 
             assertThrows(
-                    UserNotFoundException.class,
+                    GraphQLBadRequestException.class,
                     () -> userService.updateUser(updateUserInput, principal)
             );
-
         }
     }
 

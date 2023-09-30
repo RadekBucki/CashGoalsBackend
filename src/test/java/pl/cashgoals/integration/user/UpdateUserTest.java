@@ -59,11 +59,6 @@ class UpdateUserTest extends AbstractIntegrationTest {
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
                                 Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Email.message") &&
                                 responseError.getPath().equals("updateUser.input.email")
-                )
-                .expect(responseError ->
-                        responseError.getErrorType().equals(ErrorType.ValidationError) &&
-                                Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Password.message") &&
-                                responseError.getPath().equals("updateUser.input.password")
                 );
     }
 
@@ -83,6 +78,25 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 responseError.getErrorType().equals(ErrorType.ValidationError) &&
                         Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.EmailExist.message") &&
                         responseError.getPath().equals("updateUser.input.email")
+        );
+    }
+
+    @DisplayName("Should return error when password is incorrect")
+    @Test
+    @WithMockUser(username = "test@example.com", authorities = {"USER"})
+    void shouldReturnErrorWhenPasswordIsIncorrect() {
+        GraphQlTester.Response response = userRequests.updateUser(
+                "test1",
+                "bad password",
+                Theme.SYSTEM,
+                "test1@example.com",
+                Locale.ENGLISH
+        );
+
+        response.errors().expect(responseError ->
+                responseError.getErrorType().equals(org.springframework.graphql.execution.ErrorType.BAD_REQUEST) &&
+                        Objects.equals(responseError.getMessage(), "cashgoals.user.bad-password") &&
+                        responseError.getPath().equals("updateUser")
         );
     }
     

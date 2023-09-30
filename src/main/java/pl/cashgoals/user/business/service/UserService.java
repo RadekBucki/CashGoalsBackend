@@ -97,10 +97,12 @@ public class UserService implements UserDetailsService {
 
     public User updateUser(UpdateUserInput input, Principal principal) {
         User user = getUserByEmail(principal.getName());
+        if (!passwordEncoder.matches(input.password(), user.getPassword())) {
+            throw new GraphQLBadRequestException("cashgoals.user.bad-password");
+        }
 
         user.setName(input.name());
         user.setEmail(input.email());
-        user.setPassword(passwordEncoder.encode(input.password()));
         user.setTheme(input.theme());
         user.setLocale(input.locale());
 
