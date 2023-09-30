@@ -7,6 +7,7 @@ extend type Mutation {
     refreshToken(token: String!): AuthorizationOutput!
     createUser(input: CreateUserInput!): User!
     updateUser(input: UpdateUserInput!): User!
+    updateUserPassword(oldPassword: String!, newPassword: String!): Boolean!
     activateUser(email: String!, token: String!): Boolean!
     requestPasswordReset(email: String!, resetUrl: String!): Boolean!
     resetPassword(email: String!, token: String!, password: String!): Boolean!

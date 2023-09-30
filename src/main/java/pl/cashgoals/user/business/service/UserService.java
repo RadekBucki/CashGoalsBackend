@@ -109,6 +109,10 @@ public class UserService implements UserDetailsService {
         return userRepository.saveAndFlush(user);
     }
 
+    public Boolean updateUserPassword(String oldPassword, String newPassword, Principal principal) {
+        return true;
+    }
+
     public AuthorizationOutput refreshToken(String token, Authentication authentication) {
         if (!tokenService.verifyRefreshToken(token, authentication.getCredentials().toString())) {
             throw new BadRefreshTokenException();

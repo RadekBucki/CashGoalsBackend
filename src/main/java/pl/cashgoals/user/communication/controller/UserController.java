@@ -41,6 +41,17 @@ public class UserController {
     }
 
     @MutationMapping
+    @FullyAuthenticated
+    @Validated
+    public Boolean updateUserPassword(
+            @Argument String oldPassword,
+            @Argument @Password String newPassword,
+            Principal principal
+    ) {
+        return userService.updateUserPassword(oldPassword, newPassword, principal);
+    }
+
+    @MutationMapping
     public AuthorizationOutput refreshToken(@Argument String token, Authentication authentication) {
         return userService.refreshToken(token, authentication);
     }

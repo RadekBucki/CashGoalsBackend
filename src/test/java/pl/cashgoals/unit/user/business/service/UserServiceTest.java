@@ -304,6 +304,71 @@ class UserServiceTest {
         }
     }
 
+    @DisplayName("Update user password")
+    @Nested
+    class UpdateUserPassword {
+        Principal principal = mock(Principal.class);
+
+        @DisplayName("Should update user password")
+        @Test
+        void shouldUpdateUserPassword() {
+            User user = User.builder()
+                    .name("name")
+                    .password("password")
+                    .build();
+
+            when(userRepository.getUserByEmail(anyString()))
+                    .thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(anyString(), anyString()))
+                    .thenReturn(true);
+            when(passwordEncoder.encode("newPassword"))
+                    .thenReturn("encoded");
+            when(principal.getName())
+                    .thenReturn("name");
+            when(userRepository.saveAndFlush(user))
+                    .thenReturn(user);
+
+            Boolean result = userService.updateUserPassword("password", "newPassword", principal);
+
+            assertTrue(result);
+        }
+
+        @DisplayName("Should throw exception when user not found")
+        @Test
+        void shouldThrowExceptionWhenUserNotFound() {
+            when(userRepository.getUserByEmail(anyString()))
+                    .thenReturn(Optional.empty());
+            when(principal.getName())
+                    .thenReturn("name");
+
+            assertThrows(
+                    UserNotFoundException.class,
+                    () -> userService.updateUserPassword("password", "newPassword", principal)
+            );
+        }
+
+        @DisplayName("Should throw exception when password is incorrect")
+        @Test
+        void shouldThrowExceptionWhenPasswordIsIncorrect() {
+            User user = User.builder()
+                    .name("name")
+                    .password("password")
+                    .build();
+
+            when(userRepository.getUserByEmail(anyString()))
+                    .thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(anyString(), anyString()))
+                    .thenReturn(false);
+            when(principal.getName())
+                    .thenReturn("name");
+
+            assertThrows(
+                    GraphQLBadRequestException.class,
+                    () -> userService.updateUserPassword("password", "newPassword", principal)
+            );
+        }
+    }
+
     @DisplayName("Refresh token")
     @Nested
     class RefreshTokenTest {

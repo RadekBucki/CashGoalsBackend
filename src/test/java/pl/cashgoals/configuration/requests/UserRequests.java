@@ -64,6 +64,13 @@ public class UserRequests {
                 .execute();
     }
 
+    public GraphQlTester.Response updateUserPassword(String oldPassword, String newPassword) {
+        return graphQlTester.documentName("user/updateUserPassword")
+                .variable("oldPassword", oldPassword)
+                .variable("newPassword", newPassword)
+                .execute();
+    }
+
     public GraphQlTester.Response getUser() {
         return graphQlTester.documentName("user/user")
                 .execute();
