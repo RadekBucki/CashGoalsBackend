@@ -9,6 +9,7 @@ import pl.cashgoals.configuration.AbstractIntegrationTest;
 import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.User;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +24,8 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 "test1",
                 "Test123!",
                 Theme.SYSTEM,
-                "test1@example.com"
+                "test1@example.com",
+                Locale.ENGLISH
         );
 
         response
@@ -43,7 +45,8 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 "t",
                 "test",
                 Theme.SYSTEM,
-                "bad email"
+                "bad email",
+                Locale.ENGLISH
         );
 
         response.errors()
@@ -72,7 +75,8 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 "test1",
                 "Test123!",
                 Theme.SYSTEM,
-                "inactive@example.com"
+                "inactive@example.com",
+                Locale.ENGLISH
         );
 
         response.errors().expect(responseError ->
@@ -89,7 +93,8 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 "test1",
                 "Test123!",
                 Theme.SYSTEM,
-                "test1@example.com"
+                "test1@example.com",
+                Locale.ENGLISH
         );
 
         response.errors().expect(responseError ->

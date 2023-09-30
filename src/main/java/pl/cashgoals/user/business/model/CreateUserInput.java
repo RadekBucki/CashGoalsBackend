@@ -8,7 +8,7 @@ import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.validation.business.annotation.Size;
 import pl.cashgoals.validation.business.annotation.URL;
 
-public record UserInput(
+public record CreateUserInput(
         @Size(min = 2, max = 100)
         String name,
         @Password

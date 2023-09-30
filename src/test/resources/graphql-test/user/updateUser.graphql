@@ -1,5 +1,5 @@
-mutation updateUser($userInput: UserInput!) {
-    updateUser(input: $userInput) {
+mutation updateUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
         name
         email
         theme

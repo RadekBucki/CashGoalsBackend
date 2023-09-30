@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.user.business.model.LoginOutput;
+import pl.cashgoals.user.business.model.AuthorizationOutput;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -38,7 +38,7 @@ class LoginTest extends AbstractIntegrationTest {
 
         response
                 .errors().verify()
-                .path("login").entity(LoginOutput.class).satisfies(loginOutput -> {
+                .path("login").entity(AuthorizationOutput.class).satisfies(loginOutput -> {
                     assertEquals("test", loginOutput.user().getName());
                     assertEquals("test@example.com", loginOutput.user().getEmail());
 

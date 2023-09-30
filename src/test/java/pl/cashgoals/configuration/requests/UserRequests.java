@@ -3,6 +3,7 @@ package pl.cashgoals.configuration.requests;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import pl.cashgoals.user.persistence.model.Theme;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class UserRequests {
@@ -26,7 +27,7 @@ public class UserRequests {
                 "activationUrl", "http://some-web.com/activate"
         );
         return graphQlTester.documentName("user/createUser")
-                .variable("userInput", userInput)
+                .variable("input", userInput)
                 .execute();
     }
 
@@ -48,16 +49,18 @@ public class UserRequests {
             String name,
             String password,
             Theme theme,
-            String email
+            String email,
+            Locale locale
     ) {
-        Map<String, String> userInput = Map.of(
+        Map<String, String> input = Map.of(
                 "name", name,
                 "password", password,
                 "email", email,
-                "theme", theme.name()
+                "theme", theme.name(),
+                "locale", locale.toLanguageTag()
         );
         return graphQlTester.documentName("user/updateUser")
-                .variable("userInput", userInput)
+                .variable("input", input)
                 .execute();
     }
 

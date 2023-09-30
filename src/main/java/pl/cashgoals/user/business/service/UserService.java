@@ -13,8 +13,9 @@ import pl.cashgoals.notification.business.model.Template;
 import pl.cashgoals.notification.business.service.source.Source;
 import pl.cashgoals.user.business.exception.BadRefreshTokenException;
 import pl.cashgoals.user.business.exception.UserNotFoundException;
-import pl.cashgoals.user.business.model.LoginOutput;
-import pl.cashgoals.user.business.model.UserInput;
+import pl.cashgoals.user.business.model.AuthorizationOutput;
+import pl.cashgoals.user.business.model.CreateUserInput;
+import pl.cashgoals.user.business.model.UpdateUserInput;
 import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.user.persistence.model.UserToken;
@@ -45,7 +46,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User createUser(UserInput input) {
+    public User createUser(CreateUserInput input) {
         User user = User.builder()
                 .name(input.name())
                 .email(input.email())
@@ -78,7 +79,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public LoginOutput login(String email, String password) {
+    public AuthorizationOutput login(String email, String password) {
         User user = getUserByEmail(email);
 
         if (!passwordEncoder.matches(password, user.getPassword()) || Boolean.TRUE.equals(!user.getEnabled())) {
@@ -87,26 +88,26 @@ public class UserService implements UserDetailsService {
 
         String accessToken = tokenService.generateAccessToken(user);
 
-        return new LoginOutput(
+        return new AuthorizationOutput(
                 accessToken,
                 tokenService.generateRefreshToken(user, accessToken),
                 user
         );
     }
 
-    public User updateUser(UserInput input, Principal principal) {
+    public User updateUser(UpdateUserInput input, Principal principal) {
         User user = getUserByEmail(principal.getName());
 
         user.setName(input.name());
         user.setEmail(input.email());
         user.setPassword(passwordEncoder.encode(input.password()));
         user.setTheme(input.theme());
-        user.setLocale(LocaleContextHolder.getLocale());
+        user.setLocale(input.locale());
 
         return userRepository.saveAndFlush(user);
     }
 
-    public LoginOutput refreshToken(String token, Authentication authentication) {
+    public AuthorizationOutput refreshToken(String token, Authentication authentication) {
         if (!tokenService.verifyRefreshToken(token, authentication.getCredentials().toString())) {
             throw new BadRefreshTokenException();
         }
@@ -114,7 +115,7 @@ public class UserService implements UserDetailsService {
 
         String accessToken = tokenService.generateAccessToken(user);
 
-        return new LoginOutput(
+        return new AuthorizationOutput(
                 accessToken,
                 tokenService.generateRefreshToken(user, accessToken),
                 user

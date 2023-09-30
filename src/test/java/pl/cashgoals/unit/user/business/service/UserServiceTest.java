@@ -13,8 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.cashgoals.notification.business.NotificationFacade;
 import pl.cashgoals.user.business.exception.BadRefreshTokenException;
 import pl.cashgoals.user.business.exception.UserNotFoundException;
-import pl.cashgoals.user.business.model.LoginOutput;
-import pl.cashgoals.user.business.model.UserInput;
+import pl.cashgoals.user.business.model.AuthorizationOutput;
+import pl.cashgoals.user.business.model.CreateUserInput;
+import pl.cashgoals.user.business.model.UpdateUserInput;
 import pl.cashgoals.user.business.service.TokenService;
 import pl.cashgoals.user.business.service.UserService;
 import pl.cashgoals.user.persistence.model.Theme;
@@ -27,6 +28,7 @@ import pl.cashgoals.utils.graphql.business.exception.GraphQLBadRequestException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -120,7 +122,7 @@ class UserServiceTest {
         when(tokenService.generateRandomCode())
                 .thenReturn("code");
 
-        User username = userService.createUser(new UserInput(
+        User username = userService.createUser(new CreateUserInput(
                 "name",
                 "Qwerty123!",
                 "example@example.com",
@@ -151,11 +153,11 @@ class UserServiceTest {
             when(tokenService.generateRefreshToken(user, "access"))
                     .thenReturn("refresh");
 
-            LoginOutput loginOutput = userService.login("name", "password");
+            AuthorizationOutput authorizationOutput = userService.login("name", "password");
 
-            assertEquals("name", loginOutput.user().getName());
-            assertEquals("access", loginOutput.accessToken());
-            assertEquals("refresh", loginOutput.refreshToken());
+            assertEquals("name", authorizationOutput.user().getName());
+            assertEquals("access", authorizationOutput.accessToken());
+            assertEquals("refresh", authorizationOutput.refreshToken());
 
         }
 
@@ -218,12 +220,12 @@ class UserServiceTest {
         @DisplayName("Should update user")
         @Test
         void shouldUpdateUser() {
-            UserInput userInput = new UserInput(
+            UpdateUserInput updateUserInput = new UpdateUserInput(
                     "username2",
                     "password2",
                     "email2",
                     Theme.SYSTEM,
-                    "activationUrl"
+                    Locale.ENGLISH
             );
 
             User user = User.builder()
@@ -242,7 +244,7 @@ class UserServiceTest {
             when(userRepository.saveAndFlush(user))
                     .thenReturn(user);
 
-            User updatedUser = userService.updateUser(userInput, principal);
+            User updatedUser = userService.updateUser(updateUserInput, principal);
 
             assertEquals("username2", updatedUser.getName());
             assertEquals("encoded", updatedUser.getPassword());
@@ -252,12 +254,12 @@ class UserServiceTest {
         @DisplayName("Should throw exception when user not found")
         @Test
         void shouldThrowExceptionWhenUserNotFound() {
-            UserInput userInput = new UserInput(
+            UpdateUserInput updateUserInput = new UpdateUserInput(
                     "username2",
                     "password2",
                     "email2",
                     Theme.SYSTEM,
-                    "activationUrl"
+                    Locale.ENGLISH
             );
             when(userRepository.getUserByEmail(anyString()))
                     .thenReturn(Optional.empty());
@@ -266,7 +268,7 @@ class UserServiceTest {
 
             assertThrows(
                     UserNotFoundException.class,
-                    () -> userService.updateUser(userInput, principal)
+                    () -> userService.updateUser(updateUserInput, principal)
             );
 
         }
@@ -294,10 +296,10 @@ class UserServiceTest {
             when(tokenService.generateRefreshToken(user, "access"))
                     .thenReturn("refresh");
 
-            LoginOutput loginOutput = userService.refreshToken("refreshToken", authentication);
+            AuthorizationOutput authorizationOutput = userService.refreshToken("refreshToken", authentication);
 
-            assertEquals("access", loginOutput.accessToken());
-            assertEquals("refresh", loginOutput.refreshToken());
+            assertEquals("access", authorizationOutput.accessToken());
+            assertEquals("refresh", authorizationOutput.refreshToken());
         }
 
         @DisplayName("Should throw exception when refresh token is incorrect")

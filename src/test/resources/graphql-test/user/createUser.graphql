@@ -1,5 +1,5 @@
-mutation createUser($userInput: CreateUserInput!) {
-    createUser(input: $userInput) {
+mutation createUser($input: CreateUserInput!) {
+    createUser(input: $input) {
         name
         email
         theme
