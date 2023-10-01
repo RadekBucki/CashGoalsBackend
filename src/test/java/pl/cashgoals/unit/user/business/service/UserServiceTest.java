@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.cashgoals.notification.business.NotificationFacade;
+import pl.cashgoals.user.business.exception.BadPasswordException;
 import pl.cashgoals.user.business.exception.BadRefreshTokenException;
 import pl.cashgoals.user.business.exception.UserNotFoundException;
 import pl.cashgoals.user.business.model.AuthorizationOutput;
@@ -298,7 +299,7 @@ class UserServiceTest {
                     .thenReturn("name");
 
             assertThrows(
-                    GraphQLBadRequestException.class,
+                    BadPasswordException.class,
                     () -> userService.updateUser(updateUserInput, principal)
             );
         }
@@ -363,7 +364,7 @@ class UserServiceTest {
                     .thenReturn("name");
 
             assertThrows(
-                    GraphQLBadRequestException.class,
+                    BadPasswordException.class,
                     () -> userService.updateUserPassword("password", "newPassword", principal)
             );
         }

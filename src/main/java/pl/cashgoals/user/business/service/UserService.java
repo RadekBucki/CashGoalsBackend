@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import pl.cashgoals.notification.business.NotificationFacade;
 import pl.cashgoals.notification.business.model.Template;
 import pl.cashgoals.notification.business.service.source.Source;
+import pl.cashgoals.user.business.exception.BadPasswordException;
 import pl.cashgoals.user.business.exception.BadRefreshTokenException;
 import pl.cashgoals.user.business.exception.UserNotFoundException;
 import pl.cashgoals.user.business.model.AuthorizationOutput;
@@ -98,7 +99,7 @@ public class UserService implements UserDetailsService {
     public User updateUser(UpdateUserInput input, Principal principal) {
         User user = getUserByEmail(principal.getName());
         if (!passwordEncoder.matches(input.password(), user.getPassword())) {
-            throw new GraphQLBadRequestException("cashgoals.user.bad-password");
+            throw new BadPasswordException();
         }
 
         user.setName(input.name());
@@ -112,7 +113,7 @@ public class UserService implements UserDetailsService {
     public Boolean updateUserPassword(String oldPassword, String newPassword, Principal principal) {
         User user = getUserByEmail(principal.getName());
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new GraphQLBadRequestException("cashgoals.user.bad-password");
+            throw new BadPasswordException();
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.saveAndFlush(user);
