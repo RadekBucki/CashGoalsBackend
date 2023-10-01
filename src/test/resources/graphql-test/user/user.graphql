@@ -2,5 +2,7 @@ query {
     user {
         name
         email
+        theme
+        locale
     }
 }

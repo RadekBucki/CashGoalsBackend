@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.user.business.model.LoginOutput;
+import pl.cashgoals.user.business.model.AuthorizationOutput;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -37,20 +37,20 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
     @Value("${spring.security.jwt.refresh-expiration-in-days}")
     private long refreshExpirationTime;
 
-    LoginOutput loginOutput;
+    AuthorizationOutput authorizationOutput;
 
     @BeforeEach
     void setUp() {
         super.setup();
-        loginOutput = userRequests.login("test@example.com", "Test123!")
-                .path("login").entity(LoginOutput.class)
+        authorizationOutput = userRequests.login("test@example.com", "Test123!")
+                .path("login").entity(AuthorizationOutput.class)
                 .get();
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(
                 new UsernamePasswordAuthenticationToken(
-                        loginOutput.user().getEmail(),
-                        loginOutput.accessToken(),
+                        authorizationOutput.user().getEmail(),
+                        authorizationOutput.accessToken(),
                         List.of((GrantedAuthority) () -> "USER")
                 )
         );
@@ -60,9 +60,9 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
     @DisplayName("Should refresh token")
     @Test
     void shouldRefreshToken() {
-        userRequests.refreshToken(loginOutput.refreshToken())
+        userRequests.refreshToken(authorizationOutput.refreshToken())
                 .errors().verify()
-                .path("refreshToken").entity(LoginOutput.class).satisfies(loginOutput -> {
+                .path("refreshToken").entity(AuthorizationOutput.class).satisfies(loginOutput -> {
                     assertEquals("test", loginOutput.user().getName());
                     assertNotNull(loginOutput.accessToken());
                     assertNotNull(loginOutput.refreshToken());
@@ -93,7 +93,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
             mockedStatic.when(Instant::now).thenReturn(instant);
             assertEquals(Instant.now(), instant);
 
-            userRequests.refreshToken(loginOutput.refreshToken())
+            userRequests.refreshToken(authorizationOutput.refreshToken())
                     .errors()
                     .expect(responseError ->
                             responseError.getErrorType().equals(ErrorType.BAD_REQUEST) &&
@@ -111,7 +111,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
                         .issuer(issuer)
                         .issuedAt(Instant.now())
                         .expiresAt(Instant.now().plusSeconds(refreshExpirationTime * 24 * 60 * 60))
-                        .claim("accessToken", loginOutput.accessToken())
+                        .claim("accessToken", authorizationOutput.accessToken())
                         .build()
         )).getTokenValue();
         userRequests.refreshToken(refreshToken)
@@ -131,7 +131,7 @@ class RefreshUserTokenTest extends AbstractIntegrationTest {
                         .issuer(issuer)
                         .issuedAt(Instant.now())
                         .expiresAt(Instant.now().plusSeconds(refreshExpirationTime * 24 * 60 * 60))
-                        .claim("name", loginOutput.user().getName())
+                        .claim("name", authorizationOutput.user().getName())
                         .build()
         )).getTokenValue();
         userRequests.refreshToken(refreshToken)

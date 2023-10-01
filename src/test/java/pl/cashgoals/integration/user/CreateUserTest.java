@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
+import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.User;
 
 import java.util.Objects;
@@ -19,6 +20,7 @@ class CreateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.createUser(
                 "test1",
                 "Test123!",
+                Theme.SYSTEM,
                 "test1@example.com"
         );
 
@@ -27,6 +29,8 @@ class CreateUserTest extends AbstractIntegrationTest {
                 .path("createUser").entity(User.class).satisfies(user -> {
                     assertEquals("test1", user.getName());
                     assertEquals("test1@example.com", user.getEmail());
+                    assertEquals(Theme.SYSTEM, user.getTheme());
+                    assertEquals("test", user.getLocale().getLanguage());
                 });
     }
 
@@ -36,6 +40,7 @@ class CreateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.createUser(
                 "t",
                 "test",
+                Theme.SYSTEM,
                 "bad email"
         );
 
@@ -63,6 +68,7 @@ class CreateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.createUser(
                 "test1",
                 "Test123!",
+                Theme.SYSTEM,
                 "test@example.com"
         );
 

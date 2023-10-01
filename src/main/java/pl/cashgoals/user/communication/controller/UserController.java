@@ -10,8 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import pl.cashgoals.user.business.annotation.FullyAuthenticated;
 import pl.cashgoals.user.business.annotation.Password;
-import pl.cashgoals.user.business.model.LoginOutput;
-import pl.cashgoals.user.business.model.UserInput;
+import pl.cashgoals.user.business.model.AuthorizationOutput;
+import pl.cashgoals.user.business.model.CreateUserInput;
+import pl.cashgoals.user.business.model.UpdateUserInput;
 import pl.cashgoals.user.business.service.UserService;
 import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.validation.business.annotation.URL;
@@ -24,23 +25,34 @@ public class UserController {
     private final UserService userService;
 
     @MutationMapping
-    public LoginOutput login(@Argument String email, @Argument String password) {
+    public AuthorizationOutput login(@Argument String email, @Argument String password) {
         return userService.login(email, password);
     }
 
     @MutationMapping
-    public User createUser(@Valid @Argument UserInput input) {
+    public User createUser(@Valid @Argument CreateUserInput input) {
         return userService.createUser(input);
     }
 
     @MutationMapping
     @FullyAuthenticated
-    public User updateUser(@Valid @Argument UserInput input, Principal principal) {
+    public User updateUser(@Valid @Argument UpdateUserInput input, Principal principal) {
         return userService.updateUser(input, principal);
     }
 
     @MutationMapping
-    public LoginOutput refreshToken(@Argument String token, Authentication authentication) {
+    @FullyAuthenticated
+    @Validated
+    public Boolean updateUserPassword(
+            @Argument String oldPassword,
+            @Argument @Password String newPassword,
+            Principal principal
+    ) {
+        return userService.updateUserPassword(oldPassword, newPassword, principal);
+    }
+
+    @MutationMapping
+    public AuthorizationOutput refreshToken(@Argument String token, Authentication authentication) {
         return userService.refreshToken(token, authentication);
     }
 

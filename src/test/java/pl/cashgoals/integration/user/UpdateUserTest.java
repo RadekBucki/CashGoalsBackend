@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
+import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.User;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +23,9 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
-                "test1@example.com"
+                Theme.SYSTEM,
+                "test1@example.com",
+                Locale.ENGLISH
         );
 
         response
@@ -29,6 +33,7 @@ class UpdateUserTest extends AbstractIntegrationTest {
                 .path("updateUser").entity(User.class).satisfies(user -> {
                     assertEquals("test1", user.getName());
                     assertEquals("test1@example.com", user.getEmail());
+                    assertEquals(Theme.SYSTEM, user.getTheme());
                 });
     }
 
@@ -39,7 +44,9 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "t",
                 "test",
-                "bad email"
+                Theme.SYSTEM,
+                "bad email",
+                Locale.ENGLISH
         );
 
         response.errors()
@@ -52,11 +59,6 @@ class UpdateUserTest extends AbstractIntegrationTest {
                         responseError.getErrorType().equals(ErrorType.ValidationError) &&
                                 Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Email.message") &&
                                 responseError.getPath().equals("updateUser.input.email")
-                )
-                .expect(responseError ->
-                        responseError.getErrorType().equals(ErrorType.ValidationError) &&
-                                Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.Password.message") &&
-                                responseError.getPath().equals("updateUser.input.password")
                 );
     }
 
@@ -67,13 +69,34 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
-                "inactive@example.com"
+                Theme.SYSTEM,
+                "inactive@example.com",
+                Locale.ENGLISH
         );
 
         response.errors().expect(responseError ->
                 responseError.getErrorType().equals(ErrorType.ValidationError) &&
                         Objects.equals(responseError.getMessage(), "cashgoals.validation.constraints.EmailExist.message") &&
                         responseError.getPath().equals("updateUser.input.email")
+        );
+    }
+
+    @DisplayName("Should return error when password is incorrect")
+    @Test
+    @WithMockUser(username = "test@example.com", authorities = {"USER"})
+    void shouldReturnErrorWhenPasswordIsIncorrect() {
+        GraphQlTester.Response response = userRequests.updateUser(
+                "test1",
+                "bad password",
+                Theme.SYSTEM,
+                "test1@example.com",
+                Locale.ENGLISH
+        );
+
+        response.errors().expect(responseError ->
+                responseError.getErrorType().equals(org.springframework.graphql.execution.ErrorType.BAD_REQUEST) &&
+                        Objects.equals(responseError.getMessage(), "cashgoals.user.bad-password") &&
+                        responseError.getPath().equals("updateUser")
         );
     }
     
@@ -83,7 +106,9 @@ class UpdateUserTest extends AbstractIntegrationTest {
         GraphQlTester.Response response = userRequests.updateUser(
                 "test1",
                 "Test123!",
-                "test1@example.com"
+                Theme.SYSTEM,
+                "test1@example.com",
+                Locale.ENGLISH
         );
 
         response.errors().expect(responseError ->

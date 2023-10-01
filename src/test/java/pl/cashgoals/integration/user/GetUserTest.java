@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
+import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.User;
 
 import java.util.Objects;
@@ -21,6 +22,8 @@ class GetUserTest extends AbstractIntegrationTest {
                 .path("user").entity(User.class).satisfies(user -> {
                     assertEquals("test", user.getName());
                     assertEquals("test@example.com", user.getEmail());
+                    assertEquals(Theme.DARK, user.getTheme());
+                    assertEquals("en", user.getLocale().getLanguage());
                 });
     }
 
