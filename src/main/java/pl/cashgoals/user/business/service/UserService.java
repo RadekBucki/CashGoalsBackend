@@ -110,6 +110,13 @@ public class UserService implements UserDetailsService {
     }
 
     public Boolean updateUserPassword(String oldPassword, String newPassword, Principal principal) {
+        User user = getUserByEmail(principal.getName());
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new GraphQLBadRequestException("cashgoals.user.bad-password");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.saveAndFlush(user);
+
         return true;
     }
 
