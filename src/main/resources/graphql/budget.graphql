@@ -1,0 +1,118 @@
+extend type Mutation {
+    createBudget(name: String!): Budget!
+    updateIncomes(budgetId: ID!, incomes: [IncomeInput!]!): Income!
+    updateCategories(budgetId: ID!, categories: [CategoryInput!]!): [Category!]!
+    updateGoals(budgetId: ID!, goals: [GoalInput!]!): [Goal!]!
+    updateUsersAndRights(budgetId: ID!, usersAndRights: [UserRightsInput!]!): [UserAndRights!]!
+}
+
+extend type Query {
+    budgets: [Budget!]!
+    budget(id: ID!): Budget
+    categories(budgetId: ID!): [Category!]!
+    visibleCategories(budgetId: ID!): [Category!]!
+    incomes(budgetId: ID!): [Income!]!
+    goals(budgetId: ID!): [Goal!]!
+    usersAndRights(budgetId: ID!): [UserAndRights!]!
+}
+
+type Budget {
+    id: ID!
+    name: String!
+    initializationStep: Step
+    rights: [Right!]
+}
+
+enum Step {
+    INCOMES
+    EXPENSES_CATEGORIES
+    GOALS
+    USERS_AND_RIGHTS
+    FINISHED
+}
+
+input IncomeInput {
+    id: ID
+    name: String!
+    amount: Float!
+    frequency: FrequencyInput
+}
+type Income {
+    id: ID!
+    name: String!
+    amount: Float!
+    frequency: Frequency!
+}
+
+input FrequencyInput {
+    period: Period!
+    value: Int!
+}
+type Frequency {
+    period: Period!
+    value: Int!
+}
+
+enum Period {
+    DAY
+    WEEK
+    MONTH
+    YEAR
+}
+
+input CategoryInput {
+    id: ID
+    parent: ID!
+    name: String!
+    description: String
+    visible: Boolean!
+}
+type Category {
+    id: ID!
+    name: String!
+    description: String!
+    visible: Boolean!
+    children: [Category!]!
+}
+
+input GoalInput {
+    id: ID
+    name: String!
+    description: String
+    type: GoalType!
+    value: Float!
+    category: ID!
+}
+type Goal {
+    id: ID!
+    name: String!
+    description: String!
+    type: GoalType!
+    value: Float!
+    category: Category!
+}
+
+enum GoalType {
+    AMOUNT_MAX
+    AMOUNT_MIN
+    PERCENTAGE_MAX
+    PERCENTAGE_MIN
+}
+
+input UserRightsInput {
+    email: String!
+    rights: [Right!]!
+}
+type UserAndRights {
+    user: User!
+    rights: [Right!]!
+}
+
+enum Right {
+    OWNER
+    EDIT_INCOMES
+    EDIT_CATEGORIES
+    EDIT_GOALS
+    EDIT_USERS_AND_RIGHTS
+    EDIT_EXPENSES
+}
