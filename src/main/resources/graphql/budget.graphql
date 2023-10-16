@@ -3,7 +3,7 @@ extend type Mutation {
     updateIncomes(budgetId: ID!, incomes: [IncomeInput!]!): Income!
     updateCategories(budgetId: ID!, categories: [CategoryInput!]!): [Category!]!
     updateGoals(budgetId: ID!, goals: [GoalInput!]!): [Goal!]!
-    updateUsersAndRights(budgetId: ID!, usersAndRights: [UserRightsInput!]!): [UserAndRights!]!
+    updateUsersAndRights(budgetId: ID!, usersAndRights: [UserRightsInput!]!): [UserRights!]!
 }
 
 extend type Query {
@@ -13,14 +13,13 @@ extend type Query {
     visibleCategories(budgetId: ID!): [Category!]!
     incomes(budgetId: ID!): [Income!]!
     goals(budgetId: ID!): [Goal!]!
-    usersAndRights(budgetId: ID!): [UserAndRights!]!
+    usersAndRights(budgetId: ID!): [UserRights!]!
 }
 
 type Budget {
     id: ID!
     name: String!
     initializationStep: Step
-    rights: [Right!]
 }
 
 enum Step {
@@ -40,6 +39,7 @@ input IncomeInput {
 type Income {
     id: ID!
     name: String!
+    description: String!
     amount: Float!
     frequency: Frequency!
 }
@@ -103,7 +103,7 @@ input UserRightsInput {
     email: String!
     rights: [Right!]!
 }
-type UserAndRights {
+type UserRights {
     user: User!
     rights: [Right!]!
 }
