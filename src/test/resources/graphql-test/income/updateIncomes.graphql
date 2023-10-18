@@ -1,0 +1,12 @@
+mutation updateIncomes($budgetId: ID!, $incomes: [IncomeInput!]!) {
+    updateIncomes(budgetId: $budgetId, incomes: $incomes) {
+        id
+        name
+        description
+        amount
+        frequency {
+            period
+            value
+        }
+    }
+}

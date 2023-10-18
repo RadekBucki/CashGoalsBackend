@@ -1,0 +1,12 @@
+mutation updateCategories($budgetId: ID!, $categories: [CategoryInput!]!) {
+    updateCategories(budgetId: $budgetId, categories: $categories) {
+        id
+        name
+        description
+        visible
+        children {
+          id
+          name
+        }
+    }
+}

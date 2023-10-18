@@ -1,0 +1,7 @@
+query getBudgets {
+    budgets {
+        id
+        name
+        initializationStep
+    }
+}

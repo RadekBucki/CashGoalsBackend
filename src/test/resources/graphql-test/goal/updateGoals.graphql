@@ -1,0 +1,12 @@
+mutation updateGoals($budgetId: ID!, $goals: [GoalInput!]!) {
+    updateGoals(budgetId: $budgetId, goals: $goals) {
+        id
+        name
+        description
+        value
+        category {
+            id
+            name
+        }
+    }
+}

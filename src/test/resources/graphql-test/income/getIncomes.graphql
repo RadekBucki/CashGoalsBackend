@@ -1,0 +1,12 @@
+query getIncomes($budgetId: ID!) {
+    incomes(budgetId: $budgetId) {
+        id
+        name
+        description
+        amount
+        frequency {
+            period
+            value
+        }
+    }
+}

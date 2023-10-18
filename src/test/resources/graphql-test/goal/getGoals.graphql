@@ -1,0 +1,12 @@
+query getGoals($budgetId: ID!) {
+    goals(budgetId: $budgetId) {
+        id
+        name
+        description
+        value
+        category {
+            id
+            name
+        }
+    }
+}

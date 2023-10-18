@@ -1,0 +1,14 @@
+query getVisibleCategories($budgetId: ID!) {
+    visibleCategories(budgetId: $budgetId) {
+        ...CategoryDetails
+    }
+}
+fragment CategoryDetails on Category {
+    id
+    name
+    description
+    visible
+    children {
+        ...CategoryDetails
+    }
+}

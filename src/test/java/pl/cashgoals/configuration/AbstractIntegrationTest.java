@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import pl.cashgoals.configuration.requests.UserRequests;
+import pl.cashgoals.configuration.requests.*;
 import pl.cashgoals.configuration.testcontainers.GreenMail;
 import pl.cashgoals.configuration.testcontainers.PostgresContainer;
 import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
@@ -67,6 +67,10 @@ public abstract class AbstractIntegrationTest {
      * Requests
      */
     protected UserRequests userRequests;
+    protected BudgetRequests budgetRequests;
+    protected ExpenceRequests expenceRequests;
+    protected GoalRequests goalRequests;
+    protected IncomeRequests incomeRequests;
 
     @BeforeAll
     static void beforeAll() {
@@ -85,6 +89,10 @@ public abstract class AbstractIntegrationTest {
 
         //Requests
         userRequests = new UserRequests(graphQlTester);
+        budgetRequests = new BudgetRequests(graphQlTester);
+        expenceRequests = new ExpenceRequests(graphQlTester);
+        goalRequests = new GoalRequests(graphQlTester);
+        incomeRequests = new IncomeRequests(graphQlTester);
 
         // Initial data
         User user = User.builder()

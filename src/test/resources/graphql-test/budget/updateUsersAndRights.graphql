@@ -1,0 +1,9 @@
+mutation updateUsersAndRights($budgetId: ID!, $usersAndRights: [UserRightsInput!]!) {
+    updateUsersRights(budgetId: $budgetId, usersAndRights: $usersAndRights) {
+        user {
+            name
+            email
+        }
+        rights
+    }
+}
