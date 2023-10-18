@@ -1,0 +1,31 @@
+extend type Mutation {
+    updateGoals(budgetId: ID!, goals: [GoalInput!]!): [Goal!]!
+}
+
+extend type Query {
+    goals(budgetId: ID!): [Goal!]!
+}
+
+input GoalInput {
+    id: ID
+    name: String!
+    description: String
+    type: GoalType!
+    value: Float!
+    category: ID!
+}
+type Goal {
+    id: ID!
+    name: String!
+    description: String!
+    type: GoalType!
+    value: Float!
+    category: Category!
+}
+
+enum GoalType {
+    AMOUNT_MAX
+    AMOUNT_MIN
+    PERCENTAGE_MAX
+    PERCENTAGE_MIN
+}

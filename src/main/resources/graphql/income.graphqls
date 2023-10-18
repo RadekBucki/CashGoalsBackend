@@ -1,0 +1,37 @@
+extend type Mutation {
+    updateIncomes(budgetId: ID!, incomes: [IncomeInput!]!): Income!
+}
+
+extend type Query {
+    incomes(budgetId: ID!): [Income!]!
+}
+
+input IncomeInput {
+    id: ID
+    name: String!
+    amount: Float!
+    frequency: FrequencyInput
+}
+type Income {
+    id: ID!
+    name: String!
+    description: String!
+    amount: Float!
+    frequency: Frequency!
+}
+
+input FrequencyInput {
+    period: Period!
+    value: Int!
+}
+type Frequency {
+    period: Period!
+    value: Int!
+}
+
+enum Period {
+    DAY
+    WEEK
+    MONTH
+    YEAR
+}

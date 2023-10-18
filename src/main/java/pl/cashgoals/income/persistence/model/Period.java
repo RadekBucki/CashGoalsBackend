@@ -1,4 +1,4 @@
-package pl.cashgoals.budget.persistence.model;
+package pl.cashgoals.income.persistence.model;
 
 public enum Period {
     DAY,

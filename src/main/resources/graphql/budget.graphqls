@@ -1,0 +1,42 @@
+extend type Mutation {
+    createBudget(name: String!): Budget!
+    updateUsersAndRights(budgetId: ID!, usersAndRights: [UserRightsInput!]!): [UserRights!]!
+}
+
+extend type Query {
+    budgets: [Budget!]!
+    budget(id: ID!): Budget
+    usersAndRights(budgetId: ID!): [UserRights!]!
+}
+
+type Budget {
+    id: ID!
+    name: String!
+    initializationStep: Step
+}
+
+enum Step {
+    INCOMES
+    EXPENSES_CATEGORIES
+    GOALS
+    USERS_AND_RIGHTS
+    FINISHED
+}
+
+input UserRightsInput {
+    email: String!
+    rights: [Right!]!
+}
+type UserRights {
+    user: User!
+    rights: [Right!]!
+}
+
+enum Right {
+    OWNER
+    EDIT_INCOMES
+    EDIT_CATEGORIES
+    EDIT_GOALS
+    EDIT_USERS_AND_RIGHTS
+    EDIT_EXPENSES
+}

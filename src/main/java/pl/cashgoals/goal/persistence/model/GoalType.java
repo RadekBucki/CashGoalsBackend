@@ -1,4 +1,4 @@
-package pl.cashgoals.budget.persistence.model;
+package pl.cashgoals.goal.persistence.model;
 
 public enum GoalType {
     AMOUNT_MAX,

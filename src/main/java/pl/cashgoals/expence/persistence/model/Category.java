@@ -1,7 +1,9 @@
-package pl.cashgoals.budget.persistence.model;
+package pl.cashgoals.expence.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -10,15 +12,18 @@ import lombok.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Goal {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-    private GoalType type;
-    private Double value;
+    private Boolean visible;
 
     @ManyToOne
-    private Category category;
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Category> children;
 }

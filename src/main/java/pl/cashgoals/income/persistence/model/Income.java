@@ -1,7 +1,8 @@
-package pl.cashgoals.budget.persistence.model;
+package pl.cashgoals.income.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.cashgoals.budget.persistence.model.Budget;
 
 @Entity
 @Getter
