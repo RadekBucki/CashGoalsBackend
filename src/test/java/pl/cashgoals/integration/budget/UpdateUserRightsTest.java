@@ -1,0 +1,96 @@
+package pl.cashgoals.integration.budget;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.graphql.execution.ErrorType;
+import org.springframework.security.test.context.support.WithMockUser;
+import pl.cashgoals.budget.persistence.model.Budget;
+import pl.cashgoals.budget.persistence.model.Right;
+import pl.cashgoals.budget.persistence.model.Step;
+import pl.cashgoals.budget.persistence.model.UserRights;
+import pl.cashgoals.configuration.AbstractIntegrationTest;
+import pl.cashgoals.user.persistence.model.User;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static graphql.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class UpdateUserRightsTest extends AbstractIntegrationTest {
+    @DisplayName("Should update user rights")
+    @WithMockUser(username = "test@example.com", authorities = {"USER"})
+    @Test
+    void shouldUpdateUserRights() {
+        Budget budget = budgetRepository.findAll().get(0);
+        budget.setInitializationStep(Step.USERS_AND_RIGHTS);
+        budgetRepository.saveAndFlush(budget);
+        String budgetId = budget.getId();
+        budgetRequests.updateUserRights(
+                        budgetId,
+                        List.of(
+                                UserRights.builder()
+                                        .user(User.builder().email("test2@example.com").build())
+                                        .right(Right.EDIT_EXPENSES)
+                                        .build()
+                        )
+                )
+                .errors().verify()
+                .path("updateUserRights").entityList(UserRights.class).satisfies(userRights -> {
+                    Optional<UserRights> userRightsOptional = userRights.stream()
+                            .filter(userRights1 -> userRights1.getUser().getEmail().equals("test2@example.com"))
+                            .filter(userRights1 -> userRights1.getRight().equals(Right.EDIT_EXPENSES))
+                            .findFirst();
+                    assertTrue(userRightsOptional.isPresent());
+                });
+        budget = budgetRepository.findById(budgetId).orElseThrow();
+        assertEquals(Step.FINISHED, budget.getInitializationStep());
+    }
+
+    @DisplayName("Should return access denied when authorization missed")
+    @Test
+    void shouldReturnAccessDeniedWhenAuthorizationMissed() {
+        checkUnauthorizedResponse();
+    }
+
+    @DisplayName("Should return access denied when")
+    @WithMockUser(username = "test2@example.com", authorities = {"USER"})
+    @ParameterizedTest(name = "{0}")
+    @CsvSource({
+            "user has no rights to budget",
+            "user has no EDIT_USERS_AND_RIGHTS right, EDIT_EXPENSES",
+    })
+    void shouldReturnAccessDenied(String testCase, String right) {
+        User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
+        Budget budget = budgetRepository.findAll().get(0);
+        UserRights userRights = UserRights.builder()
+                .user(user)
+                .budget(budget)
+                .right(Right.valueOf(right))
+                .build();
+        userRightsRepository.saveAndFlush(userRights);
+        checkUnauthorizedResponse();
+    }
+
+    private void checkUnauthorizedResponse() {
+        String budgetId = budgetRepository.findAll().get(0).getId();
+        budgetRequests.updateUserRights(
+                        budgetId,
+                        List.of(
+                                UserRights.builder()
+                                        .user(User.builder().email("test2@example.com").build())
+                                        .right(Right.EDIT_EXPENSES)
+                                        .build()
+                        )
+                )
+                .errors()
+                .expect(responseError ->
+                        Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
+                                && responseError.getErrorType().equals(ErrorType.UNAUTHORIZED)
+                )
+                .verify();
+    }
+}

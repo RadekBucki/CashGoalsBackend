@@ -1,6 +1,11 @@
 package pl.cashgoals.configuration.requests;
 
 import org.springframework.graphql.test.tester.GraphQlTester;
+import pl.cashgoals.budget.persistence.model.UserRights;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BudgetRequests {
     private final GraphQlTester graphQlTester;
@@ -32,11 +37,25 @@ public class BudgetRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response updateUserRights(String budgetId, String userId, String role) {
+    public GraphQlTester.Response updateUserRights(String budgetId, List<UserRights> userRights) {
+
         return graphQlTester.documentName("budget/updateUserRights")
                 .variable("budgetId", budgetId)
-                .variable("userId", userId)
-                .variable("role", role)
+                .variable(
+                        "usersRights",
+                        userRights.stream()
+                                .collect(Collectors.groupingBy(
+                                        userRight -> userRight.getUser().getEmail(),
+                                        Collectors.mapping(userRight -> userRight.getRight().toString(), Collectors.toList())
+                                ))
+                                .entrySet()
+                                .stream()
+                                .map(entry -> Map.of(
+                                        "email", entry.getKey(),
+                                        "rights", entry.getValue()
+                                ))
+                                .collect(Collectors.toList())
+                )
                 .execute();
     }
 }

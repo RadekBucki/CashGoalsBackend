@@ -12,6 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import pl.cashgoals.budget.persistence.model.Budget;
+import pl.cashgoals.budget.persistence.model.Right;
+import pl.cashgoals.budget.persistence.model.Step;
+import pl.cashgoals.budget.persistence.model.UserRights;
+import pl.cashgoals.budget.persistence.repository.BudgetRepository;
+import pl.cashgoals.budget.persistence.repository.UserRightsRepository;
 import pl.cashgoals.configuration.requests.*;
 import pl.cashgoals.configuration.testcontainers.GreenMail;
 import pl.cashgoals.configuration.testcontainers.PostgresContainer;
@@ -62,6 +68,10 @@ public abstract class AbstractIntegrationTest {
 
     @Autowired
     protected UserRepository userRepository;
+    @Autowired
+    protected BudgetRepository budgetRepository;
+    @Autowired
+    protected UserRightsRepository userRightsRepository;
 
     /**
      * Requests
@@ -86,6 +96,8 @@ public abstract class AbstractIntegrationTest {
     public void setup() {
         // Repositories
         userRepository.deleteAll();
+        budgetRepository.deleteAll();
+        userRightsRepository.deleteAll();
 
         //Requests
         userRequests = new UserRequests(graphQlTester);
@@ -100,6 +112,14 @@ public abstract class AbstractIntegrationTest {
                 .name("test")
                 .password(passwordEncoder.encode("Test123!"))
                 .email("test@example.com")
+                .theme(Theme.DARK)
+                .locale(Locale.ENGLISH)
+                .build();
+        User user2 = User.builder()
+                .enabled(true)
+                .name("test2")
+                .password(passwordEncoder.encode("Test123!"))
+                .email("test2@example.com")
                 .theme(Theme.DARK)
                 .locale(Locale.ENGLISH)
                 .build();
@@ -119,7 +139,19 @@ public abstract class AbstractIntegrationTest {
                         .user(inactiveUser)
                         .build()
         );
+        userRepository.saveAllAndFlush(List.of(user, user2, inactiveUser));
 
-        userRepository.saveAllAndFlush(List.of(user, inactiveUser));
+        Budget budget = Budget.builder()
+                .name("test")
+                .initializationStep(Step.INCOMES)
+                .build();
+        budgetRepository.saveAndFlush(budget);
+
+        UserRights userRight = UserRights.builder()
+                .budget(budget)
+                .user(user)
+                .right(Right.OWNER)
+                .build();
+        userRightsRepository.saveAllAndFlush(List.of(userRight));
     }
 }

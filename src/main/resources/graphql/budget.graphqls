@@ -1,6 +1,6 @@
 extend type Mutation {
     createBudget(name: String!): Budget!
-    updateUsersRights(budgetId: ID!, usersAndRights: [UserRightsInput!]!): [UserRights!]!
+    updateUsersRights(budgetId: ID!, usersRights: [UserRightsInput!]!): [UserRights!]!
 }
 
 extend type Query {
