@@ -23,6 +23,8 @@ import pl.cashgoals.configuration.testcontainers.GreenMail;
 import pl.cashgoals.configuration.testcontainers.PostgresContainer;
 import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
+import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expence.persistence.repository.CategoryRepository;
 import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
@@ -81,6 +83,7 @@ public abstract class AbstractIntegrationTest {
     protected ExpenceRequests expenceRequests;
     protected GoalRequests goalRequests;
     protected IncomeRequests incomeRequests;
+    protected CategoryRepository categoryRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -98,6 +101,7 @@ public abstract class AbstractIntegrationTest {
         userRepository.deleteAll();
         budgetRepository.deleteAll();
         userRightsRepository.deleteAll();
+        categoryRepository.deleteAll();
 
         //Requests
         userRequests = new UserRequests(graphQlTester);
@@ -153,5 +157,27 @@ public abstract class AbstractIntegrationTest {
                 .right(Right.OWNER)
                 .build();
         userRightsRepository.saveAllAndFlush(List.of(userRight));
+
+        Category testCategory = Category.builder()
+                .name("test")
+                .description("test")
+                .visible(true)
+                .children(List.of(
+                        Category.builder()
+                                .name("test2")
+                                .description("test2")
+                                .visible(true)
+                                .budgetId(budget.getId())
+                                .build()
+                ))
+                .budgetId(budget.getId())
+                .build();
+        Category unvisibleCategory = Category.builder()
+                .name("unvisible")
+                .description("unvisible")
+                .visible(false)
+                .budgetId(budget.getId())
+                .build();
+        categoryRepository.saveAllAndFlush(List.of(testCategory, unvisibleCategory));
     }
 }
