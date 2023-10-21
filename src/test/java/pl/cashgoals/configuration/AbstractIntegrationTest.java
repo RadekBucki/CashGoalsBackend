@@ -25,6 +25,9 @@ import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
 import pl.cashgoals.expence.persistence.model.Category;
 import pl.cashgoals.expence.persistence.repository.CategoryRepository;
+import pl.cashgoals.goal.persistence.model.Goal;
+import pl.cashgoals.goal.persistence.model.GoalType;
+import pl.cashgoals.goal.persistence.repository.GoalRepository;
 import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
@@ -74,6 +77,10 @@ public abstract class AbstractIntegrationTest {
     protected BudgetRepository budgetRepository;
     @Autowired
     protected UserRightsRepository userRightsRepository;
+    @Autowired
+    protected CategoryRepository categoryRepository;
+    @Autowired
+    protected GoalRepository goalRepository;
 
     /**
      * Requests
@@ -83,7 +90,6 @@ public abstract class AbstractIntegrationTest {
     protected ExpenceRequests expenceRequests;
     protected GoalRequests goalRequests;
     protected IncomeRequests incomeRequests;
-    protected CategoryRepository categoryRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -102,6 +108,7 @@ public abstract class AbstractIntegrationTest {
         budgetRepository.deleteAll();
         userRightsRepository.deleteAll();
         categoryRepository.deleteAll();
+        goalRepository.deleteAll();
 
         //Requests
         userRequests = new UserRequests(graphQlTester);
@@ -179,5 +186,15 @@ public abstract class AbstractIntegrationTest {
                 .budgetId(budget.getId())
                 .build();
         categoryRepository.saveAllAndFlush(List.of(testCategory, unvisibleCategory));
+
+        Goal goal = Goal.builder()
+                .name("test")
+                .description("test")
+                .budget(budget)
+                .category(testCategory)
+                .type(GoalType.PERCENTAGE_MAX)
+                .value(0.5)
+                .build();
+        goalRepository.saveAndFlush(goal);
     }
 }

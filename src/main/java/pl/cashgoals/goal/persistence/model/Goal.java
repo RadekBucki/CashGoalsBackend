@@ -2,6 +2,7 @@ package pl.cashgoals.goal.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.expence.persistence.model.Category;
 
 @Entity
@@ -22,4 +23,7 @@ public class Goal {
 
     @ManyToOne
     private Category category;
+
+    @ManyToOne
+    private Budget budget;
 }
