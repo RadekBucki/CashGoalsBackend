@@ -28,6 +28,10 @@ import pl.cashgoals.expence.persistence.repository.CategoryRepository;
 import pl.cashgoals.goal.persistence.model.Goal;
 import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;
+import pl.cashgoals.income.persistence.model.Frequency;
+import pl.cashgoals.income.persistence.model.Income;
+import pl.cashgoals.income.persistence.model.Period;
+import pl.cashgoals.income.persistence.repository.IncomeRepository;
 import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
 import pl.cashgoals.user.persistence.model.User;
@@ -36,6 +40,7 @@ import pl.cashgoals.user.persistence.repository.UserRepository;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 @SpringBootTest
 @AutoConfigureGraphQlTester
@@ -81,6 +86,8 @@ public abstract class AbstractIntegrationTest {
     protected CategoryRepository categoryRepository;
     @Autowired
     protected GoalRepository goalRepository;
+    @Autowired
+    protected IncomeRepository incomeRepository;
 
     /**
      * Requests
@@ -158,12 +165,16 @@ public abstract class AbstractIntegrationTest {
                 .build();
         budgetRepository.saveAndFlush(budget);
 
-        UserRights userRight = UserRights.builder()
-                .budget(budget)
-                .user(user)
-                .right(Right.OWNER)
-                .build();
-        userRightsRepository.saveAllAndFlush(List.of(userRight));
+        List<UserRights> userRight = Stream.of(Right.values())
+                .map(
+                        right -> UserRights.builder()
+                        .budget(budget)
+                        .user(user)
+                        .right(right)
+                        .build()
+                )
+                .toList();
+        userRightsRepository.saveAllAndFlush(userRight);
 
         Category testCategory = Category.builder()
                 .name("test")
@@ -196,5 +207,19 @@ public abstract class AbstractIntegrationTest {
                 .value(0.5)
                 .build();
         goalRepository.saveAndFlush(goal);
+
+        Income income = Income.builder()
+                .name("test")
+                .description("test")
+                .amount(100.0)
+                .frequency(
+                        Frequency.builder()
+                                .period(Period.MONTH)
+                                .value(1)
+                                .build()
+                )
+                .budget(budget)
+                .build();
+        incomeRepository.saveAndFlush(income);
     }
 }
