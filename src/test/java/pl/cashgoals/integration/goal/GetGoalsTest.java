@@ -18,7 +18,7 @@ class GetGoalsTest extends AbstractIntegrationTest {
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
     @Test
     void shouldReturnAllGoals() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         goalRequests.getGoals(budgetId)
                 .errors().verify()
                 .path("goals")
@@ -39,7 +39,7 @@ class GetGoalsTest extends AbstractIntegrationTest {
     @DisplayName("Should return access denied when user is not authorized")
     @Test
     void shouldReturnAccessDeniedWhenUserIsNotAuthorized() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         goalRequests.getGoals(budgetId)
                 .errors()
                 .expect(responseError ->

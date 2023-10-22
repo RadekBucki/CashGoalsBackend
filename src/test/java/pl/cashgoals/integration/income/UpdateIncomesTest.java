@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
-import pl.cashgoals.budget.persistence.model.UserRights;
+import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
 import pl.cashgoals.income.persistence.model.Frequency;
 import pl.cashgoals.income.persistence.model.Income;
@@ -29,11 +29,11 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
         Budget budget = budgetRepository.findAll().get(0);
         budget.setInitializationStep(Step.INCOMES);
         budgetRepository.save(budget);
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
 
         Long incomeId = incomeRepository.findAll()
                 .stream()
-                .filter(income -> income.getBudget().getId().equals(budgetId))
+                .filter(income -> income.getBudget().getId().toString().equals(budgetId))
                 .findFirst()
                 .orElseThrow()
                 .getId();
@@ -67,7 +67,7 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
                     assertEquals(1, income.getFrequency().getValue());
                 });
 
-        budget = budgetRepository.findById(budgetId).orElseThrow();
+        budget = budgetRepository.findById(budget.getId()).orElseThrow();
         assertEquals(Step.EXPENSES_CATEGORIES, budget.getInitializationStep());
     }
 
@@ -87,17 +87,17 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
         Budget budget = budgetRepository.findAll().get(0);
-        UserRights userRights = UserRights.builder()
+        UserRight userRight = UserRight.builder()
                 .user(user)
                 .budget(budget)
                 .right(Right.valueOf(right))
                 .build();
-        userRightsRepository.saveAndFlush(userRights);
+        userRightsRepository.saveAndFlush(userRight);
         checkUnauthorizedResponse();
     }
 
     private void checkUnauthorizedResponse() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         incomeRequests.updateIncomes(
                         budgetId,
                         List.of(

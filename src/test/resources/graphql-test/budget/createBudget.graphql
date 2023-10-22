@@ -3,5 +3,6 @@ mutation createBudget($name: String!) {
         id
         name
         initializationStep
+        rights
     }
 }

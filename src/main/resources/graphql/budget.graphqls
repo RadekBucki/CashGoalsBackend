@@ -13,6 +13,7 @@ type Budget {
     id: ID!
     name: String!
     initializationStep: Step
+    rights: [Right!]
 }
 
 enum Step {

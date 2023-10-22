@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
-import pl.cashgoals.budget.persistence.model.UserRights;
+import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
 import pl.cashgoals.user.persistence.model.User;
 
@@ -20,7 +20,7 @@ import java.util.Optional;
 import static graphql.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class UpdateUserRightsTest extends AbstractIntegrationTest {
+class UpdateUserRightTest extends AbstractIntegrationTest {
     @DisplayName("Should update user rights")
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
     @Test
@@ -28,25 +28,25 @@ class UpdateUserRightsTest extends AbstractIntegrationTest {
         Budget budget = budgetRepository.findAll().get(0);
         budget.setInitializationStep(Step.USERS_AND_RIGHTS);
         budgetRepository.saveAndFlush(budget);
-        String budgetId = budget.getId();
+        String budgetId = budget.getId().toString();
         budgetRequests.updateUserRights(
                         budgetId,
                         List.of(
-                                UserRights.builder()
+                                UserRight.builder()
                                         .user(User.builder().email("test2@example.com").build())
                                         .right(Right.EDIT_EXPENSES)
                                         .build()
                         )
                 )
                 .errors().verify()
-                .path("updateUserRights").entityList(UserRights.class).satisfies(userRights -> {
-                    Optional<UserRights> userRightsOptional = userRights.stream()
+                .path("updateUserRights").entityList(UserRight.class).satisfies(userRights -> {
+                    Optional<UserRight> userRightsOptional = userRights.stream()
                             .filter(userRights1 -> userRights1.getUser().getEmail().equals("test2@example.com"))
                             .filter(userRights1 -> userRights1.getRight().equals(Right.EDIT_EXPENSES))
                             .findFirst();
                     assertTrue(userRightsOptional.isPresent());
                 });
-        budget = budgetRepository.findById(budgetId).orElseThrow();
+        budget = budgetRepository.findById(budget.getId()).orElseThrow();
         assertEquals(Step.FINISHED, budget.getInitializationStep());
     }
 
@@ -66,21 +66,21 @@ class UpdateUserRightsTest extends AbstractIntegrationTest {
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
         Budget budget = budgetRepository.findAll().get(0);
-        UserRights userRights = UserRights.builder()
+        UserRight userRight = UserRight.builder()
                 .user(user)
                 .budget(budget)
                 .right(Right.valueOf(right))
                 .build();
-        userRightsRepository.saveAndFlush(userRights);
+        userRightsRepository.saveAndFlush(userRight);
         checkUnauthorizedResponse();
     }
 
     private void checkUnauthorizedResponse() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         budgetRequests.updateUserRights(
                         budgetId,
                         List.of(
-                                UserRights.builder()
+                                UserRight.builder()
                                         .user(User.builder().email("test2@example.com").build())
                                         .right(Right.EDIT_EXPENSES)
                                         .build()

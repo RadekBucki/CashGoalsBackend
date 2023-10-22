@@ -1,7 +1,7 @@
 package pl.cashgoals.configuration.requests;
 
 import org.springframework.graphql.test.tester.GraphQlTester;
-import pl.cashgoals.budget.persistence.model.UserRights;
+import pl.cashgoals.budget.persistence.model.UserRight;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class BudgetRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response updateUserRights(String budgetId, List<UserRights> userRights) {
+    public GraphQlTester.Response updateUserRights(String budgetId, List<UserRight> userRights) {
 
         return graphQlTester.documentName("budget/updateUserRights")
                 .variable("budgetId", budgetId)

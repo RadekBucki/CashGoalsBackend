@@ -17,7 +17,7 @@ class GetVisibleCategoriesTest extends AbstractIntegrationTest {
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
     @Test
     void shouldReturnAllVisibleCategories() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         expenceRequests.getVisibleCategories(budgetId)
                 .errors().verify()
                 .path("categories").entityList(Category.class)
@@ -43,7 +43,7 @@ class GetVisibleCategoriesTest extends AbstractIntegrationTest {
     @DisplayName("Should return access denied when authorization missed")
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         expenceRequests.getVisibleCategories(budgetId)
                 .errors()
                 .expect(responseError ->

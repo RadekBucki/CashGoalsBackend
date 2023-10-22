@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
-import pl.cashgoals.budget.persistence.model.UserRights;
+import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
 import pl.cashgoals.expence.persistence.model.Category;
 import pl.cashgoals.user.persistence.model.User;
@@ -26,7 +26,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
     @Test
     void shouldUpdateCategory() {
         Budget budget = budgetRepository.findAll().get(0);
-        String budgetId = budget.getId();
+        String budgetId = budget.getId().toString();
         budget.setInitializationStep(Step.EXPENSES_CATEGORIES);
         budgetRepository.saveAndFlush(budget);
 
@@ -95,17 +95,17 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
         Budget budget = budgetRepository.findAll().get(0);
-        UserRights userRights = UserRights.builder()
+        UserRight userRight = UserRight.builder()
                 .user(user)
                 .budget(budget)
                 .right(Right.valueOf(right))
                 .build();
-        userRightsRepository.saveAndFlush(userRights);
+        userRightsRepository.saveAndFlush(userRight);
         checkUnauthorizedResponse();
     }
 
     private void checkUnauthorizedResponse() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         expenceRequests.updateCategories(
                         budgetId,
                         List.of(

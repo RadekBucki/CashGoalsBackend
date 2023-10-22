@@ -11,16 +11,18 @@ import pl.cashgoals.user.persistence.model.User;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRights {
+public class UserRight {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     @ManyToOne
     private User user;
 
-    @Id
     @ManyToOne
     private Budget budget;
 
-    @Id
     @Enumerated(EnumType.STRING)
+    @Column(name = "right_type")
     private Right right;
 }

@@ -17,7 +17,7 @@ class GetIncomesTest extends AbstractIntegrationTest {
     @Test
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
     void shouldGetIncomes() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         incomeRequests.getIncomes(budgetId)
                 .errors().verify()
                 .path("incomes")
@@ -36,7 +36,7 @@ class GetIncomesTest extends AbstractIntegrationTest {
     @DisplayName("Should return access denied when authorization missed")
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
-        String budgetId = budgetRepository.findAll().get(0).getId();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
         incomeRequests.getIncomes(budgetId)
                 .errors()
                 .expect(responseError ->

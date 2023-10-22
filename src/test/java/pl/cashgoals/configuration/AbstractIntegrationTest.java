@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
-import pl.cashgoals.budget.persistence.model.UserRights;
+import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.budget.persistence.repository.BudgetRepository;
 import pl.cashgoals.budget.persistence.repository.UserRightsRepository;
 import pl.cashgoals.configuration.requests.*;
@@ -23,14 +23,8 @@ import pl.cashgoals.configuration.testcontainers.GreenMail;
 import pl.cashgoals.configuration.testcontainers.PostgresContainer;
 import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
-import pl.cashgoals.expence.persistence.model.Category;
 import pl.cashgoals.expence.persistence.repository.CategoryRepository;
-import pl.cashgoals.goal.persistence.model.Goal;
-import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;
-import pl.cashgoals.income.persistence.model.Frequency;
-import pl.cashgoals.income.persistence.model.Income;
-import pl.cashgoals.income.persistence.model.Period;
 import pl.cashgoals.income.persistence.repository.IncomeRepository;
 import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
@@ -165,9 +159,9 @@ public abstract class AbstractIntegrationTest {
                 .build();
         budgetRepository.saveAndFlush(budget);
 
-        List<UserRights> userRight = Stream.of(Right.values())
+        List<UserRight> userRight = Stream.of(Right.values())
                 .map(
-                        right -> UserRights.builder()
+                        right -> UserRight.builder()
                         .budget(budget)
                         .user(user)
                         .right(right)
@@ -176,50 +170,50 @@ public abstract class AbstractIntegrationTest {
                 .toList();
         userRightsRepository.saveAllAndFlush(userRight);
 
-        Category testCategory = Category.builder()
-                .name("test")
-                .description("test")
-                .visible(true)
-                .children(List.of(
-                        Category.builder()
-                                .name("test2")
-                                .description("test2")
-                                .visible(true)
-                                .budgetId(budget.getId())
-                                .build()
-                ))
-                .budgetId(budget.getId())
-                .build();
-        Category unvisibleCategory = Category.builder()
-                .name("unvisible")
-                .description("unvisible")
-                .visible(false)
-                .budgetId(budget.getId())
-                .build();
-        categoryRepository.saveAllAndFlush(List.of(testCategory, unvisibleCategory));
-
-        Goal goal = Goal.builder()
-                .name("test")
-                .description("test")
-                .budget(budget)
-                .category(testCategory)
-                .type(GoalType.PERCENTAGE_MAX)
-                .value(0.5)
-                .build();
-        goalRepository.saveAndFlush(goal);
-
-        Income income = Income.builder()
-                .name("test")
-                .description("test")
-                .amount(100.0)
-                .frequency(
-                        Frequency.builder()
-                                .period(Period.MONTH)
-                                .value(1)
-                                .build()
-                )
-                .budget(budget)
-                .build();
-        incomeRepository.saveAndFlush(income);
+//        Category testCategory = Category.builder()
+//                .name("test")
+//                .description("test")
+//                .visible(true)
+//                .children(List.of(
+//                        Category.builder()
+//                                .name("test2")
+//                                .description("test2")
+//                                .visible(true)
+//                                .budgetId(budget.getId())
+//                                .build()
+//                ))
+//                .budgetId(budget.getId())
+//                .build();
+//        Category unvisibleCategory = Category.builder()
+//                .name("unvisible")
+//                .description("unvisible")
+//                .visible(false)
+//                .budgetId(budget.getId())
+//                .build();
+//        categoryRepository.saveAllAndFlush(List.of(testCategory, unvisibleCategory));
+//
+//        Goal goal = Goal.builder()
+//                .name("test")
+//                .description("test")
+//                .budget(budget)
+//                .category(testCategory)
+//                .type(GoalType.PERCENTAGE_MAX)
+//                .value(0.5)
+//                .build();
+//        goalRepository.saveAndFlush(goal);
+//
+//        Income income = Income.builder()
+//                .name("test")
+//                .description("test")
+//                .amount(100.0)
+//                .frequency(
+//                        Frequency.builder()
+//                                .period(Period.MONTH)
+//                                .value(1)
+//                                .build()
+//                )
+//                .budget(budget)
+//                .build();
+//        incomeRepository.saveAndFlush(income);
     }
 }
