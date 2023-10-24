@@ -1,4 +1,4 @@
-query getUsersRights($budgetId: ID!) {
+query getUsersRights($budgetId: UUID!) {
     usersRights(budgetId: $budgetId) {
         user {
             name

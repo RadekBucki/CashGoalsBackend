@@ -3,6 +3,7 @@ package pl.cashgoals.budget.business.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.cashgoals.budget.business.exception.BudgetNotFoundException;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
@@ -14,6 +15,7 @@ import pl.cashgoals.user.persistence.model.User;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +50,13 @@ public class BudgetService {
                 .filter(userRight -> userRight.getUser().getEmail().equals(principal.getName()))
                 .map(UserRight::getRight)
                 .toList();
+    }
+
+    public Budget getBudget(UUID id) {
+        return budgetRepository.findById(id).orElseThrow(BudgetNotFoundException::new);
+    }
+
+    public List<Budget> getBudgets(Principal principal) {
+        return budgetRepository.findAllByUserEmailAndRight(principal.getName(), Right.VIEW);
     }
 }

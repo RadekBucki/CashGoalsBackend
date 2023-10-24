@@ -1,8 +1,4 @@
 spring:
-  jpa:
-    properties:
-      hibernate:
-        format_sql: true
   sql:
     init:
       mode: always

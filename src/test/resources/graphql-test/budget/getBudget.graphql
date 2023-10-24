@@ -1,4 +1,4 @@
-query getBudget($id: ID!) {
+query getBudget($id: UUID!) {
     budget(id: $id) {
         id
         name

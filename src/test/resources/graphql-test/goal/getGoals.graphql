@@ -1,4 +1,4 @@
-query getGoals($budgetId: ID!) {
+query getGoals($budgetId: UUID!) {
     goals(budgetId: $budgetId) {
         id
         name

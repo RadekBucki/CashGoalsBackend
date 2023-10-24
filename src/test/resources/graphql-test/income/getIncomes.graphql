@@ -1,4 +1,4 @@
-query getIncomes($budgetId: ID!) {
+query getIncomes($budgetId: UUID!) {
     incomes(budgetId: $budgetId) {
         id
         name

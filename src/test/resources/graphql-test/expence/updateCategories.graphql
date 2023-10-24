@@ -1,4 +1,4 @@
-mutation updateCategories($budgetId: ID!, $categories: [CategoryInput!]!) {
+mutation updateCategories($budgetId: UUID!, $categories: [CategoryInput!]!) {
     updateCategories(budgetId: $budgetId, categories: $categories) {
         id
         name

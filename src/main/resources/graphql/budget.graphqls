@@ -1,16 +1,16 @@
 extend type Mutation {
     createBudget(name: String!): Budget!
-    updateUsersRights(budgetId: ID!, usersRights: [UserRightsInput!]!): [UserRights!]!
+    updateUsersRights(budgetId: UUID!, usersRights: [UserRightsInput!]!): [UserRights!]!
 }
 
 extend type Query {
     budgets: [Budget!]!
-    budget(id: ID!): Budget
-    usersRights(budgetId: ID!): [UserRights!]!
+    budget(id: UUID!): Budget
+    usersRights(budgetId: UUID!): [UserRights!]!
 }
 
 type Budget {
-    id: ID!
+    id: UUID!
     name: String!
     initializationStep: Step
     rights: [Right!]
@@ -35,6 +35,7 @@ type UserRights {
 
 enum Right {
     OWNER
+    VIEW
     EDIT_INCOMES
     EDIT_CATEGORIES
     EDIT_GOALS

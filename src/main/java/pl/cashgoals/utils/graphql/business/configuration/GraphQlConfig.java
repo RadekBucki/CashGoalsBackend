@@ -17,7 +17,8 @@ public class GraphQlConfig {
                 .scalar(ExtendedScalars.DateTime)
                 .scalar(ExtendedScalars.Date)
                 .scalar(ExtendedScalars.Time)
-                .scalar(ExtendedScalars.Json);
+                .scalar(ExtendedScalars.Json)
+                .scalar(ExtendedScalars.UUID);
     }
 
     @Bean

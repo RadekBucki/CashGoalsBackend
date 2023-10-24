@@ -1,9 +1,9 @@
 extend type Mutation {
-    updateIncomes(budgetId: ID!, incomes: [IncomeInput!]!): Income!
+    updateIncomes(budgetId: UUID!, incomes: [IncomeInput!]!): Income!
 }
 
 extend type Query {
-    incomes(budgetId: ID!): [Income!]!
+    incomes(budgetId: UUID!): [Income!]!
 }
 
 input IncomeInput {

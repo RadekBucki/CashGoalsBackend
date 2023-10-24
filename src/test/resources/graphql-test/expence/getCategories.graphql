@@ -1,4 +1,4 @@
-query getCategories($budgetId: ID!) {
+query getCategories($budgetId: UUID!) {
     categories(budgetId: $budgetId) {
         ...CategoryDetails
     }

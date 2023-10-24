@@ -1,10 +1,10 @@
 extend type Mutation {
-    updateCategories(budgetId: ID!, categories: [CategoryInput!]!): [Category!]!
+    updateCategories(budgetId: UUID!, categories: [CategoryInput!]!): [Category!]!
 }
 
 extend type Query {
-    categories(budgetId: ID!): [Category!]!
-    visibleCategories(budgetId: ID!): [Category!]!
+    categories(budgetId: UUID!): [Category!]!
+    visibleCategories(budgetId: UUID!): [Category!]!
 }
 
 input CategoryInput {

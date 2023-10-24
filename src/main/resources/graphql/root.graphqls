@@ -5,3 +5,4 @@ type Mutation
 scalar Date
 scalar Time
 scalar DateTime
+scalar UUID

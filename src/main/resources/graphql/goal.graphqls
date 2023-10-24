@@ -1,9 +1,9 @@
 extend type Mutation {
-    updateGoals(budgetId: ID!, goals: [GoalInput!]!): [Goal!]!
+    updateGoals(budgetId: UUID!, goals: [GoalInput!]!): [Goal!]!
 }
 
 extend type Query {
-    goals(budgetId: ID!): [Goal!]!
+    goals(budgetId: UUID!): [Goal!]!
 }
 
 input GoalInput {
