@@ -23,6 +23,7 @@ public class BudgetService {
     private final UserFacade userFacade;
     private final BudgetRepository budgetRepository;
     private final UserRightsRepository userRightsRepository;
+    private final RightValidationService rightValidationService;
 
     @Transactional
     public Budget createBudget(String name, Principal principal) {
@@ -45,14 +46,11 @@ public class BudgetService {
     }
 
     public List<Right> getGetCurrentUserRightsFromBudget(Budget budget, Principal principal) {
-        return budget.getUserRights()
-                .stream()
-                .filter(userRight -> userRight.getUser().getEmail().equals(principal.getName()))
-                .map(UserRight::getRight)
-                .toList();
+        return userRightsRepository.getRights(budget.getId(), principal.getName());
     }
 
     public Budget getBudget(UUID id) {
+        rightValidationService.verifyUserRight(id, Right.VIEW);
         return budgetRepository.findById(id).orElseThrow(BudgetNotFoundException::new);
     }
 

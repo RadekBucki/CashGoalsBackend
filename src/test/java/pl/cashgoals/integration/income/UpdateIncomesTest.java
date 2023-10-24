@@ -74,7 +74,22 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
     @DisplayName("Should return access denied when authorization missed")
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
-        checkUnauthorizedResponse();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
+        budgetRequests.updateUserRights(
+                        budgetId,
+                        List.of(
+                                UserRight.builder()
+                                        .user(User.builder().email("test2@example.com").build())
+                                        .right(Right.EDIT_EXPENSES)
+                                        .build()
+                        )
+                )
+                .errors()
+                .expect(responseError ->
+                        Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
+                                && responseError.getErrorType().equals(ErrorType.UNAUTHORIZED)
+                )
+                .verify();
     }
 
     @DisplayName("Should return access denied when")
@@ -82,7 +97,7 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
     @ParameterizedTest(name = "{0}")
     @CsvSource({
             "user has no rights to budget",
-            "user has no EDIT_INCOMES right, EDIT_INCOMES",
+            "user has no EDIT_EXPENSES right, EDIT_EXPENSES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
@@ -93,31 +108,21 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
                 .right(Right.valueOf(right))
                 .build();
         userRightsRepository.saveAndFlush(userRight);
-        checkUnauthorizedResponse();
-    }
 
-    private void checkUnauthorizedResponse() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        incomeRequests.updateIncomes(
+        budgetRequests.updateUserRights(
                         budgetId,
                         List.of(
-                                Income.builder()
-                                        .name("test")
-                                        .description("test")
-                                        .amount(1000.0)
-                                        .frequency(
-                                                Frequency.builder()
-                                                        .period(Period.MONTH)
-                                                        .value(1)
-                                                        .build()
-                                        )
+                                UserRight.builder()
+                                        .user(User.builder().email("test2@example.com").build())
+                                        .right(Right.EDIT_EXPENSES)
                                         .build()
                         )
                 )
                 .errors()
                 .expect(responseError ->
-                        Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
-                                && responseError.getErrorType().equals(ErrorType.UNAUTHORIZED)
+                        Objects.equals(responseError.getMessage(), "cashgoals.budget.not-found")
+                                && responseError.getErrorType().equals(ErrorType.NOT_FOUND)
                 )
                 .verify();
     }

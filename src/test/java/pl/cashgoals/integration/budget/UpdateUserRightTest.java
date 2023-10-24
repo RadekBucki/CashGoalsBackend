@@ -53,7 +53,22 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
     @DisplayName("Should return access denied when authorization missed")
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
-        checkUnauthorizedResponse();
+        String budgetId = budgetRepository.findAll().get(0).getId().toString();
+        budgetRequests.updateUserRights(
+                        budgetId,
+                        List.of(
+                                UserRight.builder()
+                                        .user(User.builder().email("test2@example.com").build())
+                                        .right(Right.EDIT_EXPENSES)
+                                        .build()
+                        )
+                )
+                .errors()
+                .expect(responseError ->
+                        Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
+                                && responseError.getErrorType().equals(ErrorType.UNAUTHORIZED)
+                )
+                .verify();
     }
 
     @DisplayName("Should return access denied when")
@@ -72,10 +87,7 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
                 .right(Right.valueOf(right))
                 .build();
         userRightsRepository.saveAndFlush(userRight);
-        checkUnauthorizedResponse();
-    }
 
-    private void checkUnauthorizedResponse() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         budgetRequests.updateUserRights(
                         budgetId,
@@ -88,8 +100,8 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
                 )
                 .errors()
                 .expect(responseError ->
-                        Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
-                                && responseError.getErrorType().equals(ErrorType.UNAUTHORIZED)
+                        Objects.equals(responseError.getMessage(), "cashgoals.budget.not-found")
+                                && responseError.getErrorType().equals(ErrorType.NOT_FOUND)
                 )
                 .verify();
     }

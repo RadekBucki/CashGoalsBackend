@@ -49,8 +49,8 @@ class GetUserRightTest extends AbstractIntegrationTest {
         budgetRequests.getUserRights(budgetId)
                 .errors()
                 .expect(responseError ->
-                        Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
-                                && responseError.getErrorType().equals(ErrorType.UNAUTHORIZED)
+                        Objects.equals(responseError.getMessage(), "cashgoals.budget.not-found")
+                                && responseError.getErrorType().equals(ErrorType.NOT_FOUND)
                 )
                 .verify();
     }
