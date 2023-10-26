@@ -42,4 +42,7 @@ public interface UserRightsRepository extends JpaRepository<UserRight, Long> {
             "AND ur.right = :right"
     )
     Boolean hasUserRight(UUID budgetId, String email, Right right);
+
+    @Query("SELECT ur FROM UserRight ur WHERE ur.budget.id = :budgetId")
+    List<UserRight> findAllByBudgetId(UUID budgetId);
 }

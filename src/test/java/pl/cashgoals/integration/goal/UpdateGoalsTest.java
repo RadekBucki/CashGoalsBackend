@@ -84,12 +84,23 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+        goalRequests.updateGoals(
                         budgetId,
                         List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
+                                Goal.builder()
+                                        .id(1L)
+                                        .name("test")
+                                        .description("test")
+                                        .type(GoalType.PERCENTAGE_MAX)
+                                        .value(0.6)
+                                        .category(Category.builder().id(1L).build())
+                                        .build(),
+                                Goal.builder()
+                                        .name("test")
+                                        .description("test")
+                                        .type(GoalType.PERCENTAGE_MIN)
+                                        .value(0.4)
+                                        .category(Category.builder().id(1L).build())
                                         .build()
                         )
                 )
@@ -119,12 +130,24 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
         userRightsRepository.saveAndFlush(userRight);
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+
+        goalRequests.updateGoals(
                         budgetId,
                         List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
+                                Goal.builder()
+                                        .id(1L)
+                                        .name("test")
+                                        .description("test")
+                                        .type(GoalType.PERCENTAGE_MAX)
+                                        .value(0.6)
+                                        .category(Category.builder().id(1L).build())
+                                        .build(),
+                                Goal.builder()
+                                        .name("test")
+                                        .description("test")
+                                        .type(GoalType.PERCENTAGE_MIN)
+                                        .value(0.4)
+                                        .category(Category.builder().id(1L).build())
                                         .build()
                         )
                 )

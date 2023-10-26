@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.cashgoals.budget.business.exception.BudgetNotFoundException;
+import pl.cashgoals.budget.business.model.UserRightsInput;
+import pl.cashgoals.budget.business.model.UserRightsOutput;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
@@ -16,6 +18,7 @@ import pl.cashgoals.user.persistence.model.User;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +59,50 @@ public class BudgetService {
 
     public List<Budget> getBudgets(Principal principal) {
         return budgetRepository.findAllByUserEmailAndRight(principal.getName(), Right.VIEW);
+    }
+
+    public List<UserRightsOutput> getUserRights(UUID budgetId) {
+        rightValidationService.verifyUserRight(budgetId, Right.VIEW);
+        return mapToUserRightsOutput(userRightsRepository.findAllByBudgetId(budgetId));
+    }
+
+    public List<UserRightsOutput> updateUserRights(UUID budgetId, List<UserRightsInput> usersRights) {
+        rightValidationService.verifyUserRight(budgetId, Right.EDIT_USERS_AND_RIGHTS);
+        // TODO: Handle new users and simplify setUserRightsToBudget to operate on budgetId and user email
+        List<UserRightsOutput> list = usersRights
+                .stream()
+                .map(userRightsInput -> {
+                    User user = userFacade.getUserByEmail(userRightsInput.email());
+                    List<UserRight> userRights = userRightsRepository.setUserRightsToBudget(
+                            budgetRepository.findById(budgetId).orElseThrow(),
+                            user,
+                            userRightsInput.rights()
+                    );
+                    return new UserRightsOutput(user, userRights.stream().map(UserRight::getRight).toList());
+                })
+                .toList();
+        updateBudgetInitializationStep(budgetId, Step.FINISHED);
+        return list;
+    }
+
+    private static List<UserRightsOutput> mapToUserRightsOutput(List<UserRight> userRights) {
+        return userRights.stream()
+                .collect(Collectors.groupingBy(
+                        UserRight::getUser,
+                        Collectors.mapping(
+                                UserRight::getRight,
+                                Collectors.toList()
+                        )
+                ))
+                .entrySet()
+                .stream()
+                .map(entry -> new UserRightsOutput(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    public void updateBudgetInitializationStep(UUID budgetId, Step step) {
+        Budget budget = budgetRepository.findById(budgetId).orElseThrow();
+        budget.setInitializationStep(step);
+        budgetRepository.save(budget);
     }
 }

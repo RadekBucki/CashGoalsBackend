@@ -4,10 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.test.context.support.WithMockUser;
+import pl.cashgoals.budget.business.model.UserRightsOutput;
 import pl.cashgoals.budget.persistence.model.Right;
-import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,11 +21,11 @@ class GetUserRightTest extends AbstractIntegrationTest {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         budgetRequests.getUserRights(budgetId)
                 .errors().verify()
-                .path("userRights").entityList(UserRight.class).satisfies(userRights -> {
+                .path("usersRights").entityList(UserRightsOutput.class).satisfies(userRights -> {
                     assertEquals(1, userRights.size());
-                    assertEquals("test", userRights.get(0).getUser().getName());
-                    assertEquals("test@example.com", userRights.get(0).getUser().getEmail());
-                    assertEquals(Right.OWNER, userRights.get(0).getRight());
+                    assertEquals("test", userRights.get(0).user().getName());
+                    assertEquals("test@example.com", userRights.get(0).user().getEmail());
+                    assertEquals(List.of(Right.values()), userRights.get(0).rights());
                 });
     }
 

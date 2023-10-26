@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.test.context.support.WithMockUser;
+import pl.cashgoals.budget.business.model.UserRightsInput;
+import pl.cashgoals.budget.business.model.UserRightsOutput;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
@@ -29,20 +31,15 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
         budget.setInitializationStep(Step.USERS_AND_RIGHTS);
         budgetRepository.saveAndFlush(budget);
         String budgetId = budget.getId().toString();
-        budgetRequests.updateUserRights(
+        budgetRequests.updateUsersRights(
                         budgetId,
-                        List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
-                                        .build()
-                        )
+                        List.of(new UserRightsInput("test2@example.com", List.of(Right.EDIT_EXPENSES)))
                 )
                 .errors().verify()
-                .path("updateUserRights").entityList(UserRight.class).satisfies(userRights -> {
-                    Optional<UserRight> userRightsOptional = userRights.stream()
-                            .filter(userRights1 -> userRights1.getUser().getEmail().equals("test2@example.com"))
-                            .filter(userRights1 -> userRights1.getRight().equals(Right.EDIT_EXPENSES))
+                .path("updateUsersRights").entityList(UserRightsOutput.class).satisfies(userRights -> {
+                    Optional<UserRightsOutput> userRightsOptional = userRights.stream()
+                            .filter(userRights1 -> userRights1.user().getEmail().equals("test2@example.com"))
+                            .filter(userRights1 -> userRights1.rights().equals(List.of(Right.EDIT_EXPENSES)))
                             .findFirst();
                     assertTrue(userRightsOptional.isPresent());
                 });
@@ -54,14 +51,9 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+        budgetRequests.updateUsersRights(
                         budgetId,
-                        List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
-                                        .build()
-                        )
+                        List.of(new UserRightsInput("test2@example.com", List.of(Right.EDIT_EXPENSES)))
                 )
                 .errors()
                 .expect(responseError ->
@@ -75,28 +67,25 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
     @WithMockUser(username = "test2@example.com", authorities = {"USER"})
     @ParameterizedTest(name = "{0}")
     @CsvSource({
-            "user has no rights to budget",
-            "user has no EDIT_EXPENSES right, EDIT_EXPENSES",
+            "user has no rights to budget, ",
+            "user has no EDIT_USERS_AND_RIGHTS right, EDIT_EXPENSES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
         Budget budget = budgetRepository.findAll().get(0);
-        UserRight userRight = UserRight.builder()
-                .user(user)
-                .budget(budget)
-                .right(Right.valueOf(right))
-                .build();
-        userRightsRepository.saveAndFlush(userRight);
+        if (right != null) {
+            UserRight userRight = UserRight.builder()
+                    .user(user)
+                    .budget(budget)
+                    .right(Right.valueOf(right))
+                    .build();
+            userRightsRepository.saveAndFlush(userRight);
+        }
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+        budgetRequests.updateUsersRights(
                         budgetId,
-                        List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
-                                        .build()
-                        )
+                        List.of(new UserRightsInput("test2@example.com", List.of(Right.EDIT_EXPENSES)))
                 )
                 .errors()
                 .expect(responseError ->

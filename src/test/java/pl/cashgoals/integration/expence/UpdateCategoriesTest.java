@@ -83,12 +83,21 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+        Long categoryId = categoryRepository.findAll()
+                .stream()
+                .filter(category -> category.getBudgetId().equals(budgetId))
+                .filter(category -> category.getName().equals("test"))
+                .findFirst()
+                .orElseThrow()
+                .getId();
+        expenceRequests.updateCategories(
                         budgetId,
                         List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
+                                Category.builder()
+                                        .id(categoryId)
+                                        .name("test")
+                                        .description("test")
+                                        .visible(false)
                                         .build()
                         )
                 )
@@ -118,12 +127,21 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
         userRightsRepository.saveAndFlush(userRight);
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+        Long categoryId = categoryRepository.findAll()
+                .stream()
+                .filter(category -> category.getBudgetId().equals(budgetId))
+                .filter(category -> category.getName().equals("test"))
+                .findFirst()
+                .orElseThrow()
+                .getId();
+        expenceRequests.updateCategories(
                         budgetId,
                         List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
+                                Category.builder()
+                                        .id(categoryId)
+                                        .name("test")
+                                        .description("test")
+                                        .visible(false)
                                         .build()
                         )
                 )

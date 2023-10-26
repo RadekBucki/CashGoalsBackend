@@ -75,12 +75,26 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+        Long incomeId = incomeRepository.findAll()
+                .stream()
+                .filter(income -> income.getBudget().getId().toString().equals(budgetId))
+                .findFirst()
+                .orElseThrow()
+                .getId();
+        incomeRequests.updateIncomes(
                         budgetId,
                         List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
+                                Income.builder()
+                                        .id(incomeId)
+                                        .name("test")
+                                        .description("test")
+                                        .amount(1000.0)
+                                        .frequency(
+                                                Frequency.builder()
+                                                        .period(Period.MONTH)
+                                                        .value(1)
+                                                        .build()
+                                        )
                                         .build()
                         )
                 )
@@ -110,12 +124,26 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
         userRightsRepository.saveAndFlush(userRight);
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUserRights(
+        Long incomeId = incomeRepository.findAll()
+                .stream()
+                .filter(income -> income.getBudget().getId().toString().equals(budgetId))
+                .findFirst()
+                .orElseThrow()
+                .getId();
+        incomeRequests.updateIncomes(
                         budgetId,
                         List.of(
-                                UserRight.builder()
-                                        .user(User.builder().email("test2@example.com").build())
-                                        .right(Right.EDIT_EXPENSES)
+                                Income.builder()
+                                        .id(incomeId)
+                                        .name("test")
+                                        .description("test")
+                                        .amount(1000.0)
+                                        .frequency(
+                                                Frequency.builder()
+                                                        .period(Period.MONTH)
+                                                        .value(1)
+                                                        .build()
+                                        )
                                         .build()
                         )
                 )

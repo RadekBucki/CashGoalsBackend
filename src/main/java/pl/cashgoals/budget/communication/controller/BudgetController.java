@@ -7,6 +7,8 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import pl.cashgoals.budget.business.model.UserRightsInput;
+import pl.cashgoals.budget.business.model.UserRightsOutput;
 import pl.cashgoals.budget.business.service.BudgetService;
 import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
@@ -44,5 +46,20 @@ public class BudgetController {
     @SchemaMapping(typeName = "Budget" , field = "rights")
     public List<Right> id(Budget budget, Principal principal) {
         return budgetService.getGetCurrentUserRightsFromBudget(budget, principal);
+    }
+
+    @QueryMapping
+    @FullyAuthenticated
+    public List<UserRightsOutput> usersRights(@Argument UUID budgetId) {
+        return budgetService.getUserRights(budgetId);
+    }
+
+    @MutationMapping
+    @FullyAuthenticated
+    public List<UserRightsOutput> updateUsersRights(
+            @Argument UUID budgetId,
+            @Argument List<UserRightsInput> usersRights
+    ) {
+        return budgetService.updateUserRights(budgetId, usersRights);
     }
 }
