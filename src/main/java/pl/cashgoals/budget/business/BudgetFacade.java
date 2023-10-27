@@ -15,7 +15,7 @@ public class BudgetFacade {
     private final RightValidationService rightValidationService;
     private final BudgetService budgetService;
 
-    public void verifyUserRight(UUID budgetId, Right right) {
+    public void verifyCurrentUserRight(UUID budgetId, Right right) {
         rightValidationService.verifyUserRight(budgetId, right);
     }
 

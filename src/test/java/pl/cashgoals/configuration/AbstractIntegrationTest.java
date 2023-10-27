@@ -23,6 +23,7 @@ import pl.cashgoals.configuration.testcontainers.GreenMail;
 import pl.cashgoals.configuration.testcontainers.PostgresContainer;
 import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
+import pl.cashgoals.expence.persistence.model.Category;
 import pl.cashgoals.expence.persistence.repository.CategoryRepository;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;
 import pl.cashgoals.income.persistence.repository.IncomeRepository;
@@ -170,27 +171,27 @@ public abstract class AbstractIntegrationTest {
                 .toList();
         userRightsRepository.saveAllAndFlush(userRight);
 
-//        Category testCategory = Category.builder()
-//                .name("test")
-//                .description("test")
-//                .visible(true)
-//                .children(List.of(
-//                        Category.builder()
-//                                .name("test2")
-//                                .description("test2")
-//                                .visible(true)
-//                                .budgetId(budget.getId())
-//                                .build()
-//                ))
-//                .budgetId(budget.getId())
-//                .build();
-//        Category unvisibleCategory = Category.builder()
-//                .name("unvisible")
-//                .description("unvisible")
-//                .visible(false)
-//                .budgetId(budget.getId())
-//                .build();
-//        categoryRepository.saveAllAndFlush(List.of(testCategory, unvisibleCategory));
+        Category test2Category = Category.builder()
+                .name("test2")
+                .description("test2")
+                .visible(true)
+                .budgetId(budget.getId())
+                .build();
+        Category testCategory = Category.builder()
+                .name("test")
+                .description("test")
+                .visible(true)
+                .children(List.of(test2Category))
+                .budgetId(budget.getId())
+                .build();
+        test2Category.setParent(testCategory);
+        Category unvisibleCategory = Category.builder()
+                .name("unvisible")
+                .description("unvisible")
+                .visible(false)
+                .budgetId(budget.getId())
+                .build();
+        categoryRepository.saveAllAndFlush(List.of(testCategory, test2Category, unvisibleCategory));
 //
 //        Goal goal = Goal.builder()
 //                .name("test")

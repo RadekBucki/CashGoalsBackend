@@ -20,7 +20,7 @@ class GetVisibleCategoriesTest extends AbstractIntegrationTest {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         expenceRequests.getVisibleCategories(budgetId)
                 .errors().verify()
-                .path("categories").entityList(Category.class)
+                .path("visibleCategories").entityList(Category.class)
                 .hasSize(1)
                 .satisfies(categories -> {
                     Optional<Category> testCategory = categories.stream()

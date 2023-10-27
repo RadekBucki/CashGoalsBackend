@@ -3,7 +3,9 @@ package pl.cashgoals.expence.persistence.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -24,8 +26,8 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent")
-    private List<Category> children;
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    private List<Category> children = new ArrayList<>();
 
-    private String budgetId;
+    private UUID budgetId;
 }

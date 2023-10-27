@@ -1,14 +1,14 @@
 query getVisibleCategories($budgetId: UUID!) {
     visibleCategories(budgetId: $budgetId) {
-        ...CategoryDetails
-    }
-}
-fragment CategoryDetails on Category {
-    id
-    name
-    description
-    visible
-    children {
-        ...CategoryDetails
+        id
+        name
+        description
+        visible
+        children {
+            id
+            name
+            description
+            visible
+        }
     }
 }
