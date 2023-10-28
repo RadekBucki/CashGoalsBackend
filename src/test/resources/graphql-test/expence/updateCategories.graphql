@@ -5,8 +5,10 @@ mutation updateCategories($budgetId: UUID!, $categories: [CategoryInput!]!) {
         description
         visible
         children {
-          id
-          name
+            id
+            name
+            description
+            visible
         }
     }
 }

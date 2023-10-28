@@ -32,7 +32,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
 
         Long categoryId = categoryRepository.findAll()
                 .stream()
-                .filter(category -> category.getBudgetId().equals(budgetId))
+                .filter(category -> category.getBudgetId().toString().equals(budgetId))
                 .filter(category -> category.getName().equals("test"))
                 .findFirst()
                 .orElseThrow()
@@ -55,14 +55,14 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                     Optional<Category> testCategory = categories.stream()
                             .filter(category -> category.getName().equals("test"))
                             .filter(category -> category.getDescription().equals("test"))
-                            .filter(category -> category.getVisible().equals(true))
+                            .filter(category -> category.getVisible().equals(false))
                             .filter(category -> category.getChildren().size() == 1)
                             .findFirst();
                     assertTrue(testCategory.isPresent());
                     Optional<Category> test2Category = testCategory.get().getChildren().stream()
                             .filter(category -> category.getName().equals("test2"))
                             .filter(category -> category.getDescription().equals("test2"))
-                            .filter(category -> category.getVisible().equals(false))
+                            .filter(category -> category.getVisible().equals(true))
                             .filter(category -> category.getChildren().isEmpty())
                             .findFirst();
                     assertTrue(test2Category.isPresent());
@@ -85,7 +85,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         Long categoryId = categoryRepository.findAll()
                 .stream()
-                .filter(category -> category.getBudgetId().equals(budgetId))
+                .filter(category -> category.getBudgetId().toString().equals(budgetId))
                 .filter(category -> category.getName().equals("test"))
                 .findFirst()
                 .orElseThrow()
@@ -113,23 +113,25 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
     @WithMockUser(username = "test2@example.com", authorities = {"USER"})
     @ParameterizedTest(name = "{0}")
     @CsvSource({
-            "user has no rights to budget",
+            "user has no rights to budget, ",
             "user has no EDIT_EXPENSES right, EDIT_EXPENSES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
         Budget budget = budgetRepository.findAll().get(0);
-        UserRight userRight = UserRight.builder()
-                .user(user)
-                .budget(budget)
-                .right(Right.valueOf(right))
-                .build();
-        userRightsRepository.saveAndFlush(userRight);
+        if (right != null) {
+            UserRight userRight = UserRight.builder()
+                    .user(user)
+                    .budget(budget)
+                    .right(Right.valueOf(right))
+                    .build();
+            userRightsRepository.saveAndFlush(userRight);
+        }
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         Long categoryId = categoryRepository.findAll()
                 .stream()
-                .filter(category -> category.getBudgetId().equals(budgetId))
+                .filter(category -> category.getBudgetId().toString().equals(budgetId))
                 .filter(category -> category.getName().equals("test"))
                 .findFirst()
                 .orElseThrow()

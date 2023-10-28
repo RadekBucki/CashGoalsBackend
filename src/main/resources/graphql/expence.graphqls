@@ -9,7 +9,7 @@ extend type Query {
 
 input CategoryInput {
     id: ID
-    parent: ID!
+    parent: ID
     name: String!
     description: String
     visible: Boolean!

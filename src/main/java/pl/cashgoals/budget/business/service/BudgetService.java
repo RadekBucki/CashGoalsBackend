@@ -102,6 +102,9 @@ public class BudgetService {
 
     public void updateBudgetInitializationStep(UUID budgetId, Step step) {
         Budget budget = budgetRepository.findById(budgetId).orElseThrow();
+        if (budget.getInitializationStep() == Step.FINISHED) {
+            return;
+        }
         budget.setInitializationStep(step);
         budgetRepository.save(budget);
     }

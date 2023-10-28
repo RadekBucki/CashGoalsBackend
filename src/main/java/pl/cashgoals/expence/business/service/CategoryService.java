@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.cashgoals.budget.business.BudgetFacade;
 import pl.cashgoals.budget.persistence.model.Right;
+import pl.cashgoals.budget.persistence.model.Step;
 import pl.cashgoals.expence.persistence.model.Category;
 import pl.cashgoals.expence.persistence.repository.CategoryRepository;
 
@@ -24,5 +25,13 @@ public class CategoryService {
     public List<Category> getVisibleCategories(UUID budgetId) {
         budgetFacade.verifyCurrentUserRight(budgetId, Right.VIEW);
         return categoryRepository.findVisibleRootCategoriesByBudgetId(budgetId);
+    }
+
+    public List<Category> updateCategories(UUID budgetId, List<Category> categories) {
+        budgetFacade.verifyCurrentUserRight(budgetId, Right.EDIT_CATEGORIES);
+        categories.forEach(category -> category.setBudgetId(budgetId));
+        categoryRepository.saveAllAndFlush(categories);
+        budgetFacade.updateBudgetInitializationStep(budgetId, Step.GOALS);
+        return getCategories(budgetId);
     }
 }
