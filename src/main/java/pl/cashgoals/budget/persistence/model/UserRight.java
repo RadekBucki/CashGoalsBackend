@@ -8,7 +8,6 @@ import pl.cashgoals.user.persistence.model.User;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRight {

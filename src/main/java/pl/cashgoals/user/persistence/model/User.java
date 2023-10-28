@@ -15,7 +15,6 @@ import java.util.*;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {

@@ -14,7 +14,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Budget {
@@ -31,5 +30,6 @@ public class Budget {
     private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "budget", cascade = CascadeType.REMOVE)
+    @Builder.Default
     private List<UserRight> userRights = new ArrayList<>();
 }

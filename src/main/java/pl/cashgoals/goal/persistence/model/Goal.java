@@ -10,7 +10,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Goal {

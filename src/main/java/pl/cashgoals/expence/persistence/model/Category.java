@@ -11,7 +11,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
@@ -27,6 +26,7 @@ public class Category {
     private Category parent;
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    @Builder.Default
     private List<Category> children = new ArrayList<>();
 
     private UUID budgetId;
