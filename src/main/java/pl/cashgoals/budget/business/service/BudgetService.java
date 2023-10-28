@@ -39,7 +39,7 @@ public class BudgetService {
         budgetRepository.save(budget);
 
         List<UserRight> userRights = userRightsRepository.setUserRightsToBudget(
-                budget,
+                budget.getId(),
                 user,
                 List.of(Right.values())
         );
@@ -74,7 +74,7 @@ public class BudgetService {
                 .map(userRightsInput -> {
                     User user = userFacade.getUserByEmail(userRightsInput.email());
                     List<UserRight> userRights = userRightsRepository.setUserRightsToBudget(
-                            budgetRepository.findById(budgetId).orElseThrow(),
+                            budgetId,
                             user,
                             userRightsInput.rights()
                     );

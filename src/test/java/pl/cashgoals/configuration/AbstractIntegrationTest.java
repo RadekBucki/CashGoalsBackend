@@ -168,7 +168,7 @@ public abstract class AbstractIntegrationTest {
         List<UserRight> userRight = Stream.of(Right.values())
                 .map(
                         right -> UserRight.builder()
-                                .budget(budget)
+                                .budgetId(budget.getId())
                                 .user(user)
                                 .right(right)
                                 .build()

@@ -119,7 +119,7 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
         if (right != null) {
             UserRight userRight = UserRight.builder()
                     .user(user)
-                    .budget(budget)
+                    .budgetId(budget.getId())
                     .right(Right.valueOf(right))
                     .build();
             userRightsRepository.saveAndFlush(userRight);
