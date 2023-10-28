@@ -25,6 +25,8 @@ import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
 import pl.cashgoals.expence.persistence.model.Category;
 import pl.cashgoals.expence.persistence.repository.CategoryRepository;
+import pl.cashgoals.goal.persistence.model.Goal;
+import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;
 import pl.cashgoals.income.persistence.repository.IncomeRepository;
 import pl.cashgoals.user.persistence.model.Theme;
@@ -163,10 +165,10 @@ public abstract class AbstractIntegrationTest {
         List<UserRight> userRight = Stream.of(Right.values())
                 .map(
                         right -> UserRight.builder()
-                        .budget(budget)
-                        .user(user)
-                        .right(right)
-                        .build()
+                                .budget(budget)
+                                .user(user)
+                                .right(right)
+                                .build()
                 )
                 .toList();
         userRightsRepository.saveAllAndFlush(userRight);
@@ -192,17 +194,17 @@ public abstract class AbstractIntegrationTest {
                 .budgetId(budget.getId())
                 .build();
         categoryRepository.saveAllAndFlush(List.of(testCategory, test2Category, unvisibleCategory));
-//
-//        Goal goal = Goal.builder()
-//                .name("test")
-//                .description("test")
-//                .budget(budget)
-//                .category(testCategory)
-//                .type(GoalType.PERCENTAGE_MAX)
-//                .value(0.5)
-//                .build();
-//        goalRepository.saveAndFlush(goal);
-//
+
+        Goal goal = Goal.builder()
+                .name("test")
+                .description("test")
+                .budgetId(budget.getId())
+                .category(testCategory)
+                .type(GoalType.PERCENTAGE_MAX)
+                .value(0.5)
+                .build();
+        goalRepository.saveAndFlush(goal);
+
 //        Income income = Income.builder()
 //                .name("test")
 //                .description("test")

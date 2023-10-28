@@ -2,6 +2,7 @@ query getGoals($budgetId: UUID!) {
     goals(budgetId: $budgetId) {
         id
         name
+        type
         description
         value
         category {

@@ -1,7 +1,7 @@
 package pl.cashgoals.configuration.requests;
 
 import org.springframework.graphql.test.tester.GraphQlTester;
-import pl.cashgoals.goal.persistence.model.Goal;
+import pl.cashgoals.goal.business.model.GoalInput;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ public class GoalRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response updateGoals(String budgetId, List<Goal> goals) {
+    public GraphQlTester.Response updateGoals(String budgetId, List<GoalInput> goals) {
         return graphQlTester.documentName("goal/updateGoals")
                 .operationName("updateGoals")
                 .variable("budgetId", budgetId)
@@ -30,16 +30,16 @@ public class GoalRequests {
                         goals.stream()
                                 .map(goal -> {
                                     Map<String, Object> goalMap = new HashMap<>(Map.of(
-                                            "name", goal.getName(),
-                                            "type", goal.getType().name(),
-                                            "value", goal.getValue(),
-                                            "category", goal.getCategory().getId()
+                                            "name", goal.name(),
+                                            "type", goal.type().name(),
+                                            "value", goal.value(),
+                                            "category", goal.category()
                                     ));
-                                    if (goal.getId() != null) {
-                                        goalMap.put("id", goal.getId());
+                                    if (goal.id() != null) {
+                                        goalMap.put("id", goal.id());
                                     }
-                                    if (goal.getDescription() != null) {
-                                        goalMap.put("description", goal.getDescription());
+                                    if (goal.description() != null) {
+                                        goalMap.put("description", goal.description());
                                     }
                                     return goalMap;
                                 })

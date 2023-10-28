@@ -11,7 +11,7 @@ import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
 import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.goal.business.model.GoalInput;
 import pl.cashgoals.goal.persistence.model.Goal;
 import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.user.persistence.model.User;
@@ -36,26 +36,27 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
         goalRequests.updateGoals(
                         budgetId,
                         List.of(
-                                Goal.builder()
-                                        .id(1L)
-                                        .name("test")
-                                        .description("test")
-                                        .type(GoalType.PERCENTAGE_MAX)
-                                        .value(0.6)
-                                        .category(Category.builder().id(1L).build())
-                                        .build(),
-                                Goal.builder()
-                                        .name("test")
-                                        .description("test")
-                                        .type(GoalType.PERCENTAGE_MIN)
-                                        .value(0.4)
-                                        .category(Category.builder().id(1L).build())
-                                        .build()
+                                new GoalInput(
+                                        1L,
+                                        "test",
+                                        "test",
+                                        GoalType.PERCENTAGE_MAX,
+                                        0.6,
+                                        1L
+                                ),
+                                new GoalInput(
+                                        null,
+                                        "test",
+                                        "test",
+                                        GoalType.PERCENTAGE_MIN,
+                                        0.4,
+                                        1L
+                                )
                         )
                 )
                 .errors().verify()
                 .path("updateGoals").entityList(Goal.class)
-                .hasSize(1)
+                .hasSize(2)
                 .satisfies(goals -> {
                     Optional<Goal> goal1 = goals.stream()
                             .filter(g -> g.getName().equals("test"))
@@ -87,21 +88,22 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
         goalRequests.updateGoals(
                         budgetId,
                         List.of(
-                                Goal.builder()
-                                        .id(1L)
-                                        .name("test")
-                                        .description("test")
-                                        .type(GoalType.PERCENTAGE_MAX)
-                                        .value(0.6)
-                                        .category(Category.builder().id(1L).build())
-                                        .build(),
-                                Goal.builder()
-                                        .name("test")
-                                        .description("test")
-                                        .type(GoalType.PERCENTAGE_MIN)
-                                        .value(0.4)
-                                        .category(Category.builder().id(1L).build())
-                                        .build()
+                                new GoalInput(
+                                        1L,
+                                        "test",
+                                        "test",
+                                        GoalType.PERCENTAGE_MAX,
+                                        0.6,
+                                        1L
+                                ),
+                                new GoalInput(
+                                        null,
+                                        "test",
+                                        "test",
+                                        GoalType.PERCENTAGE_MIN,
+                                        0.4,
+                                        1L
+                                )
                         )
                 )
                 .errors()
@@ -116,39 +118,42 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
     @WithMockUser(username = "test2@example.com", authorities = {"USER"})
     @ParameterizedTest(name = "{0}")
     @CsvSource({
-            "user has no rights to budget",
+            "user has no rights to budget, ",
             "user has no EDIT_EXPENSES right, EDIT_EXPENSES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
         Budget budget = budgetRepository.findAll().get(0);
-        UserRight userRight = UserRight.builder()
-                .user(user)
-                .budget(budget)
-                .right(Right.valueOf(right))
-                .build();
-        userRightsRepository.saveAndFlush(userRight);
+        if (right != null) {
+            UserRight userRight = UserRight.builder()
+                    .user(user)
+                    .budget(budget)
+                    .right(Right.valueOf(right))
+                    .build();
+            userRightsRepository.saveAndFlush(userRight);
+        }
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
 
         goalRequests.updateGoals(
                         budgetId,
                         List.of(
-                                Goal.builder()
-                                        .id(1L)
-                                        .name("test")
-                                        .description("test")
-                                        .type(GoalType.PERCENTAGE_MAX)
-                                        .value(0.6)
-                                        .category(Category.builder().id(1L).build())
-                                        .build(),
-                                Goal.builder()
-                                        .name("test")
-                                        .description("test")
-                                        .type(GoalType.PERCENTAGE_MIN)
-                                        .value(0.4)
-                                        .category(Category.builder().id(1L).build())
-                                        .build()
+                                new GoalInput(
+                                        1L,
+                                        "test",
+                                        "test",
+                                        GoalType.PERCENTAGE_MAX,
+                                        0.6,
+                                        1L
+                                ),
+                                new GoalInput(
+                                        null,
+                                        "test",
+                                        "test",
+                                        GoalType.PERCENTAGE_MIN,
+                                        0.4,
+                                        1L
+                                )
                         )
                 )
                 .errors()
