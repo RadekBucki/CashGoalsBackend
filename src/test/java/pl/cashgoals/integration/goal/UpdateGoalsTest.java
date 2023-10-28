@@ -33,16 +33,34 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
         budgetRepository.saveAndFlush(budget);
 
         String budgetId = budget.getId().toString();
+        Long categoryId = categoryRepository.findAll()
+                .stream()
+                .filter(category -> category.getBudgetId().toString().equals(budgetId))
+                .filter(category -> category.getName().equals("test"))
+                .findFirst()
+                .orElseThrow()
+                .getId();
+        Long goalId = goalRepository.findAll()
+                .stream()
+                .filter(goal -> goal.getBudgetId().toString().equals(budgetId))
+                .filter(goal -> goal.getName().equals("test"))
+                .filter(goal -> goal.getDescription().equals("test"))
+                .filter(goal -> goal.getType().equals(GoalType.PERCENTAGE_MAX))
+                .filter(goal -> goal.getValue().equals(0.5))
+                .filter(goal -> goal.getCategory().getName().equals("test"))
+                .findFirst()
+                .orElseThrow()
+                .getId();
         goalRequests.updateGoals(
                         budgetId,
                         List.of(
                                 new GoalInput(
-                                        1L,
+                                        goalId,
                                         "test",
                                         "test",
                                         GoalType.PERCENTAGE_MAX,
                                         0.6,
-                                        1L
+                                        categoryId
                                 ),
                                 new GoalInput(
                                         null,
@@ -50,7 +68,7 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                                         "test",
                                         GoalType.PERCENTAGE_MIN,
                                         0.4,
-                                        1L
+                                        categoryId
                                 )
                         )
                 )
