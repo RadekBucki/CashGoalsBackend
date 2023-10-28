@@ -1,5 +1,5 @@
 extend type Mutation {
-    updateIncomes(budgetId: UUID!, incomes: [IncomeInput!]!): Income!
+    updateIncomes(budgetId: UUID!, incomes: [IncomeInput!]!): [Income!]!
 }
 
 extend type Query {
@@ -9,13 +9,14 @@ extend type Query {
 input IncomeInput {
     id: ID
     name: String!
+    description: String
     amount: Float!
     frequency: FrequencyInput
 }
 type Income {
     id: ID!
     name: String!
-    description: String!
+    description: String
     amount: Float!
     frequency: Frequency!
 }

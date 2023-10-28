@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS income
 (
     id           SERIAL       NOT NULL,
     name         VARCHAR(100) NOT NULL,
-    description  VARCHAR(255) NOT NULL,
+    description  VARCHAR(255),
     amount       DECIMAL      NOT NULL,
     period       VARCHAR(5)   NOT NULL,
     period_value INTEGER      NOT NULL,

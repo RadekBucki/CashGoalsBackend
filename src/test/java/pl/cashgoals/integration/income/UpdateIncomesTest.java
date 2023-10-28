@@ -33,7 +33,7 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
 
         Long incomeId = incomeRepository.findAll()
                 .stream()
-                .filter(income -> income.getBudget().getId().toString().equals(budgetId))
+                .filter(income -> income.getBudgetId().toString().equals(budgetId))
                 .findFirst()
                 .orElseThrow()
                 .getId();
@@ -77,7 +77,7 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         Long incomeId = incomeRepository.findAll()
                 .stream()
-                .filter(income -> income.getBudget().getId().toString().equals(budgetId))
+                .filter(income -> income.getBudgetId().toString().equals(budgetId))
                 .findFirst()
                 .orElseThrow()
                 .getId();
@@ -110,23 +110,25 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
     @WithMockUser(username = "test2@example.com", authorities = {"USER"})
     @ParameterizedTest(name = "{0}")
     @CsvSource({
-            "user has no rights to budget",
+            "user has no rights to budget, ",
             "user has no EDIT_EXPENSES right, EDIT_EXPENSES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
         Budget budget = budgetRepository.findAll().get(0);
-        UserRight userRight = UserRight.builder()
-                .user(user)
-                .budget(budget)
-                .right(Right.valueOf(right))
-                .build();
-        userRightsRepository.saveAndFlush(userRight);
+        if (right != null) {
+            UserRight userRight = UserRight.builder()
+                    .user(user)
+                    .budget(budget)
+                    .right(Right.valueOf(right))
+                    .build();
+            userRightsRepository.saveAndFlush(userRight);
+        }
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         Long incomeId = incomeRepository.findAll()
                 .stream()
-                .filter(income -> income.getBudget().getId().toString().equals(budgetId))
+                .filter(income -> income.getBudgetId().toString().equals(budgetId))
                 .findFirst()
                 .orElseThrow()
                 .getId();

@@ -2,7 +2,8 @@ package pl.cashgoals.income.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.cashgoals.budget.persistence.model.Budget;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -20,6 +21,6 @@ public class Income {
     private Double amount;
     @Embedded
     private Frequency frequency;
-    @ManyToOne
-    private Budget budget;
+
+    private UUID budgetId;
 }

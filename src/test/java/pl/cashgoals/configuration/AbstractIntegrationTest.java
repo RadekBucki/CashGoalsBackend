@@ -28,6 +28,9 @@ import pl.cashgoals.expence.persistence.repository.CategoryRepository;
 import pl.cashgoals.goal.persistence.model.Goal;
 import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;
+import pl.cashgoals.income.persistence.model.Frequency;
+import pl.cashgoals.income.persistence.model.Income;
+import pl.cashgoals.income.persistence.model.Period;
 import pl.cashgoals.income.persistence.repository.IncomeRepository;
 import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
@@ -205,18 +208,18 @@ public abstract class AbstractIntegrationTest {
                 .build();
         goalRepository.saveAndFlush(goal);
 
-//        Income income = Income.builder()
-//                .name("test")
-//                .description("test")
-//                .amount(100.0)
-//                .frequency(
-//                        Frequency.builder()
-//                                .period(Period.MONTH)
-//                                .value(1)
-//                                .build()
-//                )
-//                .budget(budget)
-//                .build();
-//        incomeRepository.saveAndFlush(income);
+        Income income = Income.builder()
+                .name("test")
+                .description("test")
+                .amount(100.0)
+                .frequency(
+                        Frequency.builder()
+                                .period(Period.MONTH)
+                                .value(1)
+                                .build()
+                )
+                .budgetId(budget.getId())
+                .build();
+        incomeRepository.saveAndFlush(income);
     }
 }

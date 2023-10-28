@@ -27,7 +27,7 @@ class GetIncomesTest extends AbstractIntegrationTest {
                     Income income = incomes.get(0);
                     assertEquals("test", income.getName());
                     assertEquals("test", income.getDescription());
-                    assertEquals(1000.0, income.getAmount());
+                    assertEquals(100.0, income.getAmount());
                     assertEquals(Period.MONTH, income.getFrequency().getPeriod());
                     assertEquals(1, income.getFrequency().getValue());
                 });

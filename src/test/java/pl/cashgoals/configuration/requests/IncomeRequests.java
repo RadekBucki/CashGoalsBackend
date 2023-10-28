@@ -34,8 +34,17 @@ public class IncomeRequests {
                                     if (income.getId() != null) {
                                         incomeMap.put("id", income.getId());
                                     }
+                                    if (income.getDescription() != null) {
+                                        incomeMap.put("description", income.getDescription());
+                                    }
                                     if (income.getFrequency() != null) {
-                                        incomeMap.put("frequency", income.getFrequency());
+                                        incomeMap.put(
+                                                "frequency",
+                                                Map.of(
+                                                        "period", income.getFrequency().getPeriod(),
+                                                        "value", income.getFrequency().getValue()
+                                                )
+                                        );
                                     }
                                     return incomeMap;
                                 })
