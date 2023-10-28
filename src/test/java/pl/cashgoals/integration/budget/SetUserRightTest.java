@@ -22,21 +22,21 @@ import java.util.Optional;
 import static graphql.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class UpdateUserRightTest extends AbstractIntegrationTest {
-    @DisplayName("Should update user rights")
+class SetUserRightTest extends AbstractIntegrationTest {
+    @DisplayName("Should set user rights")
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
     @Test
-    void shouldUpdateUserRights() {
+    void shouldSetUserRights() {
         Budget budget = budgetRepository.findAll().get(0);
         budget.setInitializationStep(Step.USERS_AND_RIGHTS);
         budgetRepository.saveAndFlush(budget);
         String budgetId = budget.getId().toString();
-        budgetRequests.updateUsersRights(
+        budgetRequests.setUsersRights(
                         budgetId,
                         List.of(new UserRightsInput("test2@example.com", List.of(Right.EDIT_EXPENSES)))
                 )
                 .errors().verify()
-                .path("updateUsersRights").entityList(UserRightsOutput.class).satisfies(userRights -> {
+                .path("setUsersRights").entityList(UserRightsOutput.class).satisfies(userRights -> {
                     Optional<UserRightsOutput> userRightsOptional = userRights.stream()
                             .filter(userRights1 -> userRights1.user().getEmail().equals("test2@example.com"))
                             .filter(userRights1 -> userRights1.rights().equals(List.of(Right.EDIT_EXPENSES)))
@@ -51,7 +51,7 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUsersRights(
+        budgetRequests.setUsersRights(
                         budgetId,
                         List.of(new UserRightsInput("test2@example.com", List.of(Right.EDIT_EXPENSES)))
                 )
@@ -83,7 +83,7 @@ class UpdateUserRightTest extends AbstractIntegrationTest {
         }
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        budgetRequests.updateUsersRights(
+        budgetRequests.setUsersRights(
                         budgetId,
                         List.of(new UserRightsInput("test2@example.com", List.of(Right.EDIT_EXPENSES)))
                 )

@@ -36,8 +36,8 @@ public class BudgetRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response updateUsersRights(String budgetId, List<UserRightsInput> userRights) {
-        return graphQlTester.documentName("budget/updateUsersRights")
+    public GraphQlTester.Response setUsersRights(String budgetId, List<UserRightsInput> userRights) {
+        return graphQlTester.documentName("budget/setUsersRights")
                 .variable("budgetId", budgetId)
                 .variable(
                         "usersRights",

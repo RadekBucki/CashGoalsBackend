@@ -66,7 +66,7 @@ public class BudgetService {
         return mapToUserRightsOutput(userRightsRepository.findAllByBudgetId(budgetId));
     }
 
-    public List<UserRightsOutput> updateUserRights(UUID budgetId, List<UserRightsInput> usersRights) {
+    public List<UserRightsOutput> setUsersRights(UUID budgetId, List<UserRightsInput> usersRights) {
         rightValidationService.verifyUserRight(budgetId, Right.EDIT_USERS_AND_RIGHTS);
         // TODO: Handle new users and simplify setUserRightsToBudget to operate on budgetId and user email
         List<UserRightsOutput> list = usersRights

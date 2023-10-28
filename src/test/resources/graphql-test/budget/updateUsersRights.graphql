@@ -1,9 +1,0 @@
-mutation updateUsersAndRights($budgetId: UUID!, $usersRights: [UserRightsInput!]!) {
-    updateUsersRights(budgetId: $budgetId, usersRights: $usersRights) {
-        user {
-            name
-            email
-        }
-        rights
-    }
-}

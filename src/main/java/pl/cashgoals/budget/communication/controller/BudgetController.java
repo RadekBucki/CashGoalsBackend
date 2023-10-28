@@ -56,10 +56,10 @@ public class BudgetController {
 
     @MutationMapping
     @FullyAuthenticated
-    public List<UserRightsOutput> updateUsersRights(
+    public List<UserRightsOutput> setUsersRights(
             @Argument UUID budgetId,
             @Argument List<UserRightsInput> usersRights
     ) {
-        return budgetService.updateUserRights(budgetId, usersRights);
+        return budgetService.setUsersRights(budgetId, usersRights);
     }
 }
