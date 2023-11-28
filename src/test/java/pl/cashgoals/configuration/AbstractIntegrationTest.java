@@ -209,13 +209,6 @@ public abstract class AbstractIntegrationTest {
         Income income = Income.builder()
                 .name("test")
                 .description("test")
-                .amount(100.0)
-                .frequency(
-                        Frequency.builder()
-                                .period(Period.MONTH)
-                                .value(1)
-                                .build()
-                )
                 .budgetId(budget.getId())
                 .build();
         incomeRepository.saveAndFlush(income);

@@ -3,10 +3,5 @@ query getIncomes($budgetId: UUID!) {
         id
         name
         description
-        amount
-        frequency {
-            period
-            value
-        }
     }
 }

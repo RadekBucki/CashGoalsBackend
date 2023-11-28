@@ -3,10 +3,5 @@ mutation updateIncomes($budgetId: UUID!, $incomes: [IncomeInput!]!) {
         id
         name
         description
-        amount
-        frequency {
-            period
-            value
-        }
     }
 }
