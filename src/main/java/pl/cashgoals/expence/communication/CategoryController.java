@@ -32,4 +32,10 @@ public class CategoryController {
     public List<Category> updateCategories(@Argument UUID budgetId, @Argument List<Category> categories) {
         return categoryService.updateCategories(budgetId, categories);
     }
+
+    @MutationMapping
+    @FullyAuthenticated
+    public Boolean deleteCategories(@Argument UUID budgetId, @Argument List<Long> categoryIds) {
+        return categoryService.deleteCategories(budgetId, categoryIds);
+    }
 }

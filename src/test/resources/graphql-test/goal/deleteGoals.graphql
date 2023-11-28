@@ -1,0 +1,3 @@
+mutation deleteGoals($budgetId: UUID!, $goalIds: [ID!]!) {
+  deleteGoals(budgetId: $budgetId, goalIds: $goalIds)
+}

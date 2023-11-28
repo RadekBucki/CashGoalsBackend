@@ -1,5 +1,6 @@
 extend type Mutation {
     updateGoals(budgetId: UUID!, goals: [GoalInput!]!): [Goal!]!
+    deleteGoals(budgetId: UUID!, goalIds: [ID!]!): Boolean!
 }
 
 extend type Query {

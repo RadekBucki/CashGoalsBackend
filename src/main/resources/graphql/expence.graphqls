@@ -1,5 +1,6 @@
 extend type Mutation {
     updateCategories(budgetId: UUID!, categories: [CategoryInput!]!): [Category!]!
+    deleteCategories(budgetId: UUID!, categoryIds: [ID!]!): Boolean!
 }
 
 extend type Query {

@@ -44,4 +44,10 @@ public class GoalService {
         budgetFacade.updateBudgetInitializationStep(budgetId, Step.USERS_AND_RIGHTS);
         return goalRepository.findAllByBudgetId(budgetId);
     }
+
+    public Boolean deleteGoals(UUID budgetId, List<Long> goalIds) {
+        budgetFacade.verifyCurrentUserRight(budgetId, Right.EDIT_GOALS);
+        goalRepository.deleteGoals(budgetId, goalIds);
+        return true;
+    }
 }

@@ -50,4 +50,11 @@ public class ExpenceRequests {
                 )
                 .execute();
     }
+
+    public GraphQlTester.Response deleteCategories(String budgetId, List<Long> categoryIds) {
+        return graphQlTester.documentName("expence/deleteCategories")
+                .variable("budgetId", budgetId)
+                .variable("categoryIds", categoryIds)
+                .execute();
+    }
 }

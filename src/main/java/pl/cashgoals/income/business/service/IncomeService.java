@@ -28,4 +28,10 @@ public class IncomeService {
         budgetFacade.updateBudgetInitializationStep(budgetId, Step.EXPENSES_CATEGORIES);
         return incomeRepository.findAllByBudgetId(budgetId);
     }
+
+    public Boolean deleteIncomes(UUID budgetId, List<Long> incomeIds) {
+        budgetFacade.verifyCurrentUserRight(budgetId, Right.EDIT_INCOMES);
+        incomeRepository.deleteIncomes(budgetId, incomeIds);
+        return true;
+    }
 }

@@ -42,4 +42,11 @@ public class IncomeRequests {
                 )
                 .execute();
     }
+
+    public GraphQlTester.Response deleteIncomes(String budgetId, List<Long> incomeIds) {
+        return graphQlTester.documentName("income/deleteIncomes")
+                .variable("budgetId", budgetId)
+                .variable("incomeIds", incomeIds)
+                .execute();
+    }
 }

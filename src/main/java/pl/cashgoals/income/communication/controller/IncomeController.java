@@ -28,4 +28,10 @@ public class IncomeController {
     public List<Income> updateIncomes(@Argument UUID budgetId, @Argument List<Income> incomes) {
         return incomeService.updateIncomes(budgetId, incomes);
     }
+
+    @MutationMapping
+    @FullyAuthenticated
+    public Boolean deleteIncomes(@Argument UUID budgetId, @Argument List<Long> incomeIds) {
+        return incomeService.deleteIncomes(budgetId, incomeIds);
+    }
 }

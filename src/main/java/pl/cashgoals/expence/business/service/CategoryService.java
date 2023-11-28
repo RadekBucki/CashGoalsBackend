@@ -34,4 +34,10 @@ public class CategoryService {
         budgetFacade.updateBudgetInitializationStep(budgetId, Step.GOALS);
         return getCategories(budgetId);
     }
+
+    public Boolean deleteCategories(UUID budgetId, List<Long> categoryIds) {
+        budgetFacade.verifyCurrentUserRight(budgetId, Right.EDIT_CATEGORIES);
+        categoryRepository.deleteCategories(budgetId, categoryIds);
+        return true;
+    }
 }

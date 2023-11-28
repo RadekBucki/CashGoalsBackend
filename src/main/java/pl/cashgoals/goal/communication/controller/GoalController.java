@@ -28,4 +28,10 @@ public class GoalController {
     public List<Goal> updateGoals(@Argument UUID budgetId, @Argument List<GoalInput> goals) {
         return goalService.updateGoals(budgetId, goals);
     }
+
+    @MutationMapping
+    @FullyAuthenticated
+    public Boolean deleteGoals(@Argument UUID budgetId, @Argument List<Long> goalIds) {
+        return goalService.deleteGoals(budgetId, goalIds);
+    }
 }

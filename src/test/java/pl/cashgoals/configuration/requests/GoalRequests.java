@@ -47,4 +47,12 @@ public class GoalRequests {
                 )
                 .execute();
     }
+
+    public GraphQlTester.Response deleteGoals(String budgetId, List<Long> goalIds) {
+        return graphQlTester.documentName("goal/deleteGoals")
+                .operationName("deleteGoals")
+                .variable("budgetId", budgetId)
+                .variable("goalIds", goalIds)
+                .execute();
+    }
 }
