@@ -6,7 +6,6 @@ import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
 import pl.cashgoals.income.persistence.model.Income;
-import pl.cashgoals.income.persistence.model.Period;
 
 import java.util.Objects;
 
@@ -27,9 +26,6 @@ class GetIncomesTest extends AbstractIntegrationTest {
                     Income income = incomes.get(0);
                     assertEquals("test", income.getName());
                     assertEquals("test", income.getDescription());
-                    assertEquals(100.0, income.getAmount());
-                    assertEquals(Period.MONTH, income.getFrequency().getPeriod());
-                    assertEquals(1, income.getFrequency().getValue());
                 });
     }
 

@@ -17,9 +17,6 @@ public class Income {
     private Long id;
     private String name;
     private String description;
-    private Double amount;
-    @Embedded
-    private Frequency frequency;
 
     private UUID budgetId;
 }
