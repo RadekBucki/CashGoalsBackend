@@ -9,6 +9,12 @@ query getVisibleCategories($budgetId: UUID!) {
             name
             description
             visible
+            children {
+                id
+                name
+                description
+                visible
+            }
         }
     }
 }

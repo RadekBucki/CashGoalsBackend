@@ -10,13 +10,15 @@ extend type Query {
 
 input CategoryInput {
     id: ID
-    parent: ID
+    parentId: ID
     name: String!
     description: String
     visible: Boolean!
+    children: [CategoryInput!]!
 }
 type Category {
     id: ID!
+    parentId: ID
     name: String!
     description: String!
     visible: Boolean!

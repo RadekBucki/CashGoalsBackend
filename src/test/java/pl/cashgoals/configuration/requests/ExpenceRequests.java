@@ -1,7 +1,7 @@
 package pl.cashgoals.configuration.requests;
 
 import org.springframework.graphql.test.tester.GraphQlTester;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expence.business.model.CategoryInput;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,26 +26,13 @@ public class ExpenceRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response updateCategories(String budgetId, List<Category> categories) {
+    public GraphQlTester.Response updateCategories(String budgetId, List<CategoryInput> categories) {
         return graphQlTester.documentName("expence/updateCategories")
                 .variable("budgetId", budgetId)
                 .variable(
                         "categories",
                         categories.stream()
-                                .map(category -> {
-                                    Map<String, Object> categoryMap = new HashMap<>(Map.of(
-                                            "name", category.getName(),
-                                            "description", category.getDescription(),
-                                            "visible", category.getVisible()
-                                    ));
-                                    if (category.getId() != null) {
-                                        categoryMap.put("id", category.getId());
-                                    }
-                                    if (category.getParent() != null) {
-                                        categoryMap.put("parent", category.getParent().getId());
-                                    }
-                                    return categoryMap;
-                                })
+                                .map(this::mapCategoryInputToMap)
                                 .toList()
                 )
                 .execute();
@@ -56,5 +43,26 @@ public class ExpenceRequests {
                 .variable("budgetId", budgetId)
                 .variable("categoryIds", categoryIds)
                 .execute();
+    }
+
+    private Map<String, Object> mapCategoryInputToMap(CategoryInput categoryInput) {
+        Map<String, Object> categoryMap = new HashMap<>(Map.of(
+                "name", categoryInput.name(),
+                "visible", categoryInput.visible(),
+                "children", categoryInput.children()
+                        .stream()
+                        .map(this::mapCategoryInputToMap)
+                        .toList()
+        ));
+        if (categoryInput.id() != null) {
+            categoryMap.put("id", categoryInput.id());
+        }
+        if (categoryInput.description() != null) {
+            categoryMap.put("description", categoryInput.description());
+        }
+        if (categoryInput.parentId() != null) {
+            categoryMap.put("parentId", categoryInput.parentId());
+        }
+        return categoryMap;
     }
 }

@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS category
     id          SERIAL       NOT NULL,
     parent_id   INTEGER,
     name        VARCHAR(100) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
     visible     BOOLEAN      NOT NULL,
     budget_id   UUID         NOT NULL,
     created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS goal
 (
     id          SERIAL       NOT NULL,
     name        VARCHAR(100) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
     type        VARCHAR(14)  NOT NULL,
     value       DECIMAL      NOT NULL,
     category_id INTEGER      NOT NULL,

@@ -184,7 +184,6 @@ public abstract class AbstractIntegrationTest {
                 .name("test")
                 .description("test")
                 .visible(true)
-                .children(List.of(test2Category))
                 .budgetId(budget.getId())
                 .build();
         test2Category.setParent(testCategory);

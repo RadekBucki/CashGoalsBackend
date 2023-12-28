@@ -22,10 +22,9 @@ public class Category {
     private Boolean visible;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Builder.Default
     private List<Category> children = new ArrayList<>();
 

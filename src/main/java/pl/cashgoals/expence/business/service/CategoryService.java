@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.cashgoals.budget.business.BudgetFacade;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
+import pl.cashgoals.expence.business.model.CategoryInput;
 import pl.cashgoals.expence.persistence.model.Category;
 import pl.cashgoals.expence.persistence.repository.CategoryRepository;
 
@@ -27,9 +28,11 @@ public class CategoryService {
         return categoryRepository.findVisibleRootCategoriesByBudgetId(budgetId);
     }
 
-    public List<Category> updateCategories(UUID budgetId, List<Category> categories) {
+    public List<Category> updateCategories(UUID budgetId, List<CategoryInput> categoryInputs) {
         budgetFacade.verifyCurrentUserRight(budgetId, Right.EDIT_CATEGORIES);
-        categories.forEach(category -> category.setBudgetId(budgetId));
+        List<Category> categories = categoryInputs.stream()
+                .map(categoryInput -> mapCategoryInputToCategory(categoryInput, budgetId))
+                .toList();
         categoryRepository.saveAllAndFlush(categories);
         budgetFacade.updateBudgetInitializationStep(budgetId, Step.GOALS);
         return getCategories(budgetId);
@@ -39,5 +42,28 @@ public class CategoryService {
         budgetFacade.verifyCurrentUserRight(budgetId, Right.EDIT_CATEGORIES);
         categoryRepository.deleteCategories(budgetId, categoryIds);
         return true;
+    }
+
+    private Category mapCategoryInputToCategory(CategoryInput categoryInput, UUID budgetId) {
+        Category category = Category.builder()
+                .id(categoryInput.id())
+                .name(categoryInput.name())
+                .description(categoryInput.description())
+                .children(
+                        categoryInput.children()
+                                .stream()
+                                .map(child -> mapCategoryInputToCategory(child, budgetId))
+                                .toList()
+                )
+                .visible(categoryInput.visible())
+                .budgetId(budgetId)
+                .build();
+
+        if (categoryInput.parentId() != null) {
+            category.setParent(categoryRepository.getReferenceById(categoryInput.parentId()));
+        }
+        category.getChildren().forEach(child -> child.setParent(category));
+
+        return category;
     }
 }
