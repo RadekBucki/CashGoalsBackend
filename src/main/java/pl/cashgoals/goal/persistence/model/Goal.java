@@ -19,7 +19,8 @@ public class Goal {
     private String name;
     private String description;
     private GoalType type;
-    private Double value;
+    private Double min;
+    private Double max;
 
     @ManyToOne
     private Category category;

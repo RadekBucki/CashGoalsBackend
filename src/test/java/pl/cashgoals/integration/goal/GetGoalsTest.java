@@ -28,8 +28,8 @@ class GetGoalsTest extends AbstractIntegrationTest {
                     Optional<Goal> goal = goals.stream()
                             .filter(g -> g.getName().equals("test"))
                             .filter(g -> g.getDescription().equals("test"))
-                            .filter(g -> g.getType().equals(GoalType.PERCENTAGE_MAX))
-                            .filter(g -> g.getValue().equals(0.5))
+                            .filter(g -> g.getType().equals(GoalType.PERCENTAGE))
+                            .filter(g -> g.getMax().equals(0.5))
                             .filter(g -> g.getCategory().getName().equals("test"))
                             .findFirst();
                     assertTrue(goal.isPresent());

@@ -45,9 +45,6 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                 .filter(goal -> goal.getBudgetId().toString().equals(budgetId))
                 .filter(goal -> goal.getName().equals("test"))
                 .filter(goal -> goal.getDescription().equals("test"))
-                .filter(goal -> goal.getType().equals(GoalType.PERCENTAGE_MAX))
-                .filter(goal -> goal.getValue().equals(0.5))
-                .filter(goal -> goal.getCategory().getName().equals("test"))
                 .findFirst()
                 .orElseThrow()
                 .getId();
@@ -58,7 +55,8 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                                         goalId,
                                         "test",
                                         "test",
-                                        GoalType.PERCENTAGE_MAX,
+                                        GoalType.PERCENTAGE,
+                                        null,
                                         0.6,
                                         categoryId
                                 ),
@@ -66,8 +64,9 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                                         null,
                                         "test",
                                         "test",
-                                        GoalType.PERCENTAGE_MIN,
+                                        GoalType.PERCENTAGE,
                                         0.4,
+                                        null,
                                         categoryId
                                 )
                         )
@@ -79,8 +78,9 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                     Optional<Goal> goal1 = goals.stream()
                             .filter(g -> g.getName().equals("test"))
                             .filter(g -> g.getDescription().equals("test"))
-                            .filter(g -> g.getType().equals(GoalType.PERCENTAGE_MAX))
-                            .filter(g -> g.getValue().equals(0.6))
+                            .filter(g -> g.getType().equals(GoalType.PERCENTAGE))
+                            .filter(g -> g.getMin() == null)
+                            .filter(g -> g.getMax().equals(0.6))
                             .filter(g -> g.getCategory().getName().equals("test"))
                             .findFirst();
                     assertTrue(goal1.isPresent());
@@ -88,8 +88,9 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                     Optional<Goal> goal2 = goals.stream()
                             .filter(g -> g.getName().equals("test"))
                             .filter(g -> g.getDescription().equals("test"))
-                            .filter(g -> g.getType().equals(GoalType.PERCENTAGE_MIN))
-                            .filter(g -> g.getValue().equals(0.4))
+                            .filter(g -> g.getType().equals(GoalType.PERCENTAGE))
+                            .filter(g -> g.getMin().equals(0.4))
+                            .filter(g -> g.getMax() == null)
                             .filter(g -> g.getCategory().getName().equals("test"))
                             .findFirst();
                     assertTrue(goal2.isPresent());
@@ -110,7 +111,8 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                                         1L,
                                         "test",
                                         "test",
-                                        GoalType.PERCENTAGE_MAX,
+                                        GoalType.PERCENTAGE,
+                                        null,
                                         0.6,
                                         1L
                                 ),
@@ -118,8 +120,9 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                                         null,
                                         "test",
                                         "test",
-                                        GoalType.PERCENTAGE_MIN,
+                                        GoalType.PERCENTAGE,
                                         0.4,
+                                        null,
                                         1L
                                 )
                         )
@@ -160,7 +163,8 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                                         1L,
                                         "test",
                                         "test",
-                                        GoalType.PERCENTAGE_MAX,
+                                        GoalType.PERCENTAGE,
+                                        null,
                                         0.6,
                                         1L
                                 ),
@@ -168,8 +172,9 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                                         null,
                                         "test",
                                         "test",
-                                        GoalType.PERCENTAGE_MIN,
+                                        GoalType.PERCENTAGE,
                                         0.4,
+                                        null,
                                         1L
                                 )
                         )

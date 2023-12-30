@@ -4,7 +4,8 @@ query getGoals($budgetId: UUID!) {
         name
         type
         description
-        value
+        min
+        max
         category {
             id
             name

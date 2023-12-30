@@ -4,7 +4,8 @@ mutation updateGoals($budgetId: UUID!, $goals: [GoalInput!]!) {
         name
         description
         type
-        value
+        min
+        max
         category {
             id
             name

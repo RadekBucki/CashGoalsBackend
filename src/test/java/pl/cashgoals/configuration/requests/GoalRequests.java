@@ -32,14 +32,19 @@ public class GoalRequests {
                                     Map<String, Object> goalMap = new HashMap<>(Map.of(
                                             "name", goal.name(),
                                             "type", goal.type().name(),
-                                            "value", goal.value(),
-                                            "category", goal.category()
+                                            "categoryId", goal.categoryId()
                                     ));
                                     if (goal.id() != null) {
                                         goalMap.put("id", goal.id());
                                     }
                                     if (goal.description() != null) {
                                         goalMap.put("description", goal.description());
+                                    }
+                                    if (goal.min() != null) {
+                                        goalMap.put("min", goal.min());
+                                    }
+                                    if (goal.max() != null) {
+                                        goalMap.put("max", goal.max());
                                     }
                                     return goalMap;
                                 })

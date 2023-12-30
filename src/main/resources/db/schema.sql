@@ -35,12 +35,12 @@ CREATE TABLE IF NOT EXISTS budget
 
 CREATE TABLE IF NOT EXISTS income
 (
-    id           SERIAL       NOT NULL,
-    name         VARCHAR(100) NOT NULL,
-    description  VARCHAR(255),
-    budget_id    UUID         NOT NULL,
-    created_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id          SERIAL       NOT NULL,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    budget_id   UUID         NOT NULL,
+    created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (budget_id) REFERENCES budget (id) ON DELETE CASCADE
 );
@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS goal
     name        VARCHAR(100) NOT NULL,
     description VARCHAR(255),
     type        VARCHAR(14)  NOT NULL,
-    value       DECIMAL      NOT NULL,
+    min         DECIMAL,
+    max         DECIMAL,
     category_id INTEGER      NOT NULL,
     budget_id   UUID         NOT NULL,
     created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -77,10 +78,10 @@ CREATE TABLE IF NOT EXISTS goal
 
 CREATE TABLE IF NOT EXISTS user_right
 (
-    id        SERIAL      NOT NULL,
-    user_id   INTEGER     NOT NULL,
-    budget_id UUID         NOT NULL,
-    right_type   VARCHAR(21) NOT NULL,
+    id         SERIAL      NOT NULL,
+    user_id    INTEGER     NOT NULL,
+    budget_id  UUID        NOT NULL,
+    right_type VARCHAR(21) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES user_entity (id) ON DELETE CASCADE,
     FOREIGN KEY (budget_id) REFERENCES budget (id) ON DELETE CASCADE

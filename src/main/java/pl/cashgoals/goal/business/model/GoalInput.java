@@ -7,7 +7,8 @@ public record GoalInput(
         String name,
         String description,
         GoalType type,
-        Double value,
-        Long category
+        Double min,
+        Double max,
+        Long categoryId
 ) {
 }

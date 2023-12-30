@@ -12,21 +12,21 @@ input GoalInput {
     name: String!
     description: String
     type: GoalType!
-    value: Float!
-    category: ID!
+    min: Float
+    max: Float
+    categoryId: ID!
 }
 type Goal {
     id: ID!
     name: String!
     description: String!
     type: GoalType!
-    value: Float!
+    min: Float
+    max: Float
     category: Category!
 }
 
 enum GoalType {
-    AMOUNT_MAX
-    AMOUNT_MIN
-    PERCENTAGE_MAX
-    PERCENTAGE_MIN
+    AMOUNT
+    PERCENTAGE
 }
