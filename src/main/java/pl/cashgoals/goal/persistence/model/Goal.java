@@ -18,6 +18,7 @@ public class Goal {
     private Long id;
     private String name;
     private String description;
+    @Enumerated(EnumType.STRING)
     private GoalType type;
     private Double min;
     private Double max;
