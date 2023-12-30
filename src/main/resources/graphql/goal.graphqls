@@ -19,7 +19,7 @@ input GoalInput {
 type Goal {
     id: ID!
     name: String!
-    description: String!
+    description: String
     type: GoalType!
     min: Float
     max: Float

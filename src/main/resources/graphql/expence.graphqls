@@ -20,7 +20,7 @@ type Category {
     id: ID!
     parentId: ID
     name: String!
-    description: String!
+    description: String
     visible: Boolean!
     children: [Category!]!
 }
