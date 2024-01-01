@@ -17,4 +17,12 @@ public interface IncomeRepository extends JpaRepository<Income, Long> {
     @Transactional
     @Query("DELETE FROM Income i WHERE i.budgetId = :budgetId AND i.id IN :incomeIds")
     void deleteIncomes(UUID budgetId, List<Long> incomeIds);
+
+    @Query(
+            "SELECT DISTINCT i FROM Income i JOIN FETCH i.incomeItems ii " +
+                    "WHERE i.budgetId = :budgetId " +
+                    "AND EXTRACT(MONTH FROM ii.date) = :month " +
+                    "AND EXTRACT(YEAR FROM ii.date) = :year"
+    )
+    List<Income> findAllByBudgetIdAndMonthAndYear(UUID budgetId, Integer month, Integer year);
 }

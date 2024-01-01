@@ -3,6 +3,7 @@ package pl.cashgoals.income.persistence.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class Income {
     private String description;
 
     @OneToMany(mappedBy = "income", cascade = CascadeType.REMOVE)
-    private List<IncomeItem> incomeItems;
+    private List<IncomeItem> incomeItems = new ArrayList<>();
 
     private UUID budgetId;
 }
