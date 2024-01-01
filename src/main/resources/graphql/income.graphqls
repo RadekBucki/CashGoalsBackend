@@ -22,7 +22,9 @@ type Income {
 }
 
 type IncomeItemsOutput {
-    income: Income!
+    id: ID!
+    name: String!
+    description: String
     incomeItems: [IncomeItem!]!
 }
 

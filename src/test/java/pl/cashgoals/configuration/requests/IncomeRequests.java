@@ -61,11 +61,13 @@ public class IncomeRequests {
 
     public GraphQlTester.Response updateIncomeItem(String budgetId, IncomeItem incomeItem) {
         Map<String, Object> incomeItemMap = new HashMap<>(Map.of(
-                "id", incomeItem.getId(),
                 "description", incomeItem.getDescription(),
                 "amount", incomeItem.getAmount(),
                 "date", incomeItem.getDate()
         ));
+        if (incomeItem.getId() != null) {
+            incomeItemMap.put("id", incomeItem.getId());
+        }
         if (incomeItem.getName() != null) {
             incomeItemMap.put("name", incomeItem.getName());
         }

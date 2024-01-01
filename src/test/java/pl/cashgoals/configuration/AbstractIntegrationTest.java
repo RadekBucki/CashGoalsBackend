@@ -38,7 +38,7 @@ import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.user.persistence.model.UserToken;
 import pl.cashgoals.user.persistence.repository.UserRepository;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -218,14 +218,23 @@ public abstract class AbstractIntegrationTest {
                 .build();
         incomeRepository.saveAndFlush(income);
 
-        IncomeItem incomeItem = IncomeItem.builder()
+        IncomeItem incomeItem1 = IncomeItem.builder()
                 .name("test")
                 .description("test")
                 .amount(100.0)
-                .date(new Timestamp(System.currentTimeMillis()))
+                .date(LocalDate.of(2023, 12, 31))
                 .incomeId(income.getId())
                 .budgetId(budget.getId())
                 .build();
-        incomeItemRepository.saveAndFlush(incomeItem);
+        IncomeItem incomeItem2 = IncomeItem.builder()
+                .name("test2")
+                .description("test2")
+                .amount(100.0)
+                .date(LocalDate.of(2024, 1, 1))
+                .incomeId(income.getId())
+                .budgetId(budget.getId())
+                .build();
+
+        incomeItemRepository.saveAllAndFlush(List.of(incomeItem1, incomeItem2));
     }
 }

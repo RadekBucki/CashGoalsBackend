@@ -92,7 +92,7 @@ class UpdateIncomesTest extends AbstractIntegrationTest {
     @ParameterizedTest(name = "{0}")
     @CsvSource({
             "user has no rights to budget, ",
-            "user has no EDIT_EXPENSES right, EDIT_EXPENSES",
+            "user has no EDIT_INCOMES right, EDIT_EXPENSES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
