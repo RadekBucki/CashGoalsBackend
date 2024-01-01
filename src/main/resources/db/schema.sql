@@ -22,3 +22,67 @@ CREATE TABLE IF NOT EXISTS user_token
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES user_entity (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS budget
+(
+    id                  UUID         NOT NULL,
+    name                VARCHAR(100) NOT NULL,
+    initialization_step VARCHAR(20)  NOT NULL,
+    created_at          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS income
+(
+    id          SERIAL       NOT NULL,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    budget_id   UUID         NOT NULL,
+    created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (budget_id) REFERENCES budget (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS category
+(
+    id          SERIAL       NOT NULL,
+    parent_id   INTEGER,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    visible     BOOLEAN      NOT NULL,
+    budget_id   UUID         NOT NULL,
+    created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (budget_id) REFERENCES budget (id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_id) REFERENCES category (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS goal
+(
+    id          SERIAL       NOT NULL,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    type        VARCHAR(14)  NOT NULL,
+    min         DECIMAL,
+    max         DECIMAL,
+    category_id INTEGER      NOT NULL,
+    budget_id   UUID         NOT NULL,
+    created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (budget_id) REFERENCES budget (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_right
+(
+    id         SERIAL      NOT NULL,
+    user_id    INTEGER     NOT NULL,
+    budget_id  UUID        NOT NULL,
+    right_type VARCHAR(21) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES user_entity (id) ON DELETE CASCADE,
+    FOREIGN KEY (budget_id) REFERENCES budget (id) ON DELETE CASCADE
+);

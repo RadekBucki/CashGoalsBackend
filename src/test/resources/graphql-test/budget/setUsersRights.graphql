@@ -1,0 +1,9 @@
+mutation setUsersRights($budgetId: UUID!, $usersRights: [UserRightsInput!]!) {
+    setUsersRights(budgetId: $budgetId, usersRights: $usersRights) {
+        user {
+            name
+            email
+        }
+        rights
+    }
+}

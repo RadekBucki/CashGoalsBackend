@@ -1,0 +1,7 @@
+query getIncomes($budgetId: UUID!) {
+    incomes(budgetId: $budgetId) {
+        id
+        name
+        description
+    }
+}

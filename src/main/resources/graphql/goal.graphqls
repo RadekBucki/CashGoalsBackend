@@ -1,0 +1,32 @@
+extend type Mutation {
+    updateGoals(budgetId: UUID!, goals: [GoalInput!]!): [Goal!]!
+    deleteGoals(budgetId: UUID!, goalIds: [ID!]!): Boolean!
+}
+
+extend type Query {
+    goals(budgetId: UUID!): [Goal!]!
+}
+
+input GoalInput {
+    id: ID
+    name: String!
+    description: String
+    type: GoalType!
+    min: Float
+    max: Float
+    categoryId: ID!
+}
+type Goal {
+    id: ID!
+    name: String!
+    description: String
+    type: GoalType!
+    min: Float
+    max: Float
+    category: Category!
+}
+
+enum GoalType {
+    AMOUNT
+    PERCENTAGE
+}

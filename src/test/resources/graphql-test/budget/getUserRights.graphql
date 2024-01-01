@@ -1,0 +1,9 @@
+query getUsersRights($budgetId: UUID!) {
+    usersRights(budgetId: $budgetId) {
+        user {
+            name
+            email
+        }
+        rights
+    }
+}

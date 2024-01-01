@@ -1,0 +1,26 @@
+extend type Mutation {
+    updateCategories(budgetId: UUID!, categories: [CategoryInput!]!): [Category!]!
+    deleteCategories(budgetId: UUID!, categoryIds: [ID!]!): Boolean!
+}
+
+extend type Query {
+    categories(budgetId: UUID!): [Category!]!
+    visibleCategories(budgetId: UUID!): [Category!]!
+}
+
+input CategoryInput {
+    id: ID
+    parentId: ID
+    name: String!
+    description: String
+    visible: Boolean!
+    children: [CategoryInput!]!
+}
+type Category {
+    id: ID!
+    parentId: ID
+    name: String!
+    description: String
+    visible: Boolean!
+    children: [Category!]!
+}

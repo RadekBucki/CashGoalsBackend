@@ -1,0 +1,14 @@
+mutation updateGoals($budgetId: UUID!, $goals: [GoalInput!]!) {
+    updateGoals(budgetId: $budgetId, goals: $goals) {
+        id
+        name
+        description
+        type
+        min
+        max
+        category {
+            id
+            name
+        }
+    }
+}

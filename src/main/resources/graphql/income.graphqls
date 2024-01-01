@@ -1,0 +1,19 @@
+extend type Mutation {
+    updateIncomes(budgetId: UUID!, incomes: [IncomeInput!]!): [Income!]!
+    deleteIncomes(budgetId: UUID!, incomeIds: [ID!]!): Boolean!
+}
+
+extend type Query {
+    incomes(budgetId: UUID!): [Income!]!
+}
+
+input IncomeInput {
+    id: ID
+    name: String!
+    description: String
+}
+type Income {
+    id: ID!
+    name: String!
+    description: String
+}

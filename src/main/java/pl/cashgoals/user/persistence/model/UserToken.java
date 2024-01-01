@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserToken implements Serializable {

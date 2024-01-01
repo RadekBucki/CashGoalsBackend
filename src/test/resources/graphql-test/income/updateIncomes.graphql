@@ -1,0 +1,7 @@
+mutation updateIncomes($budgetId: UUID!, $incomes: [IncomeInput!]!) {
+    updateIncomes(budgetId: $budgetId, incomes: $incomes) {
+        id
+        name
+        description
+    }
+}

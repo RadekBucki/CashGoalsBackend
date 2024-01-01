@@ -1,0 +1,7 @@
+query getBudget($id: UUID!) {
+    budget(id: $id) {
+        id
+        name
+        initializationStep
+    }
+}

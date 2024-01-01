@@ -1,0 +1,3 @@
+mutation deleteCategories($budgetId: UUID!, $categoryIds: [ID!]! ) {
+    deleteCategories(budgetId: $budgetId, categoryIds: $categoryIds)
+}
