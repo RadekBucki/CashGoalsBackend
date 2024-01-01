@@ -1,10 +1,13 @@
 extend type Mutation {
     updateIncomes(budgetId: UUID!, incomes: [IncomeInput!]!): [Income!]!
     deleteIncomes(budgetId: UUID!, incomeIds: [ID!]!): Boolean!
+    updateIncomeItem(budgetId: UUID!, incomeItem: IncomeItemInput!): IncomeItem!
+    deleteIncomeItem(budgetId: UUID!, incomeItemId: ID!): Boolean!
 }
 
 extend type Query {
     incomes(budgetId: UUID!): [Income!]!
+    incomeItems(budgetId: UUID!, month: Int!, year: Int!): [IncomeItemsOutput!]!
 }
 
 input IncomeInput {
@@ -16,4 +19,26 @@ type Income {
     id: ID!
     name: String!
     description: String
+}
+
+type IncomeItemsOutput {
+    income: Income!
+    incomeItems: [IncomeItem!]!
+}
+
+type IncomeItem {
+    id: ID!
+    name: String!
+    description: String
+    date: Date!
+    amount: Float!
+}
+
+input IncomeItemInput {
+    id: ID
+    incomeId: ID!
+    name: String!
+    description: String
+    date: Date!
+    amount: Float!
 }
