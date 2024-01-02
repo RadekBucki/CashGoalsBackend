@@ -24,7 +24,9 @@ import pl.cashgoals.configuration.testcontainers.PostgresContainer;
 import pl.cashgoals.configuration.testcontainers.RabbitMQContainer;
 import pl.cashgoals.configuration.testcontainers.RedisContainer;
 import pl.cashgoals.expense.persistence.model.Category;
+import pl.cashgoals.expense.persistence.model.Expense;
 import pl.cashgoals.expense.persistence.repository.CategoryRepository;
+import pl.cashgoals.expense.persistence.repository.ExpenseRepository;
 import pl.cashgoals.goal.persistence.model.Goal;
 import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;
@@ -91,13 +93,15 @@ public abstract class AbstractIntegrationTest {
     protected IncomeRepository incomeRepository;
     @Autowired
     protected IncomeItemRepository incomeItemRepository;
+    @Autowired
+    protected ExpenseRepository expenseRepository;
 
     /**
      * Requests
      */
     protected UserRequests userRequests;
     protected BudgetRequests budgetRequests;
-    protected ExpenceRequests expenceRequests;
+    protected ExpenseRequests expenseRequests;
     protected GoalRequests goalRequests;
     protected IncomeRequests incomeRequests;
 
@@ -124,7 +128,7 @@ public abstract class AbstractIntegrationTest {
         //Requests
         userRequests = new UserRequests(graphQlTester);
         budgetRequests = new BudgetRequests(graphQlTester);
-        expenceRequests = new ExpenceRequests(graphQlTester);
+        expenseRequests = new ExpenseRequests(graphQlTester);
         goalRequests = new GoalRequests(graphQlTester);
         incomeRequests = new IncomeRequests(graphQlTester);
 
@@ -232,5 +236,19 @@ public abstract class AbstractIntegrationTest {
                 .build();
 
         incomeItemRepository.saveAllAndFlush(List.of(incomeItem1, incomeItem2));
+
+        Expense expense = Expense.builder()
+                .description("test")
+                .amount(100.0)
+                .date(LocalDate.of(2023, 12, 31))
+                .category(testCategory)
+                .build();
+        Expense expense2 = Expense.builder()
+                .description("test2")
+                .amount(100.0)
+                .date(LocalDate.of(2024, 1, 1))
+                .category(test2Category)
+                .build();
+        expenseRepository.saveAllAndFlush(List.of(expense, expense2));
     }
 }

@@ -1,4 +1,4 @@
-package pl.cashgoals.integration.expence;
+package pl.cashgoals.integration.expence.category;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,16 +12,16 @@ import java.util.Optional;
 
 import static graphql.Assert.assertTrue;
 
-class GetCategoriesTest extends AbstractIntegrationTest {
-    @DisplayName("Should return all categories")
+class GetVisibleCategoriesTest extends AbstractIntegrationTest {
+    @DisplayName("Should return all visible categories")
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
     @Test
-    void shouldReturnAllCategories() {
+    void shouldReturnAllVisibleCategories() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        expenceRequests.getCategories(budgetId)
+        expenseRequests.getVisibleCategories(budgetId)
                 .errors().verify()
-                .path("categories").entityList(Category.class)
-                .hasSize(2)
+                .path("visibleCategories").entityList(Category.class)
+                .hasSize(1)
                 .satisfies(categories -> {
                     Optional<Category> testCategory = categories.stream()
                             .filter(category -> category.getName().equals("test"))
@@ -37,13 +37,6 @@ class GetCategoriesTest extends AbstractIntegrationTest {
                             .filter(category -> category.getChildren().isEmpty())
                             .findFirst();
                     assertTrue(test2Category.isPresent());
-                    Optional<Category> test3Category = categories.stream()
-                            .filter(category -> category.getName().equals("unvisible"))
-                            .filter(category -> category.getDescription().equals("unvisible"))
-                            .filter(category -> category.getVisible().equals(false))
-                            .filter(category -> category.getChildren().isEmpty())
-                            .findFirst();
-                    assertTrue(test3Category.isPresent());
                 });
     }
 
@@ -51,7 +44,7 @@ class GetCategoriesTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        expenceRequests.getCategories(budgetId)
+        expenseRequests.getVisibleCategories(budgetId)
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")

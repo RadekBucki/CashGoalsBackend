@@ -10,56 +10,38 @@ import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.expense.persistence.model.Category;
+import pl.cashgoals.expense.persistence.model.Expense;
 import pl.cashgoals.user.persistence.model.User;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DeleteCategoriesTest extends AbstractIntegrationTest {
-    @DisplayName("Should delete category")
+class GetExpensesTest extends AbstractIntegrationTest {
+    @DisplayName("Should return all expenses")
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
     @Test
-    void shouldDeleteCategory() {
+    void shouldReturnAllExpenses() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-
-        Category testCategory = categoryRepository.findAll()
-                .stream()
-                .filter(category -> category.getBudgetId().toString().equals(budgetId))
-                .filter(category -> category.getName().equals("test"))
-                .findFirst()
-                .orElseThrow();
-        expenceRequests.deleteCategories(
-                        budgetId,
-                        List.of(testCategory.getId())
-                )
-                .errors()
-                .verify()
-                .path("deleteCategories")
-                .entity(Boolean.class)
-                .isEqualTo(true);
-
-        List<Category> categories = categoryRepository.findAll();
-        assertFalse(categories.contains(testCategory));
+        expenseRequests.getExpenses(budgetId, 1, 2024)
+                .errors().verify()
+                .path("expenses").entityList(Expense.class)
+                .hasSize(1)
+                .satisfies(expenses -> {
+                    Expense expense = expenses.get(0);
+                    assertEquals("test2", expense.getDescription());
+                    assertEquals(100, expense.getAmount());
+                    assertEquals(LocalDate.of(2024, 1, 1), expense.getDate());
+                    assertEquals("test2", expense.getCategory().getName());
+                });
     }
 
     @DisplayName("Should return access denied when authorization missed")
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        Long categoryId = categoryRepository.findAll()
-                .stream()
-                .filter(category -> category.getBudgetId().toString().equals(budgetId))
-                .filter(category -> category.getName().equals("test"))
-                .findFirst()
-                .orElseThrow()
-                .getId();
-        expenceRequests.deleteCategories(
-                        budgetId,
-                        List.of(categoryId)
-                )
+        expenseRequests.getExpenses(budgetId, 1, 2024)
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
@@ -73,7 +55,7 @@ class DeleteCategoriesTest extends AbstractIntegrationTest {
     @ParameterizedTest(name = "{0}")
     @CsvSource({
             "user has no rights to budget, ",
-            "user has no EDIT_CATEGORIES right, EDIT_EXPENSES",
+            "user has no VIEW right to budget, EDIT_CATEGORIES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
@@ -88,17 +70,7 @@ class DeleteCategoriesTest extends AbstractIntegrationTest {
         }
 
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        Long categoryId = categoryRepository.findAll()
-                .stream()
-                .filter(category -> category.getBudgetId().toString().equals(budgetId))
-                .filter(category -> category.getName().equals("test"))
-                .findFirst()
-                .orElseThrow()
-                .getId();
-        expenceRequests.deleteCategories(
-                        budgetId,
-                        List.of(categoryId)
-                )
+        expenseRequests.getExpenses(budgetId, 1, 2024)
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.budget.not-found")
@@ -106,4 +78,5 @@ class DeleteCategoriesTest extends AbstractIntegrationTest {
                 )
                 .verify();
     }
+
 }

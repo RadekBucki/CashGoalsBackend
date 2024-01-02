@@ -1,4 +1,4 @@
-package pl.cashgoals.integration.expence;
+package pl.cashgoals.integration.expence.category;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -98,7 +98,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -163,7 +163,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -232,7 +232,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -280,7 +280,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(

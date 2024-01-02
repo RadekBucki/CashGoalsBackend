@@ -8,27 +8,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExpenceRequests {
+public class ExpenseRequests {
     private final GraphQlTester graphQlTester;
 
-    public ExpenceRequests(GraphQlTester graphQlTester) {
+    public ExpenseRequests(GraphQlTester graphQlTester) {
         this.graphQlTester = graphQlTester;
     }
 
     public GraphQlTester.Response getCategories(String budgetId) {
-        return graphQlTester.documentName("expence/category/getCategories")
+        return graphQlTester.documentName("expense/category/getCategories")
                 .variable("budgetId", budgetId)
                 .execute();
     }
 
     public GraphQlTester.Response getVisibleCategories(String budgetId) {
-        return graphQlTester.documentName("expence/category/getVisibleCategories")
+        return graphQlTester.documentName("expense/category/getVisibleCategories")
                 .variable("budgetId", budgetId)
                 .execute();
     }
 
     public GraphQlTester.Response updateCategories(String budgetId, List<CategoryInput> categories) {
-        return graphQlTester.documentName("expence/category/updateCategories")
+        return graphQlTester.documentName("expense/category/updateCategories")
                 .variable("budgetId", budgetId)
                 .variable(
                         "categories",
@@ -40,15 +40,17 @@ public class ExpenceRequests {
     }
 
     public GraphQlTester.Response deleteCategories(String budgetId, List<Long> categoryIds) {
-        return graphQlTester.documentName("expence/category/deleteCategories")
+        return graphQlTester.documentName("expense/category/deleteCategories")
                 .variable("budgetId", budgetId)
                 .variable("categoryIds", categoryIds)
                 .execute();
     }
 
-    public GraphQlTester.Response getExpenses(String budgetId) {
-        return graphQlTester.documentName("expence/expense/getExpenses")
+    public GraphQlTester.Response getExpenses(String budgetId, Integer month, Integer year) {
+        return graphQlTester.documentName("expense/getExpenses")
                 .variable("budgetId", budgetId)
+                .variable("month", month)
+                .variable("year", year)
                 .execute();
     }
 
@@ -64,14 +66,14 @@ public class ExpenceRequests {
         if (expense.description() != null) {
             expenseMap.put("description", expense.description());
         }
-        return graphQlTester.documentName("expence/expense/updateExpense")
+        return graphQlTester.documentName("expense/updateExpense")
                 .variable("budgetId", budgetId)
                 .variable("expense", expenseMap)
                 .execute();
     }
 
     public GraphQlTester.Response deleteExpense(String budgetId, Long expenseId) {
-        return graphQlTester.documentName("expence/expense/deleteExpense")
+        return graphQlTester.documentName("expense/deleteExpense")
                 .variable("budgetId", budgetId)
                 .variable("expenseId", expenseId)
                 .execute();
