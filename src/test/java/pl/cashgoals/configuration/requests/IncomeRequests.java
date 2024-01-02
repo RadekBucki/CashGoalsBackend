@@ -1,6 +1,7 @@
 package pl.cashgoals.configuration.requests;
 
 import org.springframework.graphql.test.tester.GraphQlTester;
+import pl.cashgoals.income.business.model.IncomeItemInput;
 import pl.cashgoals.income.persistence.model.Income;
 
 import java.util.HashMap;
@@ -47,6 +48,39 @@ public class IncomeRequests {
         return graphQlTester.documentName("income/deleteIncomes")
                 .variable("budgetId", budgetId)
                 .variable("incomeIds", incomeIds)
+                .execute();
+    }
+
+    public GraphQlTester.Response getIncomeItems(String budgetId, int month, int year) {
+        return graphQlTester.documentName("income/item/getIncomeItems")
+                .variable("budgetId", budgetId)
+                .variable("month", month)
+                .variable("year", year)
+                .execute();
+    }
+
+    public GraphQlTester.Response updateIncomeItem(String budgetId, IncomeItemInput incomeItem) {
+        Map<String, Object> incomeItemMap = new HashMap<>(Map.of(
+                "description", incomeItem.description(),
+                "amount", incomeItem.amount(),
+                "date", incomeItem.date()
+        ));
+        if (incomeItem.id() != null) {
+            incomeItemMap.put("id", incomeItem.id());
+        }
+        if (incomeItem.incomeId() != null) {
+            incomeItemMap.put("incomeId", incomeItem.incomeId());
+        }
+        return graphQlTester.documentName("income/item/updateIncomeItem")
+                .variable("budgetId", budgetId)
+                .variable("incomeItem", incomeItemMap)
+                .execute();
+    }
+
+    public GraphQlTester.Response deleteIncomeItem(String budgetId, Long incomeItemId) {
+        return graphQlTester.documentName("income/item/deleteIncomeItem")
+                .variable("budgetId", budgetId)
+                .variable("incomeItemId", incomeItemId)
                 .execute();
     }
 }

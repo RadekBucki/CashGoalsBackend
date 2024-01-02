@@ -1,12 +1,9 @@
 package pl.cashgoals.income.persistence.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -14,12 +11,14 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Income {
+public class IncomeItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
     private String description;
+    private Double amount;
+    private LocalDate date;
 
-    private UUID budgetId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Income income;
 }

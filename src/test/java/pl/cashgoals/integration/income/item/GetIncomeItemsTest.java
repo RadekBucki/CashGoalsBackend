@@ -1,4 +1,4 @@
-package pl.cashgoals.integration.income;
+package pl.cashgoals.integration.income.item;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,54 +10,37 @@ import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.income.persistence.model.Income;
+import pl.cashgoals.income.persistence.model.IncomeItem;
 import pl.cashgoals.user.persistence.model.User;
 
-import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DeleteIncomesTest extends AbstractIntegrationTest {
-    @DisplayName("Should delete incomes")
+class GetIncomeItemsTest extends AbstractIntegrationTest {
+    @DisplayName("Should get income items")
     @Test
     @WithMockUser(username = "test@example.com", authorities = {"USER"})
-    void shouldDeleteIncomes() {
+    void shouldGetIncomeItems() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-
-        Income firstIncome = incomeRepository.findAll()
-                .stream()
-                .filter(income -> income.getBudgetId().toString().equals(budgetId))
-                .findFirst()
-                .orElseThrow();
-        incomeRequests.deleteIncomes(
-                        budgetId,
-                        List.of(firstIncome.getId())
-                )
-                .errors()
-                .verify()
-                .path("deleteIncomes")
-                .entity(Boolean.class)
-                .isEqualTo(true);
-
-        List<Income> incomes = incomeRepository.findAll();
-        assertFalse(incomes.contains(firstIncome));
+        incomeRequests.getIncomeItems(budgetId, 12, 2023)
+                .errors().verify()
+                .path("incomeItems")
+                .entityList(IncomeItem.class)
+                .hasSize(1)
+                .satisfies(incomesItems -> {
+                    assertEquals(1, incomesItems.size());
+                    IncomeItem incomeItem = incomesItems.get(0);
+                    assertEquals("test", incomeItem.getDescription());
+                    assertEquals(100, incomeItem.getAmount());
+                });
     }
 
     @DisplayName("Should return access denied when authorization missed")
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        Long incomeId = incomeRepository.findAll()
-                .stream()
-                .filter(income -> income.getBudgetId().toString().equals(budgetId))
-                .findFirst()
-                .orElseThrow()
-                .getId();
-        incomeRequests.deleteIncomes(
-                        budgetId,
-                        List.of(incomeId)
-                )
+        incomeRequests.getIncomeItems(budgetId, 12, 2023)
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
@@ -71,7 +54,7 @@ class DeleteIncomesTest extends AbstractIntegrationTest {
     @ParameterizedTest(name = "{0}")
     @CsvSource({
             "user has no rights to budget, ",
-            "user has no EDIT_INCOMES right, EDIT_EXPENSES",
+            "user has no VIEW right to budget, EDIT_CATEGORIES",
     })
     void shouldReturnAccessDenied(String testCase, String right) {
         User user = userRepository.getUserByEmail("test2@example.com").orElseThrow();
@@ -85,17 +68,8 @@ class DeleteIncomesTest extends AbstractIntegrationTest {
             userRightsRepository.saveAndFlush(userRight);
         }
 
-        String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        Long incomeId = incomeRepository.findAll()
-                .stream()
-                .filter(income -> income.getBudgetId().toString().equals(budgetId))
-                .findFirst()
-                .orElseThrow()
-                .getId();
-        incomeRequests.deleteIncomes(
-                        budgetId,
-                        List.of(incomeId)
-                )
+        String budgetId = budget.getId().toString();
+        incomeRequests.getIncomeItems(budgetId, 12, 2023)
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.budget.not-found")

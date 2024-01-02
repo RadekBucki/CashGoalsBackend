@@ -6,10 +6,9 @@ env:
   POSTGRES_URL: jdbc:postgresql://localhost:${POSTGRES_LOCAL_PORT}/${POSTGRES_DATABASE}
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches:
+      - '*'
 
 jobs:
   build:

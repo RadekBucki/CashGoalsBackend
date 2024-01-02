@@ -29,6 +29,8 @@ import pl.cashgoals.goal.persistence.model.Goal;
 import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;
 import pl.cashgoals.income.persistence.model.Income;
+import pl.cashgoals.income.persistence.model.IncomeItem;
+import pl.cashgoals.income.persistence.repository.IncomeItemRepository;
 import pl.cashgoals.income.persistence.repository.IncomeRepository;
 import pl.cashgoals.user.persistence.model.Theme;
 import pl.cashgoals.user.persistence.model.TokenType;
@@ -36,6 +38,7 @@ import pl.cashgoals.user.persistence.model.User;
 import pl.cashgoals.user.persistence.model.UserToken;
 import pl.cashgoals.user.persistence.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -86,6 +89,8 @@ public abstract class AbstractIntegrationTest {
     protected GoalRepository goalRepository;
     @Autowired
     protected IncomeRepository incomeRepository;
+    @Autowired
+    protected IncomeItemRepository incomeItemRepository;
 
     /**
      * Requests
@@ -114,6 +119,7 @@ public abstract class AbstractIntegrationTest {
         userRightsRepository.deleteAll();
         categoryRepository.deleteAll();
         goalRepository.deleteAll();
+        incomeRepository.deleteAll();
 
         //Requests
         userRequests = new UserRequests(graphQlTester);
@@ -211,5 +217,20 @@ public abstract class AbstractIntegrationTest {
                 .budgetId(budget.getId())
                 .build();
         incomeRepository.saveAndFlush(income);
+
+        IncomeItem incomeItem1 = IncomeItem.builder()
+                .description("test")
+                .amount(100.0)
+                .date(LocalDate.of(2023, 12, 31))
+                .income(income)
+                .build();
+        IncomeItem incomeItem2 = IncomeItem.builder()
+                .description("test2")
+                .amount(100.0)
+                .date(LocalDate.of(2024, 1, 1))
+                .income(income)
+                .build();
+
+        incomeItemRepository.saveAllAndFlush(List.of(incomeItem1, incomeItem2));
     }
 }
