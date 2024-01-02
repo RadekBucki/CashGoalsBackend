@@ -39,6 +39,7 @@ input ExpenseInput {
 type Expense {
     id: ID!
     category: Category!
+    categories: String!
     amount: Float!
     description: String
     date: Date!

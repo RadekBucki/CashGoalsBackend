@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 import pl.cashgoals.expense.business.model.ExpenseInput;
 import pl.cashgoals.expense.business.service.ExpenseService;
@@ -34,5 +35,10 @@ public class ExpenseController {
     @FullyAuthenticated
     public Boolean deleteExpense(@Argument UUID budgetId, @Argument Long expenseId) {
         return expenseService.deleteExpense(budgetId, expenseId);
+    }
+
+    @SchemaMapping(typeName = "Expense", field = "categories")
+    public String categories(Expense expense) {
+        return expenseService.getCategories(expense);
     }
 }
