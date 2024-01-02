@@ -7,7 +7,7 @@ extend type Mutation {
 
 extend type Query {
     incomes(budgetId: UUID!): [Income!]!
-    incomeItems(budgetId: UUID!, month: Int!, year: Int!): [IncomeItemsOutput!]!
+    incomeItems(budgetId: UUID!, month: Int!, year: Int!): [IncomeItem!]!
 }
 
 input IncomeInput {
@@ -21,15 +21,9 @@ type Income {
     description: String
 }
 
-type IncomeItemsOutput {
-    id: ID!
-    name: String!
-    description: String
-    incomeItems: [IncomeItem!]!
-}
-
 type IncomeItem {
     id: ID!
+    income: Income!
     name: String!
     description: String
     date: Date!

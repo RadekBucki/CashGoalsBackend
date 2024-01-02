@@ -1,10 +1,11 @@
 package pl.cashgoals.income.persistence.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,9 +20,6 @@ public class Income {
     private Long id;
     private String name;
     private String description;
-
-    @OneToMany(mappedBy = "income", cascade = CascadeType.REMOVE)
-    private List<IncomeItem> incomeItems = new ArrayList<>();
 
     private UUID budgetId;
 }

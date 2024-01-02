@@ -223,16 +223,14 @@ public abstract class AbstractIntegrationTest {
                 .description("test")
                 .amount(100.0)
                 .date(LocalDate.of(2023, 12, 31))
-                .incomeId(income.getId())
-                .budgetId(budget.getId())
+                .income(income)
                 .build();
         IncomeItem incomeItem2 = IncomeItem.builder()
                 .name("test2")
                 .description("test2")
                 .amount(100.0)
                 .date(LocalDate.of(2024, 1, 1))
-                .incomeId(income.getId())
-                .budgetId(budget.getId())
+                .income(income)
                 .build();
 
         incomeItemRepository.saveAllAndFlush(List.of(incomeItem1, incomeItem2));

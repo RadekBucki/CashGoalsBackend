@@ -10,7 +10,6 @@ import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.income.persistence.model.Income;
 import pl.cashgoals.income.persistence.model.IncomeItem;
 import pl.cashgoals.user.persistence.model.User;
 
@@ -27,14 +26,11 @@ class GetIncomeItemsTest extends AbstractIntegrationTest {
         incomeRequests.getIncomeItems(budgetId, 12, 2023)
                 .errors().verify()
                 .path("incomeItems")
-                .entityList(Income.class)
+                .entityList(IncomeItem.class)
                 .hasSize(1)
-                .satisfies(incomes -> {
-                    Income income = incomes.get(0);
-                    assertEquals("test", income.getName());
-                    assertEquals("test", income.getDescription());
-                    assertEquals(1, income.getIncomeItems().size());
-                    IncomeItem incomeItem = income.getIncomeItems().get(0);
+                .satisfies(incomesItems -> {
+                    assertEquals(1, incomesItems.size());
+                    IncomeItem incomeItem = incomesItems.get(0);
                     assertEquals("test", incomeItem.getName());
                     assertEquals("test", incomeItem.getDescription());
                     assertEquals(100, incomeItem.getAmount());

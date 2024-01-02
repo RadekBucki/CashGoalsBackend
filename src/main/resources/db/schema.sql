@@ -52,10 +52,8 @@ CREATE TABLE IF NOT EXISTS income_item
     description VARCHAR(255),
     amount      DECIMAL      NOT NULL,
     income_id   INTEGER      NOT NULL,
-    budget_id   UUID         NOT NULL,
     date        DATE         NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (budget_id) REFERENCES budget (id) ON DELETE CASCADE,
     FOREIGN KEY (income_id) REFERENCES income (id) ON DELETE CASCADE
 );
 

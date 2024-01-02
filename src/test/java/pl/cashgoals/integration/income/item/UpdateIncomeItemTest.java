@@ -10,6 +10,7 @@ import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
+import pl.cashgoals.income.business.model.IncomeItemInput;
 import pl.cashgoals.income.persistence.model.IncomeItem;
 import pl.cashgoals.user.persistence.model.User;
 
@@ -26,7 +27,17 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         IncomeItem incomeItem = incomeItemRepository.findAll().get(0);
         incomeItem.setName("test name changed");
-        incomeRequests.updateIncomeItem(budgetId, incomeItem)
+        incomeRequests.updateIncomeItem(
+                        budgetId,
+                        IncomeItemInput.builder()
+                                .id(incomeItem.getId())
+                                .incomeId(incomeItem.getIncome().getId())
+                                .name(incomeItem.getName())
+                                .description(incomeItem.getDescription())
+                                .amount(incomeItem.getAmount())
+                                .date(incomeItem.getDate())
+                                .build()
+                )
                 .errors().verify()
                 .path("updateIncomeItem")
                 .entity(IncomeItem.class)
@@ -34,6 +45,7 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
                     assertEquals("test name changed", incomeItem1.getName());
                     assertEquals("test", incomeItem1.getDescription());
                     assertEquals(100, incomeItem1.getAmount());
+                    assertEquals(LocalDate.of(2023, 12, 31), incomeItem1.getDate());
                 });
     }
 
@@ -43,7 +55,7 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
     void shouldCreateIncomeItem() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         Long incomeId = incomeRepository.findAll().get(0).getId();
-        IncomeItem incomeItem = IncomeItem.builder()
+        IncomeItemInput incomeItem = IncomeItemInput.builder()
                 .incomeId(incomeId)
                 .name("test123")
                 .description("test123")
@@ -58,6 +70,8 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
                     assertEquals("test123", incomeItem1.getName());
                     assertEquals("test123", incomeItem1.getDescription());
                     assertEquals(100, incomeItem1.getAmount());
+                    assertEquals(LocalDate.of(2024, 1, 1), incomeItem1.getDate());
+                    assertEquals(incomeId, incomeItem1.getIncome().getId());
                 });
     }
 
@@ -67,7 +81,17 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         IncomeItem incomeItem = incomeItemRepository.findAll().get(0);
         incomeItem.setName("test name changed");
-        incomeRequests.updateIncomeItem(budgetId, incomeItem)
+        incomeRequests.updateIncomeItem(
+                        budgetId,
+                        IncomeItemInput.builder()
+                                .id(incomeItem.getId())
+                                .incomeId(incomeItem.getIncome().getId())
+                                .name(incomeItem.getName())
+                                .description(incomeItem.getDescription())
+                                .amount(incomeItem.getAmount())
+                                .date(incomeItem.getDate())
+                                .build()
+                )
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")
@@ -97,7 +121,17 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         IncomeItem incomeItem = incomeItemRepository.findAll().get(0);
         incomeItem.setName("test name changed");
-        incomeRequests.updateIncomeItem(budgetId, incomeItem)
+        incomeRequests.updateIncomeItem(
+                        budgetId,
+                        IncomeItemInput.builder()
+                                .id(incomeItem.getId())
+                                .incomeId(incomeItem.getIncome().getId())
+                                .name(incomeItem.getName())
+                                .description(incomeItem.getDescription())
+                                .amount(incomeItem.getAmount())
+                                .date(incomeItem.getDate())
+                                .build()
+                )
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.budget.not-found")

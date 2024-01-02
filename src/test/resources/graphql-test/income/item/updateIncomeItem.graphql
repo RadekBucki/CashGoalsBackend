@@ -1,6 +1,11 @@
 mutation updateIncomeItem($budgetId: UUID!, $incomeItem: IncomeItemInput!) {
     updateIncomeItem(budgetId: $budgetId, incomeItem: $incomeItem) {
         id
+        income {
+            id
+            name
+            description
+        }
         name
         description
         date

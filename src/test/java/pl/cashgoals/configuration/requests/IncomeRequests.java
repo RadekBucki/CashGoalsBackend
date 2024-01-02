@@ -1,8 +1,8 @@
 package pl.cashgoals.configuration.requests;
 
 import org.springframework.graphql.test.tester.GraphQlTester;
+import pl.cashgoals.income.business.model.IncomeItemInput;
 import pl.cashgoals.income.persistence.model.Income;
-import pl.cashgoals.income.persistence.model.IncomeItem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,20 +59,20 @@ public class IncomeRequests {
                 .execute();
     }
 
-    public GraphQlTester.Response updateIncomeItem(String budgetId, IncomeItem incomeItem) {
+    public GraphQlTester.Response updateIncomeItem(String budgetId, IncomeItemInput incomeItem) {
         Map<String, Object> incomeItemMap = new HashMap<>(Map.of(
-                "description", incomeItem.getDescription(),
-                "amount", incomeItem.getAmount(),
-                "date", incomeItem.getDate()
+                "description", incomeItem.description(),
+                "amount", incomeItem.amount(),
+                "date", incomeItem.date()
         ));
-        if (incomeItem.getId() != null) {
-            incomeItemMap.put("id", incomeItem.getId());
+        if (incomeItem.id() != null) {
+            incomeItemMap.put("id", incomeItem.id());
         }
-        if (incomeItem.getName() != null) {
-            incomeItemMap.put("name", incomeItem.getName());
+        if (incomeItem.name() != null) {
+            incomeItemMap.put("name", incomeItem.name());
         }
-        if (incomeItem.getIncomeId() != null) {
-            incomeItemMap.put("incomeId", incomeItem.getIncomeId());
+        if (incomeItem.incomeId() != null) {
+            incomeItemMap.put("incomeId", incomeItem.incomeId());
         }
         return graphQlTester.documentName("income/item/updateIncomeItem")
                 .variable("budgetId", budgetId)
