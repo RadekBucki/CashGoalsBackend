@@ -1,0 +1,3 @@
+mutation deleteExpense($budgetId: UUID!, $expenseId: ID!) {
+    deleteExpense(budgetId: $budgetId, expenseId: $expenseId)
+}

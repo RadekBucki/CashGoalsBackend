@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.cashgoals.budget.business.BudgetFacade;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expense.persistence.model.Category;
 import pl.cashgoals.goal.business.model.GoalInput;
 import pl.cashgoals.goal.persistence.model.Goal;
 import pl.cashgoals.goal.persistence.repository.GoalRepository;

@@ -1,0 +1,13 @@
+mutation updateExpense($budgetId: UUID!, $expense: ExpenseInput!) {
+    updateExpense(budgetId: $budgetId, expense: $expense) {
+        id
+        description
+        amount
+        date
+        category {
+            id
+            name
+            description
+        }
+    }
+}

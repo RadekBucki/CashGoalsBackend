@@ -1,4 +1,4 @@
-package pl.cashgoals.expence.persistence.model;
+package pl.cashgoals.expense.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;

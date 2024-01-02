@@ -1,4 +1,4 @@
-package pl.cashgoals.expence.communication;
+package pl.cashgoals.expense.communication;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -6,9 +6,9 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
-import pl.cashgoals.expence.business.service.CategoryService;
-import pl.cashgoals.expence.business.model.CategoryInput;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expense.business.service.CategoryService;
+import pl.cashgoals.expense.business.model.CategoryInput;
+import pl.cashgoals.expense.persistence.model.Category;
 import pl.cashgoals.user.business.annotation.FullyAuthenticated;
 
 import java.util.List;

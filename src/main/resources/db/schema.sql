@@ -71,6 +71,17 @@ CREATE TABLE IF NOT EXISTS category
     FOREIGN KEY (parent_id) REFERENCES category (id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS expense
+(
+    id          SERIAL       NOT NULL,
+    description VARCHAR(255),
+    amount      DECIMAL      NOT NULL,
+    category_id INTEGER      NOT NULL,
+    date        DATE         NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS goal
 (
     id          SERIAL       NOT NULL,

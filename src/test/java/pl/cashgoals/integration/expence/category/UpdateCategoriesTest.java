@@ -1,4 +1,4 @@
-package pl.cashgoals.integration.expence;
+package pl.cashgoals.integration.expence.category;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,8 @@ import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
 import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.expence.business.model.CategoryInput;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expense.business.model.CategoryInput;
+import pl.cashgoals.expense.persistence.model.Category;
 import pl.cashgoals.user.persistence.model.User;
 
 import java.util.List;
@@ -38,7 +38,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -98,7 +98,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -163,7 +163,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -232,7 +232,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(
@@ -280,7 +280,7 @@ class UpdateCategoriesTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow()
                 .getId();
-        expenceRequests.updateCategories(
+        expenseRequests.updateCategories(
                         budgetId,
                         List.of(
                                 new CategoryInput(

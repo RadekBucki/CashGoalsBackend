@@ -1,4 +1,4 @@
-package pl.cashgoals.expence.business.model;
+package pl.cashgoals.expense.business.model;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
-package pl.cashgoals.integration.expence;
+package pl.cashgoals.integration.expence.category;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expense.persistence.model.Category;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -18,7 +18,7 @@ class GetCategoriesTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAllCategories() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        expenceRequests.getCategories(budgetId)
+        expenseRequests.getCategories(budgetId)
                 .errors().verify()
                 .path("categories").entityList(Category.class)
                 .hasSize(2)
@@ -51,7 +51,7 @@ class GetCategoriesTest extends AbstractIntegrationTest {
     @Test
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
-        expenceRequests.getCategories(budgetId)
+        expenseRequests.getCategories(budgetId)
                 .errors()
                 .expect(responseError ->
                         Objects.equals(responseError.getMessage(), "cashgoals.user.unauthorized")

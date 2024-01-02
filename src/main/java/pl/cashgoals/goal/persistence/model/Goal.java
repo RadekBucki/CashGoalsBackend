@@ -2,7 +2,7 @@ package pl.cashgoals.goal.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expense.persistence.model.Category;
 
 import java.util.UUID;
 
