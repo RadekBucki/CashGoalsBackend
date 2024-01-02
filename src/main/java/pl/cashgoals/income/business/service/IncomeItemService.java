@@ -19,9 +19,13 @@ public class IncomeItemService {
     private final IncomeItemRepository incomeItemRepository;
     private final BudgetFacade budgetFacade;
 
+    public List<IncomeItem> findIncomeItems(UUID budgetId, Integer month, Integer year) {
+        return incomeItemRepository.findAllByBudgetIdAndMonthAndYear(budgetId, month, year);
+    }
+
     public List<IncomeItem> getIncomeItems(UUID budgetId, Integer month, Integer year) {
         budgetFacade.verifyCurrentUserRight(budgetId, Right.VIEW);
-        return incomeItemRepository.findAllByBudgetIdAndMonthAndYear(budgetId, month, year);
+        return findIncomeItems(budgetId, month, year);
     }
 
     public IncomeItem updateIncomeItem(UUID budgetId, IncomeItemInput incomeItemInput) {

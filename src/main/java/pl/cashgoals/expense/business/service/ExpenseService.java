@@ -22,9 +22,12 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final BudgetFacade budgetFacade;
 
+    public List<Expense> findExpenses(UUID budgetId, Integer year, Integer month) {
+        return expenseRepository.findAllByBudgetIdAndYearAndMonth(budgetId, year, month);
+    }
     public List<Expense> getExpenses(UUID budgetId, Integer year, Integer month) {
         budgetFacade.verifyCurrentUserRight(budgetId, Right.VIEW);
-        return expenseRepository.findAllByBudgetIdAndYearAndMonth(budgetId, year, month);
+        return findExpenses(budgetId, year, month);
     }
     public Expense updateExpense(UUID budgetId, ExpenseInput expenseInput) {
         budgetFacade.verifyCurrentUserRight(budgetId, Right.EDIT_EXPENSES);
