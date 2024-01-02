@@ -8,7 +8,6 @@ import java.time.LocalDate;
 public record IncomeItemInput(
         Long id,
         Long incomeId,
-        String name,
         String description,
         Double amount,
         LocalDate date

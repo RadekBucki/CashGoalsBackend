@@ -68,9 +68,6 @@ public class IncomeRequests {
         if (incomeItem.id() != null) {
             incomeItemMap.put("id", incomeItem.id());
         }
-        if (incomeItem.name() != null) {
-            incomeItemMap.put("name", incomeItem.name());
-        }
         if (incomeItem.incomeId() != null) {
             incomeItemMap.put("incomeId", incomeItem.incomeId());
         }

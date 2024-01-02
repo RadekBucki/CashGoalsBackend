@@ -219,14 +219,12 @@ public abstract class AbstractIntegrationTest {
         incomeRepository.saveAndFlush(income);
 
         IncomeItem incomeItem1 = IncomeItem.builder()
-                .name("test")
                 .description("test")
                 .amount(100.0)
                 .date(LocalDate.of(2023, 12, 31))
                 .income(income)
                 .build();
         IncomeItem incomeItem2 = IncomeItem.builder()
-                .name("test2")
                 .description("test2")
                 .amount(100.0)
                 .date(LocalDate.of(2024, 1, 1))

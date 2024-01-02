@@ -6,7 +6,6 @@ query getIncomeItems($budgetId: UUID!, $month: Int!, $year: Int!) {
             name
             description
         }
-        name
         description
         date
         amount

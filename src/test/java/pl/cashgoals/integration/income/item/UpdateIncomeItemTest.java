@@ -26,13 +26,12 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
     void shouldUpdateIncomeItem() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         IncomeItem incomeItem = incomeItemRepository.findAll().get(0);
-        incomeItem.setName("test name changed");
+        incomeItem.setDescription("test description changed");
         incomeRequests.updateIncomeItem(
                         budgetId,
                         IncomeItemInput.builder()
                                 .id(incomeItem.getId())
                                 .incomeId(incomeItem.getIncome().getId())
-                                .name(incomeItem.getName())
                                 .description(incomeItem.getDescription())
                                 .amount(incomeItem.getAmount())
                                 .date(incomeItem.getDate())
@@ -42,8 +41,7 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
                 .path("updateIncomeItem")
                 .entity(IncomeItem.class)
                 .satisfies(incomeItem1 -> {
-                    assertEquals("test name changed", incomeItem1.getName());
-                    assertEquals("test", incomeItem1.getDescription());
+                    assertEquals("test description changed", incomeItem1.getDescription());
                     assertEquals(100, incomeItem1.getAmount());
                     assertEquals(LocalDate.of(2023, 12, 31), incomeItem1.getDate());
                 });
@@ -57,7 +55,6 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
         Long incomeId = incomeRepository.findAll().get(0).getId();
         IncomeItemInput incomeItem = IncomeItemInput.builder()
                 .incomeId(incomeId)
-                .name("test123")
                 .description("test123")
                 .amount(100.0)
                 .date(LocalDate.of(2024, 1, 1))
@@ -67,7 +64,6 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
                 .path("updateIncomeItem")
                 .entity(IncomeItem.class)
                 .satisfies(incomeItem1 -> {
-                    assertEquals("test123", incomeItem1.getName());
                     assertEquals("test123", incomeItem1.getDescription());
                     assertEquals(100, incomeItem1.getAmount());
                     assertEquals(LocalDate.of(2024, 1, 1), incomeItem1.getDate());
@@ -80,13 +76,12 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
     void shouldReturnAccessDeniedWhenAuthorizationMissed() {
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         IncomeItem incomeItem = incomeItemRepository.findAll().get(0);
-        incomeItem.setName("test name changed");
+        incomeItem.setDescription("test description changed");
         incomeRequests.updateIncomeItem(
                         budgetId,
                         IncomeItemInput.builder()
                                 .id(incomeItem.getId())
                                 .incomeId(incomeItem.getIncome().getId())
-                                .name(incomeItem.getName())
                                 .description(incomeItem.getDescription())
                                 .amount(incomeItem.getAmount())
                                 .date(incomeItem.getDate())
@@ -120,13 +115,12 @@ class UpdateIncomeItemTest extends AbstractIntegrationTest {
         }
         String budgetId = budgetRepository.findAll().get(0).getId().toString();
         IncomeItem incomeItem = incomeItemRepository.findAll().get(0);
-        incomeItem.setName("test name changed");
+        incomeItem.setDescription("test description changed");
         incomeRequests.updateIncomeItem(
                         budgetId,
                         IncomeItemInput.builder()
                                 .id(incomeItem.getId())
                                 .incomeId(incomeItem.getIncome().getId())
-                                .name(incomeItem.getName())
                                 .description(incomeItem.getDescription())
                                 .amount(incomeItem.getAmount())
                                 .date(incomeItem.getDate())

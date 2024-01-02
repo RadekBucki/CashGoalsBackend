@@ -48,7 +48,6 @@ CREATE TABLE IF NOT EXISTS income
 CREATE TABLE IF NOT EXISTS income_item
 (
     id          SERIAL       NOT NULL,
-    name        VARCHAR(100) NOT NULL,
     description VARCHAR(255),
     amount      DECIMAL      NOT NULL,
     income_id   INTEGER      NOT NULL,

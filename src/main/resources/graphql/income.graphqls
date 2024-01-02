@@ -24,7 +24,6 @@ type Income {
 type IncomeItem {
     id: ID!
     income: Income!
-    name: String!
     description: String
     date: Date!
     amount: Float!
@@ -33,7 +32,6 @@ type IncomeItem {
 input IncomeItemInput {
     id: ID
     incomeId: ID!
-    name: String!
     description: String
     date: Date!
     amount: Float!

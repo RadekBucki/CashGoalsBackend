@@ -31,7 +31,6 @@ class GetIncomeItemsTest extends AbstractIntegrationTest {
                 .satisfies(incomesItems -> {
                     assertEquals(1, incomesItems.size());
                     IncomeItem incomeItem = incomesItems.get(0);
-                    assertEquals("test", incomeItem.getName());
                     assertEquals("test", incomeItem.getDescription());
                     assertEquals(100, incomeItem.getAmount());
                 });

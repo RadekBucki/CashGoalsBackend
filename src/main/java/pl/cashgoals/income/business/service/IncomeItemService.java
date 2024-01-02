@@ -29,7 +29,6 @@ public class IncomeItemService {
         IncomeItem incomeItem = IncomeItem.builder()
                 .id(incomeItemInput.id())
                 .income(incomeRepository.getReferenceById(incomeItemInput.incomeId()))
-                .name(incomeItemInput.name())
                 .description(incomeItemInput.description())
                 .amount(incomeItemInput.amount())
                 .date(incomeItemInput.date())

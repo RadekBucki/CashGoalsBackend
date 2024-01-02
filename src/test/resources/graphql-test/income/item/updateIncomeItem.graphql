@@ -6,7 +6,6 @@ mutation updateIncomeItem($budgetId: UUID!, $incomeItem: IncomeItemInput!) {
             name
             description
         }
-        name
         description
         date
         amount
