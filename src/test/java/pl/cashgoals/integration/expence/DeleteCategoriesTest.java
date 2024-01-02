@@ -10,7 +10,7 @@ import pl.cashgoals.budget.persistence.model.Budget;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.UserRight;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expense.persistence.model.Category;
 import pl.cashgoals.user.persistence.model.User;
 
 import java.util.List;

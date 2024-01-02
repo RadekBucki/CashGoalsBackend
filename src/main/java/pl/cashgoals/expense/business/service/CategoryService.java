@@ -1,13 +1,13 @@
-package pl.cashgoals.expence.business.service;
+package pl.cashgoals.expense.business.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.cashgoals.budget.business.BudgetFacade;
 import pl.cashgoals.budget.persistence.model.Right;
 import pl.cashgoals.budget.persistence.model.Step;
-import pl.cashgoals.expence.business.model.CategoryInput;
-import pl.cashgoals.expence.persistence.model.Category;
-import pl.cashgoals.expence.persistence.repository.CategoryRepository;
+import pl.cashgoals.expense.business.model.CategoryInput;
+import pl.cashgoals.expense.persistence.model.Category;
+import pl.cashgoals.expense.persistence.repository.CategoryRepository;
 
 import java.util.List;
 import java.util.UUID;

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.test.context.support.WithMockUser;
 import pl.cashgoals.configuration.AbstractIntegrationTest;
-import pl.cashgoals.expence.persistence.model.Category;
+import pl.cashgoals.expense.persistence.model.Category;
 
 import java.util.Objects;
 import java.util.Optional;

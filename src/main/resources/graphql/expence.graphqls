@@ -1,11 +1,14 @@
 extend type Mutation {
     updateCategories(budgetId: UUID!, categories: [CategoryInput!]!): [Category!]!
     deleteCategories(budgetId: UUID!, categoryIds: [ID!]!): Boolean!
+    updateExpense(budgetId: UUID!, expense: ExpenseInput!): Expense!
+    deleteExpense(budgetId: UUID!, expenseId: ID!): Boolean!
 }
 
 extend type Query {
     categories(budgetId: UUID!): [Category!]!
     visibleCategories(budgetId: UUID!): [Category!]!
+    expenses(budgetId: UUID!, month: Int!, year: Int!): [Expense!]!
 }
 
 input CategoryInput {
@@ -23,4 +26,20 @@ type Category {
     description: String
     visible: Boolean!
     children: [Category!]!
+}
+
+input ExpenseInput {
+    id: ID
+    categoryId: ID!
+    amount: Float!
+    description: String
+    date: Date!
+}
+
+type Expense {
+    id: ID!
+    category: Category!
+    amount: Float!
+    description: String
+    date: Date!
 }

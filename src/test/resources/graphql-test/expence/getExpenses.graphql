@@ -1,0 +1,13 @@
+query getExpenses($budgetId: UUID!, $month: Int!, $year: Int!) {
+    expenses(budgetId: $budgetId, month: $month, year: $year) {
+        id
+        description
+        amount
+        date
+        category {
+            id
+            name
+            description
+        }
+    }
+}
