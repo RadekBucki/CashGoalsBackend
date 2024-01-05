@@ -14,6 +14,6 @@ public class ExpenseFacade {
     private final ExpenseService expenseService;
 
     public List<Expense> getExpenses(UUID budgetId, Integer month, Integer year) {
-        return expenseService.findExpenses(budgetId, month, year);
+        return expenseService.findExpenses(budgetId, year, month);
     }
 }
