@@ -5,7 +5,7 @@ extend type Mutation {
 
 extend type Query {
     goals(budgetId: UUID!): [Goal!]!
-    goalResults(budgetId: UUID!): [GoalResult!]!
+    goalResults(budgetId: UUID!, month: Int!, year: Int!): [GoalResult!]!
 }
 
 input GoalInput {
@@ -30,8 +30,7 @@ type Goal {
 type GoalResult {
     goal: Goal!
     actual: Float!
-    minReached: Boolean!
-    maxReached: Boolean!
+    reached: Boolean!
 }
 
 enum GoalType {

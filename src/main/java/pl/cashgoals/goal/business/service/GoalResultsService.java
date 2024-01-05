@@ -26,7 +26,7 @@ public class GoalResultsService {
         List<Goal> goals = goalService.getGoals(budgetId);
         List<Expense> expenses = expenseFacade.getExpenses(budgetId, month, year);
         List<IncomeItem> incomes = incomeFacade.getIncomeItems(budgetId, month, year);
-        Double totalIncomes = incomes.stream()
+        Double totalIncome = incomes.stream()
                 .mapToDouble(IncomeItem::getAmount)
                 .sum();
 
@@ -39,7 +39,7 @@ public class GoalResultsService {
                     if (goal.getType() == GoalType.AMOUNT) {
                         return calculateAmountGoalResult(goal, goalCategoryExpensesTotal);
                     } else {
-                        return calculatePercentageGoalResult(goal, goalCategoryExpensesTotal, totalIncomes);
+                        return calculatePercentageGoalResult(goal, goalCategoryExpensesTotal, totalIncome);
                     }
                 })
                 .toList();
@@ -48,44 +48,43 @@ public class GoalResultsService {
     private static boolean hasExpenseCategory(Category category, Expense expense) {
         boolean hasCategory = false;
         Category expenseCategory = expense.getCategory();
-        while (category != null && !hasCategory) {
+        while (expenseCategory != null && !hasCategory) {
             hasCategory = category.getId().equals(expenseCategory.getId());
-            category = category.getParent();
+            expenseCategory = expenseCategory.getParent();
         }
         return hasCategory;
     }
 
-    private static GoalResult calculatePercentageGoalResult(Goal goal, Double expensesTotal, Double totalIncomes) {
+    private static GoalResult calculatePercentageGoalResult(Goal goal, Double expensesTotal, Double totalIncome) {
         double actualPercentage;
-        if (totalIncomes != 0) {
-            actualPercentage = expensesTotal / totalIncomes * PERCENTAGE_MULTIPLIER;
+        if (totalIncome != 0) {
+            actualPercentage = expensesTotal / totalIncome * PERCENTAGE_MULTIPLIER;
         } else {
             actualPercentage = 0.0;
         }
 
-        return calculateAmountGoalResult(goal, actualPercentage);
+        return calculateAmountGoalResult(goal, (double) Math.round(actualPercentage));
     }
 
     private static GoalResult calculateAmountGoalResult(Goal goal, Double expensesTotal) {
         boolean maxReached;
         if (goal.getMax() != null) {
-            maxReached = expensesTotal >= goal.getMax();
+            maxReached = expensesTotal <= goal.getMax();
         } else {
-            maxReached = false;
+            maxReached = true;
         }
 
         boolean minReached;
         if (goal.getMin() != null) {
             minReached = expensesTotal >= goal.getMin();
         } else {
-            minReached = false;
+            minReached = true;
         }
 
         return new GoalResult(
                 goal,
                 expensesTotal,
-                maxReached,
-                minReached
+                maxReached && minReached
         );
     }
 }
