@@ -211,7 +211,7 @@ public abstract class AbstractIntegrationTest {
                 .budgetId(budget.getId())
                 .category(testCategory)
                 .type(GoalType.PERCENTAGE)
-                .max(0.5)
+                .max(50.0)
                 .build();
         goalRepository.saveAndFlush(goal);
 

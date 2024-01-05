@@ -29,7 +29,7 @@ class GetGoalsTest extends AbstractIntegrationTest {
                             .filter(g -> g.getName().equals("test"))
                             .filter(g -> g.getDescription().equals("test"))
                             .filter(g -> g.getType().equals(GoalType.PERCENTAGE))
-                            .filter(g -> g.getMax().equals(0.5))
+                            .filter(g -> g.getMax().equals(50.0))
                             .filter(g -> g.getCategory().getName().equals("test"))
                             .findFirst();
                     assertTrue(goal.isPresent());

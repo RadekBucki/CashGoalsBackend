@@ -1,0 +1,14 @@
+query goalResults($budgetId: UUID!, $month: Int!, $year: Int!) {
+    goalResults(budgetId: $budgetId, month: $month, year: $year) {
+        goal {
+            id
+            name
+            category {
+                id
+                name
+            }
+        }
+        actual
+        reached
+    }
+}

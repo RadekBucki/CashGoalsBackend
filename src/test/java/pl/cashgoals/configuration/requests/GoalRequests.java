@@ -60,4 +60,13 @@ public class GoalRequests {
                 .variable("goalIds", goalIds)
                 .execute();
     }
+
+    public GraphQlTester.Response getGoalResults(String budgetId, Integer year, Integer month) {
+        return graphQlTester.documentName("goal/goalResults")
+                .operationName("goalResults")
+                .variable("budgetId", budgetId)
+                .variable("year", year)
+                .variable("month", month)
+                .execute();
+    }
 }
