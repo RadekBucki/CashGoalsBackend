@@ -80,7 +80,7 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                             .filter(g -> g.getDescription().equals("test"))
                             .filter(g -> g.getType().equals(GoalType.PERCENTAGE))
                             .filter(g -> g.getMin() == null)
-                            .filter(g -> g.getMax().equals(0.6))
+                            .filter(g -> g.getMax() != null && g.getMax() == 0.6)
                             .filter(g -> g.getCategory().getName().equals("test"))
                             .findFirst();
                     assertTrue(goal1.isPresent());
@@ -89,7 +89,7 @@ class UpdateGoalsTest extends AbstractIntegrationTest {
                             .filter(g -> g.getName().equals("test"))
                             .filter(g -> g.getDescription().equals("test"))
                             .filter(g -> g.getType().equals(GoalType.PERCENTAGE))
-                            .filter(g -> g.getMin().equals(0.4))
+                            .filter(g -> g.getMin() != null && g.getMin() == 0.4)
                             .filter(g -> g.getMax() == null)
                             .filter(g -> g.getCategory().getName().equals("test"))
                             .findFirst();

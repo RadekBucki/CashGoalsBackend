@@ -12,6 +12,9 @@ import pl.cashgoals.expense.persistence.model.Expense;
 import pl.cashgoals.goal.business.model.GoalResult;
 import pl.cashgoals.goal.business.service.GoalResultsService;
 import pl.cashgoals.goal.business.service.GoalService;
+import pl.cashgoals.goal.business.strategies.goal.result.AmountStrategy;
+import pl.cashgoals.goal.business.strategies.goal.result.GoalResultStrategyResolver;
+import pl.cashgoals.goal.business.strategies.goal.result.PercentageStrategy;
 import pl.cashgoals.goal.persistence.model.Goal;
 import pl.cashgoals.goal.persistence.model.GoalType;
 import pl.cashgoals.income.business.IncomeFacade;
@@ -31,6 +34,8 @@ class GoalResultsServiceTest {
     private ExpenseFacade expenseFacade;
     @Mock
     private GoalService goalService;
+    @Mock
+    private GoalResultStrategyResolver goalResultStrategyResolver;
     @InjectMocks
     private GoalResultsService goalResultsService;
 
@@ -47,6 +52,15 @@ class GoalResultsServiceTest {
         when(goalService.getGoals(budgetId)).thenReturn(goals);
         when(expenseFacade.getExpenses(budgetId, month, year)).thenReturn(expenses);
         when(incomeFacade.getIncomeItems(budgetId, month, year)).thenReturn(incomes);
+
+        AmountStrategy amountStrategy = new AmountStrategy();
+        PercentageStrategy percentageStrategy = new PercentageStrategy(amountStrategy);
+        if (goals.stream().anyMatch(goal -> goal.getType() == GoalType.AMOUNT)) {
+            when(goalResultStrategyResolver.resolve(GoalType.AMOUNT)).thenReturn(amountStrategy);
+        }
+        if (goals.stream().anyMatch(goal -> goal.getType() == GoalType.PERCENTAGE)) {
+            when(goalResultStrategyResolver.resolve(GoalType.PERCENTAGE)).thenReturn(percentageStrategy);
+        }
     }
 
     @Test
