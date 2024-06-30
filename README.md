@@ -1,5 +1,7 @@
 # CashGoalsBackend
 
+This backend project is experiment of how far away we can go with GraphQL API in Spring without manual entity mapping.
+
 ## This repository is part of the Cash Goals application
 | Responsibility                      | Link                                                     |
 |-------------------------------------|----------------------------------------------------------|
